@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  generateName: membomb-1-
+  labels:
+    app: membomb
+spec:
+  containers:
+  - image: quay.io/appuio/membomb:configuration_best_practices
+    imagePullPolicy: Always
+    name: membomb
+    env:
+    - name: START_SIZE
+      value: "-4000"
+    - name: SIZE_INCR
+      value: "25"
+    - name: PYTHONUNBUFFERED
+      value: "1"
+  restartPolicy: Never
