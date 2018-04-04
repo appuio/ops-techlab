@@ -8,9 +8,9 @@ First we will download the default example hosts file from the Openshift Github 
 
 Login to the first master and compare the Ansible Inventories
 ```
-[ec2-user@master1 ~]$ sudo yum install wget vim -y
-[ec2-user@master1 ~]$ wget https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.7/inventory/byo/hosts.example
-[ec2-user@master1 ~]$ vimdiff /etc/ansible/hosts hosts.example 
+[ec2-user@master0 ~]$ sudo yum install wget vim -y
+[ec2-user@master0 ~]$ wget https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.7/inventory/byo/hosts.example
+[ec2-user@master0 ~]$ vimdiff /etc/ansible/hosts hosts.example
 ```
 As we can see there are the following differences:
 1. [OSEv3:children]
