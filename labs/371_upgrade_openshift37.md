@@ -93,6 +93,12 @@ If all volumes have "Number of entries: 0", we can proceed with the next node an
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml 
 ```
 
+6. If you are using the oc client outside of the Openshift Platform, you need to download the latest binary for the client and replace it. The binary is available for Linux, macOS and Windows. You can get it here:
+```
+https://console.user[X].lab.openshift.ch/console/extensions/clients/
+```
+Important: You need to tell all users of the platform to update their client.
+
 Lab 3.5.3: Verify upgrade
 -------------
 Check rpm package version of docker and openshift on all nodes and master.
@@ -109,4 +115,4 @@ Check image version of registry, router, metrics and logging
 ```
 
 Now we need to verify our installation according to: "322_install_openshift => Verify Openshift installation"
-Todo: Link
+- 3.2.2 [Install OpenShift](322_install_openshift.md)

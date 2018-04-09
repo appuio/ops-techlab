@@ -37,8 +37,14 @@ Run the installation in three steps.
 
 5. Now open your browser and access the master API with the user "shushu". Password is documented in the Ansible inventory.
 ```
-https://master.user[X].lab.openshift.ch:8443/console/
+https://console.user[X].lab.openshift.ch/console/
 ```
+
+6. You can download the binary for the client and use it from your local workstation. The binary is available for Linux, macOS and Windows. You can get it here:
+```
+https://console.user[X].lab.openshift.ch/console/extensions/clients/
+```
+
 
 ## Verify Openshift installation
 After the completion of the installation, we can verify, if everything is running as expected. Most of the checks are already been done by the playbooks.
