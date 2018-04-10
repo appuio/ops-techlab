@@ -6,25 +6,17 @@ Lab 3.3.3: Add a new OpenShift node and master
 In this lab we take a look how to add a new node and a new master to our Openshift Cluster.
 
 ## Scaleup node
-Add the new hosts to the Ansible inventory and uncomment new_nodes and new_masters in the "[OSEv3:children]" section.
+Uncomment the new_node (node3.user) in the Ansible inventory and uncomment new_nodes in the "[OSEv3:children]" section.
 ```
 [root@master0 ec2-user]# vi /etc/ansible/hosts 
 ...
-[OSEv3:children]
-masters
-nodes
-etcd
-#lb
 #nfs
-new_masters
+#new_masters
 new_nodes
 glusterfs
 ...
 [new_nodes]
 node3.user[X].lab.openshift.ch openshift_hostname=node3.useri[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}" openshift_schedulable=false
-
-[new_masters]
-master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
 ...
 
 ```
@@ -41,7 +33,6 @@ We will run an Ansible playbook, that will install all the required prerequisite
 
 Check if the hosts are available on ssh with Ansible and run the pre-install playbook.
 ```
-[ec2-user@master0 ~]$ ansible master2.user[X].lab.openshift.ch -m ping
 [ec2-user@master0 ~]$ ansible node3.user[X].lab.openshift.ch -m ping
 [ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml
 ```
@@ -95,9 +86,16 @@ vi /etc/ansible/hosts
 
 ## Scaleup the new master
 
-Add the new master to the Ansible inventory. It needs to be in both sections (new_nodes and new_masters).
+Uncomment the new master to the Ansible inventory. It needs to be in both sections (new_nodes and new_masters).
 ```
 [root@master0 ~]# vi /etc/ansible/hosts
+...
+etcd
+#lb
+#nfs
+new_masters
+new_nodes
+glusterfs
 ...
 [new_nodes]
 master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
@@ -110,6 +108,7 @@ master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshif
 Check if the host is available on ssh with Ansible and run the pre-install playbook.
 ```
 [ec2-user@master0 ~]$ ansible master2.user[X].lab.openshift.ch -m ping
+[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml
 ```
 
 Now we can add the new master.
@@ -169,4 +168,5 @@ Uncomment the new master from the new_nodes and new_master section.
 #master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
 ```
 
-TODO: Entries in ELB for masters
+Now, you need to add the new master as a target to your Load Balancers, so it receives traffic.
+

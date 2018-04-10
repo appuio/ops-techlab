@@ -7,7 +7,7 @@ Lab 3.3.2: Update Host
 ## Openshift excluder
 In this lab we take a look at the Openshift excluders, apply OS updates to all nodes, drain, reboot and schedule them again.
 
-During the installation of Openshift or when running the config Playbook, Openshift removes and adds excludes for certain rpm Packages. This can cause Trouble during Upgrade of non OSE packages.
+During the installation of Openshift or when running the config Playbook, openshift removes and adds excludes for certain rpm packages. This can cause trouble during upgrade of non OSE packages.
 
 First, let's check if the excludes are set by Openshift on all nodes. Connect to the first master and run: 
 ```
@@ -18,7 +18,7 @@ exclude= tuned-profiles-atomic-openshift-node  atomic-openshift-tests  atomic-op
 ...
 ```
 
-These excludes are set by using the official Openshift playbooks or when the binary atomic-openshift-excluder and atomic-openshift-docker-excluder.
+These excludes are set by using the official Openshift playbooks or when using the binary atomic-openshift-excluder and atomic-openshift-docker-excluder directly.
 We remove now the excludes and set it again for demonstration purpose. This is sometimes required, if you need to patch a system without using the Openshift playbooks and there are dependency errors.
 ```
 [ec2-user@master0 ~]$ ansible all -m shell -a "atomic-openshift-excluder unexclude && atomic-openshift-docker-excluder unexclude"
@@ -53,13 +53,13 @@ node1.[user].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+51
 
 ```
 If everthing is ok, you can apply all OS patches and make a reboot.
-We exclude the Openshift repository, because these packages are managed by the Openshift playbooks. Also docker and etcd packages are maintained by the Openshift playbooks.
+We exclude the Openshift repository, because these packages are managed by the Openshift playbooks.
 ```
-[ec2-user@master0 ~]$ ansible node1.[user].lab.openshift.ch -m shell -a 'yum update -y --disablerepo=rhel-7-server-ose-3.6-rpms --exclude="etcd* docker*"'
+[ec2-user@master0 ~]$ ansible node1.[user].lab.openshift.ch -m shell -a 'yum update -y --disablerepo=rhel-7-server-ose-3.6-rpms'
 [ec2-user@master0 ~]$ ansible node1.[user].lab.openshift.ch -m shell -a 'systemctl reboot'
 ```
 
-Wait until the node becomes available again and schedule it again.
+Wait until the node becomes available again and schedule it again. Be careful, as it takes some time, until the not becomes unready.
 ```
 [ec2-user@master0 ~]$ oc get nodes -w
 [ec2-user@master0 ~]$ oc adm manage-node node1.[user].lab.openshift.ch --schedulable
@@ -73,6 +73,7 @@ Listing matched pods on node: node1.user6.lab.openshift.ch
 
 NAME                      READY     STATUS    RESTARTS   AGE
 glusterfs-storage-1758r   1/1       Running   2          2d
+router-1-cc21f            1/1       Running   0          4m
 logging-fluentd-s2k2j     1/1       Running   1          1h
 ```
 

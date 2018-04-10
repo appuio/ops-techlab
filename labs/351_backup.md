@@ -84,7 +84,7 @@ Check if all pods are becoming ready
 
 If everything is ready, you can check, if you can login to Kibana and see that it's receiving logs again.
 ```
-https://kibana.wildcard.[user].lab.openshift.ch
+https://logging.app[USERID].lab.openshift.ch
 ```
 
 Lab 5.5: etcd Backup and complete Restore

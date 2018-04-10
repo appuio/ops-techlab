@@ -4,6 +4,7 @@ Lab 3.3: Daily business
 Lab 3.3.3: Renew certificates
 -------------
 In this lab we take a look at the Openshift certificates and how to renew them.
+
 These are the main certificates, that needs to be maintained. For each component there is playbook provided by Red Hat, that will redeploy the certificates:
 -    masters (API server and controllers) 
 -    etcd  
@@ -59,13 +60,14 @@ Check the current etcd ca certificate creation time again.
 ```
 
 You should see now, that a new etcd ca certificate has been generated, but etcd is still using the old server certificate. With the "redeploy-etcd-certificates.yml" playbook from Red Hat, we replace now the server certificate with new ones, signed by the newly created ca certificate.
+WARNING: This will lead to a restart of etcd and master services.
 ```
 [ec2-user@master0 ~]$ ansible-playbook -v -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-certificates.yml
 ```
 
 Now you can check, if the server certificate is also replaced.
 ```
-[ec2-user@master0 ~]$ sudo penssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
+[ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
 ```
 

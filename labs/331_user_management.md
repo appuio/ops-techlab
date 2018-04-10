@@ -64,6 +64,53 @@ You have access to the following projects and can switch between them with 'oc p
 Using project "openshift-infra".
 ```
 
+## Create a group and add user to the group
+It is also possible to add a group with users to a cluster policy.
+Create a local group and add test-user to it. (It's also possible to work with ldap/AD groups)
+```
+[ec2-user@master0 ~]$ oc adm groups new test-group test-user
+NAME         USERS
+test-group   test-user
+```
+
+Add the group to the cluster-role
+```
+[ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-group cluster-admin test-group
+cluster role "cluster-admin" added: "test-group"
+```
+
+Verifiy that the group is added to the cluster-admins
+```
+[ec2-user@master0 ~]$ oc get clusterrolebindings | grep cluster-admin
+cluster-admin                                                         /cluster-admin                                                         shushu, test-user                system:masters, test-group               
+```
+
+## Evaluate authorizations
+It's possible to evaluate authorizations. This can be done with the following pattern.
+```
+oc who-can VERB RESOURCE_NAME
+```
+
+Examples
+Who can delete the openshift-infra project.
+```
+oc policy who-can delete project -n openshift-infra
+```
+
+Who can create configmaps in the default project.
+```
+oc policy who-can create configmaps -n default
+```
+
+## Delete resource
+Delete the user and the group:
+```
+[ec2-user@master0 ~]$ oc delete group test-group
+[ec2-user@master0 ~]$ oc get identity
+[ec2-user@master0 ~]$ oc delete identity htpasswd_auth:test-user
+[ec2-user@master0 ~]$ sudo htpasswd -D /etc/origin/master/htpasswd test-user
+```
+
 You can get all available clusterPolicies and clusterPoliciesBinding with the following oc command.
 ```
 [ec2-user@master0 ~]$ oc login -u system:admin

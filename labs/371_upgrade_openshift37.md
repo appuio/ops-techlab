@@ -23,7 +23,7 @@ First we need to prepare our nodes and make sure, all instances have the new rep
 
 Next we need to upgrade atomic-openshift-utils to version 3.7 on our first master. 
 ```
-[ec2-user@master0 ~]$ sudo yum update atomic-openshift-utils
+[ec2-user@master0 ~]$ sudo yum update -y atomic-openshift-utils
 ....
 Updating:
  atomic-openshift-utils                              noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  354 k
@@ -38,11 +38,11 @@ Updating for dependencies:
 ....
 ```
 
-Next we need to change the following Ansible variables in our Openshift inventory:
+Change the following Ansible variables in our Openshift inventory:
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts 
 ....
-openshift_pkg_version=-3.7.23
+openshift_pkg_version=-3.7.42
 ....
 openshift_release=v3.7
 ```
@@ -54,9 +54,9 @@ openshift_release=v3.7
 ...
 ```
 2. Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes. 
-Upgrade "node1.[user].lab.openshift.ch":
+Upgrade "node0.[user].lab.openshift.ch":
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml --extra-vars "kubernetes.io/hostname=node1.[user].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml --extra-vars "kubernetes.io/hostname=node0.[user].lab.openshift.ch"
 ...
 ```
 
@@ -64,9 +64,9 @@ Wait until all GlusterFS Pods are ready again and check if GlusterFS volumes hav
 ```
 [ec2-user@master0 ~]$ oc project default
 [ec2-user@master0 ~]$ oc get pods -o wide | grep glusterfs
-usterfs-storage-b9xdl                       1/1       Running   0          23m       172.31.33.43    node1.user6.lab.openshift.ch
-glusterfs-storage-lll7g                       1/1       Running   0          23m       172.31.43.209   node2.user6.lab.openshift.ch
-glusterfs-storage-mw5sz                       1/1       Running   0          23m       172.31.34.222   node3.user6.lab.openshift.ch
+usterfs-storage-b9xdl                       1/1       Running   0          23m       172.31.33.43    node0.user6.lab.openshift.ch
+glusterfs-storage-lll7g                       1/1       Running   0          23m       172.31.43.209   node1.user6.lab.openshift.ch
+glusterfs-storage-mw5sz                       1/1       Running   0          23m       172.31.34.222   node2.user6.lab.openshift.ch
 [ec2-user@master0 ~]$ oc rsh <GlusterFS_pod_name>
 [ec2-user@master0 ~]$ for vol in `gluster volume list`; do gluster volume heal $vol info; done | grep -i "number of entries"
 Number of entries: 0

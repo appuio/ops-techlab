@@ -21,7 +21,15 @@ We can set the information in variables
 ```
 [ec2-user@master0 ~]$ export HEKETI_CLI_USER=admin
 [ec2-user@master0 ~]$ export HEKETI_CLI_KEY="[HEKETI_ADMIN_KEY]"
-[ec2-user@master0 ~]$ export HEKETI_CLI_SERVER=$(oc get svc/heketi-storage --template "http://{{.spec.clusterIP}}:{{(index .spec.ports 0).port}}")
+[ec2-user@master0 ~]$ export HEKETI_CLI_SERVER=$(oc get svc/heketi-storage -n default --template "http://{{.spec.clusterIP}}:{{(index .spec.ports 0).port}}")
+```
+
+Verify if everything is set as it should
+```
+[ec2-user@master0 ~]$ env | grep -i heketi
+HEKETI_CLI_KEY=[PASSWORD]
+HEKETI_CLI_SERVER=http://172.30.250.14:8080
+HEKETI_CLI_USER=admin
 ```
 
 Now we can run some useful commands for troubleshooting.
@@ -91,6 +99,7 @@ Check if pvc can be claimed and check the created pv.
 [ec2-user@master0 ~]$ oc get pvc
 NAME        STATUS    VOLUME                                     CAPACITY   ACCESSMODES   STORAGECLASS        AGE
 testclaim   Bound     pvc-839223fd-30d4-11e8-89f3-067e4f48dfe4   1Gi        RWO           glusterfs-storage   38s
+
 [ec2-user@master0 ~]$ oc get pv
 NAME                                       CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS    CLAIM                    STORAGECLASS        REASON    AGE
 pvc-839223fd-30d4-11e8-89f3-067e4f48dfe4   1Gi        RWO           Delete          Bound     test/testclaim           glusterfs-storage             41s
@@ -114,8 +123,10 @@ First we need to know, which volume name is used for the registry.
 [ec2-user@master0 ~]$ oc get pvc registry-claim -n default
 NAME             STATUS    VOLUME            CAPACITY   ACCESSMODES   STORAGECLASS   AGE
 registry-claim   Bound     registry-volume   5Gi        RWX                          2d
+
 [ec2-user@master0 ~]$ oc describe pv registry-volume | grep Path
     Path:		glusterfs-registry-volume
+
 [ec2-user@master0 ~]$ heketi-cli volume list | grep glusterfs-registry-volume
 Id:255b9535ee460dfa696a7616b57a7035    Cluster:bc64bf1b4a4e7cc0702d28c7c02674cf    Name:glusterfs-registry-volume
 
@@ -128,8 +139,14 @@ Name: glusterfs-registry-volume
 Size: 6
 ...
 ```
+Check if the gluster volume has the new size:
+```
+[ec2-user@master0 ~]$ ansible all -m shell -a "df -ah" | grep glusterfs-registry-volume
+172.31.40.96:glusterfs-registry-volume  6.0G  317M  5.7G   3% /var/lib/origin/openshift.local.volumes/pods/d8dc2712-3bcf-11e8-90a6-066961eacc9a/volumes/kubernetes.io~glusterfs/registry-volume
+```
 
-To use the space, we need to extend the pvc also.
+
+To use the space, we need to extend the pv also.
 ```
 [ec2-user@master0 ~]$ oc get pv
 NAME              CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS    CLAIM                    STORAGECLASS   REASON    AGE
