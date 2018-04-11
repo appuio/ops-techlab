@@ -23,7 +23,7 @@ We remove now the excludes and set it again for demonstration purpose. This is s
 ```
 [ec2-user@master0 ~]$ ansible all -m shell -a "atomic-openshift-excluder unexclude && atomic-openshift-docker-excluder unexclude"
 [ec2-user@master0 ~]$ ansible all -m shell -a "grep exclude /etc/yum.conf"
-[ec2-user@master0 ~]$ ansible all -m shell -a "atomic-openshift-excluder exclude && atomic-openshift-docker-excluder unexclude"
+[ec2-user@master0 ~]$ ansible all -m shell -a "atomic-openshift-excluder exclude && atomic-openshift-docker-excluder exclude"
 [ec2-user@master0 ~]$ ansible all -m shell -a "grep exclude /etc/yum.conf"
 ```
 
