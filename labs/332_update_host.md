@@ -13,7 +13,7 @@ First, let's check if the excludes are set by Openshift on all nodes. Connect to
 ```
 [ec2-user@master0 ~]$ ansible all -m shell -a "grep exclude /etc/yum.conf"
 ...
-node1.[user].lab.openshift.ch | SUCCESS | rc=0 >>
+node1.user[X].lab.openshift.ch | SUCCESS | rc=0 >>
 exclude= tuned-profiles-atomic-openshift-node  atomic-openshift-tests  atomic-openshift-sdn-ovs  atomic-openshift-recycle  atomic-openshift-pod  atomic-openshift-node  atomic-openshift-master  atomic-openshift-dockerregistry  atomic-openshift-clients-redistributable  atomic-openshift-clients  atomic-openshift  docker*1.20*  docker*1.19*  docker*1.18*  docker*1.17*  docker*1.16*  docker*1.15*  docker*1.14*  docker*1.13*
 ...
 ```
@@ -31,12 +31,12 @@ We remove now the excludes and set it again for demonstration purpose. This is s
 First login as cluster-admin and drain the first node.
 ```
 [ec2-user@master0 ~]$ oc get nodes
-[ec2-user@master0 ~]$ oc adm drain node1.[user].lab.openshift.ch --ignore-daemonsets --delete-local-data
+[ec2-user@master0 ~]$ oc adm drain node1.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
 ```
 
 If you list all running pods on the node you should see, that just the DaemonSets (glusterfs-storage and logging-fluentd) are left.
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node1.[user].lab.openshift.ch --list-pods
+[ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --list-pods
 Listing matched pods on node: node1.user6.lab.openshift.ch
 
 NAME                      READY     STATUS    RESTARTS   AGE
@@ -48,26 +48,26 @@ Let's check if the node is unscheduled.
 ```
 [ec2-user@master0 ~]$ oc get nodes
 ...
-node1.[user].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5115d708d7
+node1.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5115d708d7
 ...
 
 ```
 If everthing is ok, you can apply all OS patches and make a reboot.
 We exclude the Openshift repository, because these packages are managed by the Openshift playbooks.
 ```
-[ec2-user@master0 ~]$ ansible node1.[user].lab.openshift.ch -m shell -a 'yum update -y --disablerepo=rhel-7-server-ose-3.6-rpms'
-[ec2-user@master0 ~]$ ansible node1.[user].lab.openshift.ch -m shell -a 'systemctl reboot'
+[ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m shell -a 'yum update -y --disablerepo=rhel-7-server-ose-3.6-rpms'
+[ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m shell -a 'systemctl reboot'
 ```
 
 Wait until the node becomes available again and schedule it again. Be careful, as it takes some time, until the not becomes unready.
 ```
 [ec2-user@master0 ~]$ oc get nodes -w
-[ec2-user@master0 ~]$ oc adm manage-node node1.[user].lab.openshift.ch --schedulable
+[ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --schedulable
 ```
 
 Check if all pods will be properly created again on this node.
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node1.[user].lab.openshift.ch --list-pods
+[ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --list-pods
 
 Listing matched pods on node: node1.user6.lab.openshift.ch
 
