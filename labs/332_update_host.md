@@ -59,7 +59,7 @@ We exclude the Openshift repository, because these packages are managed by the O
 [ec2-user@master0 ~]$ ansible node1.[user].lab.openshift.ch -m shell -a 'systemctl reboot'
 ```
 
-Wait until the node becomes available again and schedule it again. Be careful, as it takes some time, until the not becomes unready.
+Wait until the node becomes available again and schedule it again. Be careful, as it takes some time, until the node becomes unready.
 ```
 [ec2-user@master0 ~]$ oc get nodes -w
 [ec2-user@master0 ~]$ oc adm manage-node node1.[user].lab.openshift.ch --schedulable
