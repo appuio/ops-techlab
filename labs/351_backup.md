@@ -1,4 +1,4 @@
-Lab 5: Backup / Restore
+Lab 3.5: Backup / Restore
 ============
 
 In this techlab, we will create a Backup and learn, where the important files to backup are located. The full state of a cluster installation includes:
@@ -10,11 +10,11 @@ In this techlab, we will create a Backup and learn, where the important files to
 - Certificates
 - Ansible hosts file
 
-Lab 5.1: Master Backup files
+Lab 3.5.1: Master Backup files
 -------------
 All files that are recommended to make a backup on the master are located in the following folders:
 
-Ansible inventory file, that contains the information, how the cluster is build. 
+Ansible inventory file, that contains the information, how the cluster is build.
 ```
 /etc/ansible/hosts
 ```
@@ -25,7 +25,7 @@ Here are the master Configuration files, certificates and htpasswd located
 ```
 These files should be backed up on all masters.
 
-Lab 5.2: Node Backup files
+Lab 3.5.2: Node Backup files
 -------------
 All files that are recommended to make a backup on the nodes are located in the following folders:
 
@@ -42,12 +42,12 @@ On each node are the certs from the docker-registry.
 These files should be backed up on all nodes.
 
 
-Lab 5.3: Application Backup
+Lab 3.5.3: Application Backup
 -------------
 
 To make a backup of the data in the persistent volumes, you need to backup the volumes of your storage environment. If you are using glusterfs, it's recommended to mount all volumes and use an existing backup software to make a backup of all files in those mounts.
 
-Lab 5.4: Project Backup
+Lab 3.5.4: Project Backup
 -------------
 It is advisable to Backup regularly all project data.
 Login to the first master and run the script. It will create a folders for each project with all Openshift API Objects in json.
@@ -72,7 +72,7 @@ Now we will restore the logging project from our backup
 
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/serviceaccount.json
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/secret.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/configmap.json 
+[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/configmap.json
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/rolebindings.json
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/project.json
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/daemonset.json
@@ -87,7 +87,7 @@ If everything is ready, you can check, if you can login to Kibana and see that i
 https://logging.app[USERID].lab.openshift.ch
 ```
 
-Lab 5.5: etcd Backup and complete Restore
+Lab 3.5.5: etcd Backup and complete Restore
 -------------
 ## Create etcd Backup
 To make a consistent etcd backup, we need to login to the master and make a cold backup of the etcd server:
@@ -105,7 +105,7 @@ member 92c764a37c90869 is healthy: got healthy result from https://172.31.46.235
 cluster is healthy
 ```
 ## Restore etcd cluster
-We will restore the etcd cluster now. 
+We will restore the etcd cluster now.
 
 First, we need to stop etcd on the first master.
 ```
@@ -121,7 +121,7 @@ The cluster is now down and you can't get any resources through the console. We 
 [root@master0 ~]# chown -R etcd:etcd $ETCD_DIR
 ```
 
-Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and check if it's running. This is needed, because initially it will create a new cluster with the existing data from the backup. 
+Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and check if it's running. This is needed, because initially it will create a new cluster with the existing data from the backup.
 ```
 [root@master0 ~]# sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /usr/lib/systemd/system/etcd.service
 [root@master0 ~]# systemctl daemon-reload
@@ -158,3 +158,10 @@ Updated member with ID 6248d01c5701 in cluster
 6248d01c5701: name=master0.[user].lab.openshift.ch peerURLs=https://172.31.46.201:2379 clientURLs=https://172.31.46.201:2379 isLeader=true
 ```
 
+---
+
+**End of Lab 3.5**
+
+<p width="100px" align="right"><a href="360_monitoring_troubleshooting.md">Monitoring and Troubleshooting →</a></p>
+
+[← back to overview](../README.md)

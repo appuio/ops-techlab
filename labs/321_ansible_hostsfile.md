@@ -1,7 +1,7 @@
 Lab 3.2: Install Openshift Container Platform
 ============
 
-Lab 3.2.1: Create Ansible inventory 
+Lab 3.2.1: Create Ansible inventory
 -------------
 In this lab, we will verify the Ansible inventory file, so it fits our lab cluster. The Inventory file describes, how the cluster will be built.
 First we will download the default example hosts file from the Openshift Github repository and compare it to the prepared inventory for the lab. We will use the default Openshift 3.7 template, as we will later upgrade to OSE 3.7 and like this we already have the right variables in place.
@@ -15,7 +15,7 @@ As we can see there are the following differences:
 1. [OSEv3:children]
     1. lb, nfs, new_masters and new_nodes are commented out.
     1. glusterfs hostgroup: Deploy Container Native Storage.
-1. ansible_ssh_user: Run Ansible playbook as ec2-user. 
+1. ansible_ssh_user: Run Ansible playbook as ec2-user.
 1. ansible_become: The ec2-user is not in the root group, so we need the ansible_become=yes set.
 1. openshift_deployment: Deploy "openshift-enterprise".
 1. openshift_release: Deploy Openshift 3.6, then upgrade to 3.7.
@@ -43,3 +43,11 @@ As we can see there are the following differences:
     1. openshift_storage_glusterfs_wipe
 1. openshift_disable_check: Disable a few checks, because the lab environment is not sized as a production environment.
 1. [masters],[etcd],[lb],[nodes],[new_nodes],[new_masters],[glusterfs]: Specify all hosts, that it fits with the environment.
+
+---
+
+**End of Lab 3.2.1**
+
+<p width="100px" align="right"><a href="322_install_openshift.md">Install Openshift →</a></p>
+
+[← back to overview](../README.md)

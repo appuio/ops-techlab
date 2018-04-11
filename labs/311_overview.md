@@ -1,4 +1,4 @@
-Lab 3.1: Warmup 
+Lab 3.1: Warmup
 ============
 
 Lab 3.1.1: Get a short architectural overview of the environment
@@ -24,3 +24,10 @@ Out lab Platform consist of the following components:
 1. We will use the first master as a Bastion host because of simplicity of the labs. (bastion.userX.lab.openshift.ch)
     1. (For production use it's recommended to use a separate instance for this.)
 
+---
+
+**End of Lab 3.1.1**
+
+<p width="100px" align="right"><a href="312_access_environment.md">Learn how to access the lab environment →</a></p>
+
+[← back to overview](../README.md)

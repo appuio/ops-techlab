@@ -16,12 +16,12 @@ The master usually houses two to three master-specific services:
 
 The node-specific services can also be found on a master:
 * `atomic-openshift-node` (in order for the master to be part of the SDN)
-* `docker` 
+* `docker`
 
 General services include the following:
-* `openvswitch` 
+* `openvswitch`
 * `dnsmasq`
-* `NetworkManager` 
+* `NetworkManager`
 
 
 ### Service States
@@ -43,9 +43,9 @@ There is also the possibility of checking etcd's health using `etcdctl`:
 # etcdctl --cert-file=/etc/etcd/peer.crt \
           --key-file=/etc/etcd/peer.key \
           --ca-file=/etc/etcd/ca.crt \
-          --peers="https://master0.userX.lab.openshift.ch:2379,\
-                   https://master1.userX.lab.openshift.ch:2379,\
-                   https://master2.userX.lab.openshift.ch:2379"\
+          --peers="https://master0.user[X].lab.openshift.ch:2379,\
+                   https://master1.user[X].lab.openshift.ch:2379,\
+                   https://master2.user[X].lab.openshift.ch:2379"\
           cluster-health
 ```
 
@@ -66,7 +66,14 @@ Depending on the outcome of the above commands we have to get a closer look at s
 $ ansible masters[0] -a "journalctl -u etcd -n 30"
 ```
 
-Or by searching Elasticsearch: After logging in to https://logging.appX.lab.openshift.ch, make sure you're on Kibana's "Discover" tab. Then choose the `.operations.*` index by clicking on the arrow in the dark-grey box on the left to get a list of all available indices. You can then create search queries such as "systemd.t.SYSTEMD_UNIT:atomic-openshift-node.service" in order to filter for all messages from every running OpenShift node service.
+Or by searching Elasticsearch: After logging in to https://logging.app[X].lab.openshift.ch, make sure you're on Kibana's "Discover" tab. Then choose the `.operations.*` index by clicking on the arrow in the dark-grey box on the left to get a list of all available indices. You can then create search queries such as `systemd.t.SYSTEMD_UNIT:atomic-openshift-node.service` in order to filter for all messages from every running OpenShift node service.
 
 Or if we wanted to filter for error messages we could simply use "error" in the search bar and then by looking at the available fields (in the menu on the left) limit the search results further.
 
+---
+
+**End of Lab 3.6.2**
+
+<p width="100px" align="right"><a href="371_upgrade_openshift37.md">Upgrade Openshift from 3.6 to 3.7 →</a></p>
+
+[← back to overview](../README.md)
