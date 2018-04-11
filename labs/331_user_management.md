@@ -15,9 +15,9 @@ Add the admin role of the project openshift-infra to the created user.
 [ec2-user@master0 ~]$ oc adm policy add-role-to-user admin test-user -n openshift-infra
 ```
 
-Now login with the new user and check if you see the openshift-infra project
+Now login with the new user from your client and check if you see the openshift-infra project
 ```
-[ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch
+[localuser@localhost ~]$ oc login https://console.[user].lab.openshift.ch
 Username: test-user
 Password:
 Login successful.
