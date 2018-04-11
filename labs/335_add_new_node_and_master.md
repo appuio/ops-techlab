@@ -16,7 +16,7 @@ new_nodes
 glusterfs
 ...
 [new_nodes]
-node3.user[X].lab.openshift.ch openshift_hostname=node3.useri[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}" openshift_schedulable=false
+node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}" openshift_schedulable=false
 ...
 
 ```
