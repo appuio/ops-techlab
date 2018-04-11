@@ -66,7 +66,7 @@ Depending on the outcome of the above commands we have to get a closer look at s
 $ ansible masters[0] -a "journalctl -u etcd -n 30"
 ```
 
-Or by searching Elasticsearch: After logging in to https://logging.appX.lab.openshift.ch, make sure you're on Kibana's "Discover" tab. Then choose the `.operations.*` index by clicking on the arrow in the dark-grey box on the left to get a list of all available indices. You can then create search queries such as "systemd.t.SYSTEMD_UNIT:atomic-openshift-node.service" in order to filter for all messages from every running OpenShift node service.
+Or by searching Elasticsearch: After logging in to https://logging.appX.lab.openshift.ch, make sure you're on Kibana's "Discover" tab. Then choose the `.operations.*` index by clicking on the arrow in the dark-grey box on the left to get a list of all available indices. You can then create search queries such as `systemd.t.SYSTEMD_UNIT:atomic-openshift-node.service` in order to filter for all messages from every running OpenShift node service.
 
 Or if we wanted to filter for error messages we could simply use "error" in the search bar and then by looking at the available fields (in the menu on the left) limit the search results further.
 
