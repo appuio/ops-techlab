@@ -34,7 +34,7 @@ We will run an Ansible playbook, that will install all the required prerequisite
 Check if the hosts are available on ssh with Ansible and run the pre-install playbook.
 ```
 [ec2-user@master0 ~]$ ansible node3.user[X].lab.openshift.ch -m ping
-[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml
+[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=node3.user[X].lab.openshift.ch
 ```
 
 Now we can run the scaleup playbook provided by Red Hat for the node scaleup.
