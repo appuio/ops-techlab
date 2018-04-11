@@ -108,7 +108,7 @@ master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshif
 Check if the host is available on ssh with Ansible and run the pre-install playbook.
 ```
 [ec2-user@master0 ~]$ ansible master2.user[X].lab.openshift.ch -m ping
-[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml
+[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=master2.user[X].lab.openshift.ch
 ```
 
 Now we can add the new master.
