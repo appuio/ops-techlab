@@ -5,6 +5,6 @@ In this chapter, we are going to look at how to do monitoring and troubleshootin
 
 ## Chapter Content
 
-3.6.1: Monitoring
-3.6.2: Logs
+* [3.6.1: Monitoring](361_monitoring.md)
+* [3.6.2: Logs](362_logs.md)
 
