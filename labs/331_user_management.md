@@ -27,7 +27,7 @@ You have one project on this server: "openshift-infra"
 Using project "openshift-infra".
 ```
 
-## Add user to cluster role
+## Add cluster role to user
 If the user is a cluster admin we should delete the created rolebinding for the project and give him the global clusterPolicyBinding "cluster-admin" role.
 
 Login as system:admin
