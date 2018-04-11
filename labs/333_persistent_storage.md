@@ -48,7 +48,7 @@ Get Cluster id and get details of the cluster.
 [ec2-user@master0 ~]$ heketi-cli cluster list
 Clusters:
 Id:bc64bf1b4a4e7cc0702d28c7c02674cf [file][block]
-[ec2-user@master0 ~]$ heketi-cli cluster info bc64bf1b4a4e7cc0702d28c7c02674cf 
+[ec2-user@master0 ~]$ heketi-cli cluster info bc64bf1b4a4e7cc0702d28c7c02674cf
 ...
 ```
 
@@ -68,7 +68,7 @@ Show the whole topology
 ...
 ```
 
-## Create and delete a pv 
+## Create and delete a pv
 If you create a pvc, Heketi will automatically create a pv and bind it to your pvc. Also if you delete a pvc, Heketi will delete the pv.
 
 Create a new project, set default storageclass and create a pvc
@@ -77,7 +77,7 @@ Create a new project, set default storageclass and create a pvc
 Now using project "test" on server "https://console.[user].lab.openshift.ch:8443".
 ...
 [ec2-user@master0 ~]$ oc patch storageclass glusterfs-storage -p  '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-[ec2-user@master0 ~]$ cat <<EOF >pvc.yaml 
+[ec2-user@master0 ~]$ cat <<EOF >pvc.yaml
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
 metadata:
@@ -157,3 +157,10 @@ NAME              CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS    CLAIM      
 registry-volume   6Gi        RWX           Retain          Bound     default/registry-claim                            1d
 ```
 
+---
+
+**End of Lab 3.3.3**
+
+<p width="100px" align="right"><a href="334_renew_certificates.md">Renew certificates →</a></p>
+
+[← back to overview](../README.md)

@@ -1,26 +1,26 @@
 Lab 3.3: Daily business
 ============
 
-Lab 3.3.3: Renew certificates
+Lab 3.3.4: Renew certificates
 -------------
 In this lab we take a look at the Openshift certificates and how to renew them.
 
 These are the main certificates, that needs to be maintained. For each component there is playbook provided by Red Hat, that will redeploy the certificates:
--    masters (API server and controllers) 
+-    masters (API server and controllers)
 -    etcd  
 -    nodes
 -    registry
 -    router
 
 ## Check the expiration of the certificates
-To check all your certificates you can run the playbook "certificate_expiry/easy-mode.yaml" provided from Red Hat. 
+To check all your certificates you can run the playbook "certificate_expiry/easy-mode.yaml" provided from Red Hat.
 ```
 [ec2-user@master0 ~]$ ansible-playbook -v -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/certificate_expiry/easy-mode.yaml
 ...
 ```
 It will generate the following files with a dump of all information of each certificate in json and html markup:
 ```
-/tmp/cert-expiry-report.html 
+/tmp/cert-expiry-report.html
 /tmp/cert-expiry-report.json
 ```
 
@@ -84,3 +84,11 @@ You can use the following playbooks to replace the certificates of the other mai
      -    /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-registry-certificates.yml
 -    router
      -    /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-router-certificates.yml
+
+---
+
+**End of Lab 3.3.4**
+
+<p width="100px" align="right"><a href="335_add_new_node_and_master.md">Add a new OpenShift node and master →</a></p>
+
+[← back to overview](../README.md)
