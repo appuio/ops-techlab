@@ -62,6 +62,8 @@ As already mentioned, finding out if our cluster will remain in an operational s
 
 Next to the usual monitoring of storage per partition/logical volume, there's one logical volume on each node of special interest to us: the **Docker storage**. The Docker storage contains images and container filesystems of running containers. Monitoring the available space of this logical volume is important in order to tune garbage collection. Garbage collection is done by the **kubelets** running on each node. The available garbage collection kubelet arguments can be found in the [official documentation](https://docs.openshift.com/container-platform/3.7/admin_guide/garbage_collection.html).
 
+Speaking of garbage collection, there's another component that needs frequent garbage collection: the registry. Contrary to the Docker storage on each node, OpenShift only provides a command to prune the registry but does not offer a means to execute it on a regular basis. Until it does, setup the [appuio-pruner](https://github.com/appuio/appuio-pruner) as described in its README.
+
 
 ### Does our cluster have enough capacity to run all pods?
 
