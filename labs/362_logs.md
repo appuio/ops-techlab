@@ -16,12 +16,12 @@ The master usually houses two to three master-specific services:
 
 The node-specific services can also be found on a master:
 * `atomic-openshift-node` (in order for the master to be part of the SDN)
-* `docker` 
+* `docker`
 
 General services include the following:
-* `openvswitch` 
+* `openvswitch`
 * `dnsmasq`
-* `NetworkManager` 
+* `NetworkManager`
 
 
 ### Service States
@@ -70,3 +70,10 @@ Or by searching Elasticsearch: After logging in to https://logging.app[X].lab.op
 
 Or if we wanted to filter for error messages we could simply use "error" in the search bar and then by looking at the available fields (in the menu on the left) limit the search results further.
 
+---
+
+**End of Lab 3.6.2**
+
+<p width="100px" align="right"><a href="371_upgrade_openshift37.md">Upgrade Openshift from 3.6 to 3.7 →</a></p>
+
+[← back to overview](../README.md)
