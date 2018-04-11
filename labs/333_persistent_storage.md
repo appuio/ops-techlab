@@ -8,7 +8,7 @@ In this lab we take a look at the Openshift implementation of Container Native S
 ## heketi-cli
 First we need to install the Heketi client rpm. We will use the client from the community upstream project for this lab. In production enviroment, you should use the client, provided by RedHat.
 ```
-[ec2-user@master0 ~]$ sudo rpm -i https://buildlogs.centos.org/centos/7/storage/x86_64/gluster-4.0/heketi-client-6.0.0-1.el7.x86_64.rpm
+[ec2-user@master0 ~]$ sudo yum install -y https://buildlogs.centos.org/centos/7/storage/x86_64/gluster-4.0/heketi-client-6.0.0-1.el7.x86_64.rpm
 ```
 
 Now we need the URL and admin Key to access the Heketi API.
