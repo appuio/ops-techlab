@@ -66,11 +66,11 @@ Check if all pvc are bound and glusterfs runs fine
 
 Check the etcd health status. Do not forget to change the *[X]* of *user[X]* with your number.
 ```
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
+[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
 member 92c764a37c90869 is healthy: got healthy result from https://172.31.46.235:2379
 cluster is healthy
 
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member list
+[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member list
 92c764a37c90869: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.235:2380 clientURLs=https://172.31.46.235:2379 isLeader=true
 ```
 
