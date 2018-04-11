@@ -17,7 +17,7 @@ Add the admin role of the project openshift-infra to the created user.
 
 Now login with the new user and check if you see the openshift-infra project
 ```
-[ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch:8443
+[ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch
 Username: test-user
 Password: 
 Login successful.
@@ -44,8 +44,8 @@ cluster role "cluster-admin" added: "test-user"
 ```
 Now you can try to login with the user and check if you see all projects
 ```
-[ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch:8443
-Authentication required for https://console.user6.lab.openshift.ch:8443 (openshift)
+[ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch
+Authentication required for https://console.user6.lab.openshift.ch (openshift)
 Username: test-user
 Password: 
 Login successful.
