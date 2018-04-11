@@ -88,7 +88,7 @@ cluster-admin                                                         /cluster-a
 ## Evaluate authorizations
 It's possible to evaluate authorizations. This can be done with the following pattern.
 ```
-oc who-can VERB RESOURCE_NAME
+oc policy who-can VERB RESOURCE_NAME
 ```
 
 Examples
