@@ -7,10 +7,10 @@ Lab 3.2.2: Install Openshift
 In the previous lab we prepared the Ansible inventory to fit our test lab environment. Now we can prepare and run the installation.
 
 Now we run the pre-install.yml playbook. This will do the following:
-- Enable Ansible ssh pipelining.
 - Attach all needed repositories for the installation of Openshift on all nodes
 - Install the prerequisite packages: wget git net-tools bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
 - Enable iptables on all nodes
+- Enable Ansible ssh pipelining (performance improvements for Ansible)
 ```
 [ec2-user@master0 ~]$ ansible-playbook /home/ec2-user/resource/pre-install.yml
 ```
