@@ -64,7 +64,7 @@ Check if all pvc are bound and glusterfs runs fine
 [ec2-user@master0 ~]$ oc get pvc --all-namespaces
 ```
 
-Check the etcd health status. Do not forget to change the *[X]* of *user[X]* with your number.
+Check the etcd health status (as root user). Do not forget to change the *[X]* of *user[X]* with your number.
 ```
 [root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
 member 92c764a37c90869 is healthy: got healthy result from https://172.31.46.235:2379
