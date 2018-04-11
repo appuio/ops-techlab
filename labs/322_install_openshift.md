@@ -16,18 +16,17 @@ Now we run the pre-install.yml playbook. This will do the following:
 ```
 
 Run the installation in three steps.
-1. Installation of Openshift
-Prepare a coffee, this run takes some time.
+1. Install Openshift. This takes a while, get a coffee.
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
 
-2. Deploying Openshift metrics
+2. Deploy the Openshift metrics
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
 ```
 
-3. Deploying Openshift logging
+3. Deploy the Openshift logging
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
 ```
