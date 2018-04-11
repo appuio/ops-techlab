@@ -1,14 +1,14 @@
 Lab 3.3: Daily business
 ============
 
-Lab 3.3.3: Add a new OpenShift node and master
+Lab 3.3.5: Add a new OpenShift node and master
 -------------
 In this lab we take a look how to add a new node and a new master to our Openshift Cluster.
 
 ## Scaleup node
 Uncomment the new_node (node3.user) in the Ansible inventory and uncomment new_nodes in the "[OSEv3:children]" section.
 ```
-[root@master0 ec2-user]# vi /etc/ansible/hosts 
+[root@master0 ec2-user]# vi /etc/ansible/hosts
 ...
 #nfs
 #new_masters
@@ -56,14 +56,14 @@ node3.user[X].lab.openshift.ch     Ready,SchedulingDisabled   1m        v1.6.1+5
 
 Schedule the new node, drain another worker node and see, if the pods are running correctly on the new node.
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node3.user[X].lab.openshift.ch --schedulable 
+[ec2-user@master0 ~]$ oc adm manage-node node3.user[X].lab.openshift.ch --schedulable
 [ec2-user@master0 ~]$ oc adm drain node2.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
 [ec2-user@master0 ~]$ watch "oc adm manage-node node3.user[X].lab.openshift.ch --list-pods"
 ```
 
 If everything works as expected, we schedule the node again and move the new node from the "new_nodes" section in the Ansible inventory to the nodes section.
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node2.user[X].lab.openshift.ch --schedulable 
+[ec2-user@master0 ~]$ oc adm manage-node node2.user[X].lab.openshift.ch --schedulable
 [root@master0 ~]$ vi /etc/ansible/hosts
 [nodes]
 master0.user[X].lab.openshift.ch openshift_hostname=master0.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
@@ -71,7 +71,7 @@ master1.user[X].lab.openshift.ch openshift_hostname=master1.user[X].lab.openshif
 node0.user[X].lab.openshift.ch openshift_hostname=node0.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 node1.user[X].lab.openshift.ch openshift_hostname=node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 node2.user[X].lab.openshift.ch openshift_hostname=node2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}"
-node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}" 
+node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}"
 
 ```
 Uncomment the new node from the new_nodes section.
@@ -113,7 +113,7 @@ Check if the host is available on ssh with Ansible and run the pre-install playb
 
 Now we can add the new master.
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-master/scaleup.yml 
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-master/scaleup.yml
 ```
 
 Let's check if the node daemon on the new master is ready
@@ -170,3 +170,10 @@ Uncomment the new master from the new_nodes and new_master section.
 
 Now, you need to add the new master as a target to your Load Balancers, so it receives traffic.
 
+---
+
+**End of Lab 3.3.5**
+
+<p width="100px" align="right"><a href="351_backup.md">Backup / Restore →</a></p>
+
+[← back to overview](../README.md)

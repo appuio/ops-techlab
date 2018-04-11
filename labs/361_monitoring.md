@@ -65,3 +65,11 @@ Next to the usual monitoring of storage per partition/logical volume, there's on
 
 ### Does our cluster have enough capacity to run all pods?
 
+
+---
+
+**End of Lab 3.6.1**
+
+<p width="100px" align="right"><a href="362_logs.md">Troubleshooting Using Logs →</a></p>
+
+[← back to overview](../README.md)

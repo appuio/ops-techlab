@@ -1,7 +1,7 @@
 Lab 3.3: Daily business
 ============
 
-Lab 3.3.1: User management 
+Lab 3.3.1: User management
 -------------
 ## Add user to project
 First we create a user and give him the admin role in the openshift-infra project.
@@ -19,7 +19,7 @@ Now login with the new user and check if you see the openshift-infra project
 ```
 [ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch:8443
 Username: test-user
-Password: 
+Password:
 Login successful.
 
 You have one project on this server: "openshift-infra"
@@ -47,7 +47,7 @@ Now you can try to login with the user and check if you see all projects
 [ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch:8443
 Authentication required for https://console.user6.lab.openshift.ch:8443 (openshift)
 Username: test-user
-Password: 
+Password:
 Login successful.
 
 You have access to the following projects and can switch between them with 'oc project <projectname>':
@@ -118,3 +118,11 @@ You can get all available clusterPolicies and clusterPoliciesBinding with the fo
 [ec2-user@master0 ~]$ oc describe clusterPolicy default
 [ec2-user@master0 ~]$ oc describe clusterPolicyBindings :default
 ```
+
+---
+
+**End of Lab 3.3.1**
+
+<p width="100px" align="right"><a href="332_update_host.md">Update Host →</a></p>
+
+[← back to overview](../README.md)

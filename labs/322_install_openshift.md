@@ -1,7 +1,7 @@
 Lab 3.2: Install Openshift Container Platform
 ============
 
-Lab 3.2.2:  Install Openshift
+Lab 3.2.2: Install Openshift
 -------------
 ## Installation of Openshift
 In the previous lab we prepared the Ansible inventory to fit our test lab environment. Now we can prepare and run the installation.
@@ -81,3 +81,11 @@ Create a project, run a build, push/pull from the internal registry and deploy a
 [ec2-user@master0 ~]$ oc get pods -w
 [ec2-user@master0 ~]$ oc delete project test
 ```
+
+---
+
+**End of Lab 3.2.2**
+
+<p width="100px" align="right"><a href="331_user_management.md">User management →</a></p>
+
+[← back to overview](../README.md)

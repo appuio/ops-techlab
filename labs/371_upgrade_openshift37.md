@@ -1,17 +1,17 @@
-Lab 3.5: Upgrade Openshift from 3.6 to 3.7
+Lab 3.7: Upgrade Openshift from 3.6 to 3.7
 ============
 
 In this techlab, we will upgrade our Openshifft 3.6 installation to Openshift 3.7
 
-Lab 3.5.1: Upgrade to latest Openshift 3.6 
+Lab 3.7.1: Upgrade to latest Openshift 3.6
 -------------
 Before upgrading to the next minor release, you need to upgrade to the latest asynchronous release of version 3.6.
 https://docs.openshift.com/container-platform/3.6/release_notes/ocp_3_6_release_notes.html#ocp-36-asynchronous-errata-updates
 
-The procedure is the same as upgrading to the next minor version. See next lab (Lab 3.5.2: Upgrade to latest Openshift 3.7) 
+The procedure is the same as upgrading to the next minor version. See next lab (Lab 3.5.2: Upgrade to latest Openshift 3.7)
 As our lab is already on the latest asynchronous release of version 3.6, we can proceed to upgrade to latest Openshift 3.7.
 
-Lab 3.5.2: Upgrade to latest Openshift 3.7
+Lab 3.7.2: Upgrade to latest Openshift 3.7
 -------------
 ## Upgrade preparation
 First we need to prepare our nodes and make sure, all instances have the new repository attached and the old removed.
@@ -21,7 +21,7 @@ First we need to prepare our nodes and make sure, all instances have the new rep
 [ec2-user@master0 ~]$ ansible all -m shell -a "yum clean all"
 ```
 
-Next we need to upgrade atomic-openshift-utils to version 3.7 on our first master. 
+Next we need to upgrade atomic-openshift-utils to version 3.7 on our first master.
 ```
 [ec2-user@master0 ~]$ sudo yum update -y atomic-openshift-utils
 ....
@@ -40,7 +40,7 @@ Updating for dependencies:
 
 Change the following Ansible variables in our Openshift inventory:
 ```
-[ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts 
+[ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 ....
 openshift_pkg_version=-3.7.42
 ....
@@ -53,7 +53,7 @@ openshift_release=v3.7
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_control_plane.yml
 ...
 ```
-2. Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes. 
+2. Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes.
 Upgrade "node0.[user].lab.openshift.ch":
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml --extra-vars "kubernetes.io/hostname=node0.[user].lab.openshift.ch"
@@ -90,7 +90,7 @@ If all volumes have "Number of entries: 0", we can proceed with the next node an
 
 5. To finish the upgrade it's best practice to run the config playbook
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml 
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
 
 6. If you are using the oc client outside of the Openshift Platform, you need to download the latest binary for the client and replace it. The binary is available for Linux, macOS and Windows. You can get it here:
@@ -99,14 +99,14 @@ https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
 Important: You need to tell all users of the platform to update their client.
 
-Lab 3.5.3: Verify upgrade
+Lab 3.7.3: Verify upgrade
 -------------
 Check rpm package version of docker and openshift on all nodes and master.
 ```
-[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi atomic-openshift | grep -i name -A1" 
-[ec2-user@master0 ~]$ ansible masters -m shell -a "rpm -qi atomic-openshift-master | grep -i name -A1" 
-[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi atomic-openshift-node | grep -i name -A1" 
-[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi docker | grep -i name -A3" 
+[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi atomic-openshift | grep -i name -A1"
+[ec2-user@master0 ~]$ ansible masters -m shell -a "rpm -qi atomic-openshift-master | grep -i name -A1"
+[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi atomic-openshift-node | grep -i name -A1"
+[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi docker | grep -i name -A3"
 ```
 
 Check image version of registry, router, metrics and logging
@@ -116,3 +116,9 @@ Check image version of registry, router, metrics and logging
 
 Now we need to verify our installation according to: "322_install_openshift => Verify Openshift installation"
 - 3.2.2 [Install OpenShift](322_install_openshift.md)
+
+---
+
+**End of Lab 3.7**
+
+[← back to overview](../README.md)

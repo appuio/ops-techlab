@@ -9,7 +9,7 @@ In this lab we take a look at the Openshift excluders, apply OS updates to all n
 
 During the installation of Openshift or when running the config Playbook, openshift removes and adds excludes for certain rpm packages. This can cause trouble during upgrade of non OSE packages.
 
-First, let's check if the excludes are set by Openshift on all nodes. Connect to the first master and run: 
+First, let's check if the excludes are set by Openshift on all nodes. Connect to the first master and run:
 ```
 [ec2-user@master0 ~]$ ansible all -m shell -a "grep exclude /etc/yum.conf"
 ...
@@ -67,7 +67,7 @@ Wait until the node becomes available again and schedule it again. Be careful, a
 
 Check if all pods will be properly created again on this node.
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node1.[user].lab.openshift.ch --list-pods 
+[ec2-user@master0 ~]$ oc adm manage-node node1.[user].lab.openshift.ch --list-pods
 
 Listing matched pods on node: node1.user6.lab.openshift.ch
 
@@ -78,3 +78,11 @@ logging-fluentd-s2k2j     1/1       Running   1          1h
 ```
 
 You need to repeat this steps on all other Instances to make sure, the whole cluster has the current OS Patches. Master don't need to be drained, as they are not scheduled and there are no running pods on them.
+
+---
+
+**End of Lab 3.3.2**
+
+<p width="100px" align="right"><a href="333_persistent_storage.md">Persistent storage →</a></p>
+
+[← back to overview](../README.md)
