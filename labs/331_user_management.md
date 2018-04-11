@@ -42,9 +42,9 @@ role "admin" removed: "test-user"
 [ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user cluster-admin test-user
 cluster role "cluster-admin" added: "test-user"
 ```
-Now you can try to login with the user and check if you see all projects
+Now you can try to login from your client with the user and check if you see all projects
 ```
-[ec2-user@master0 ~]$ oc login https://console.[user].lab.openshift.ch
+[localuser@localhost ~]$ oc login https://console.[user].lab.openshift.ch
 Authentication required for https://console.user6.lab.openshift.ch (openshift)
 Username: test-user
 Password:
