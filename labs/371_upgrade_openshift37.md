@@ -54,9 +54,9 @@ openshift_release=v3.7
 ...
 ```
 2. Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes.
-Upgrade "node0.[user].lab.openshift.ch":
+Upgrade "node0.user[X].lab.openshift.ch":
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml --extra-vars "kubernetes.io/hostname=node0.[user].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml --extra-vars "kubernetes.io/hostname=node0.user[X].lab.openshift.ch"
 ...
 ```
 
@@ -75,7 +75,7 @@ Number of entries: 0
 If all volumes have "Number of entries: 0", we can proceed with the next node and repeat the check of GlusterFS.
 
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e "kubernetes.io/hostname=node2.[user].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e "kubernetes.io/hostname=node2.user[X].lab.openshift.ch"
 ...
 ```
 3. Upgrading the EFK Logging Stack

@@ -48,14 +48,14 @@ First, let's look at how to use above checks to answer this second question.
 
 The health endpoint exposed by **masters** was accessed via load balancer in the first category in order to find out if the API is generally available. This time however we want to find out if at least one of the master APIs is unavailable, even if there still are some that are accessible. So we check every single master endpoint directly instead of via load balancer:
 ```
-$ for i in {0..2}; curl -v https://master${i}.userX.lab.openshift.ch/healthz; done
+$ for i in {0..2}; curl -v https://master${i}.user[X].lab.openshift.ch/healthz; done
 ```
 
 The **etcd** check above is already run against single members of the cluster and can therefore be applied here in the exact same form. The difference only is that we want to make sure every single member is running, not just the number needed to have quorum.
 
 The approach used for the masters also applies to the **HAProxy routers**. A router pod is effectively listening on the node's interface it is running on. So instead of connecting via load balancer, we use the nodes' IP addresses the router pods are running on. In our case, these are nodes 0 and 1:
 ```
-$ for i in {0..1}; curl -v http://node${i}.userX.lab.openshift.ch:1936/healthz; done
+$ for i in {0..1}; curl -v http://node${i}.user[X].lab.openshift.ch:1936/healthz; done
 ```
 
 As already mentioned, finding out if our cluster will remain in an operational state in the near future also includes some better known checks we could call a more conventional **components monitoring**.

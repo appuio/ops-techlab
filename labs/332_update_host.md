@@ -37,7 +37,7 @@ First login as cluster-admin and drain the first node.
 If you list all running pods on the node you should see, that just the DaemonSets (glusterfs-storage and logging-fluentd) are left.
 ```
 [ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --list-pods
-Listing matched pods on node: node1.user6.lab.openshift.ch
+Listing matched pods on node: node1.user[X].lab.openshift.ch
 
 NAME                      READY     STATUS    RESTARTS   AGE
 glusterfs-storage-1758r   1/1       Running   1          2d

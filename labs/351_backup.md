@@ -100,7 +100,7 @@ To make a consistent etcd backup, we need to login to the master and make a cold
 
 Check if the etcd cluster is healthy.
 ```
-[root@master0 ~]# etcdctl -C https://master0.[user].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
+[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
 member 92c764a37c90869 is healthy: got healthy result from https://172.31.46.235:2379
 cluster is healthy
 ```
@@ -139,23 +139,23 @@ The cluster is now initialized, so we need to remove the "--force-new-cluster" p
 
 Check if etcd is healthy again and check if "/openshift.io" exists in etcd
 ```
-[root@master0 ~]# etcdctl -C https://master0.[user].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
+[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
 member 92c764a37c90869 is healthy: got healthy result from https://127.0.0.1:2379
 cluster is healthy
-[root@master0 ~]# etcdctl -C https://master0.[user].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key ls /
+[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key ls /
 /openshift.io
 ```
 
 we need to change the peerURL of the etcd to it's private ip.
 ```
-[root@master0 ~]# etcdctl -C https://master0.[user].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
-92c764a37c90869: name=master0.[user].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
+[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
+92c764a37c90869: name=master0.user[X].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
 
-[root@master0 ~]# etcdctl -C https://master0.[user].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member update 6248d01c5701 https://[private_ip]:2379
+[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member update 6248d01c5701 https://[private_ip]:2379
 Updated member with ID 6248d01c5701 in cluster
 
-[root@master0 ~]# etcdctl -C https://master0.[user].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
-6248d01c5701: name=master0.[user].lab.openshift.ch peerURLs=https://172.31.46.201:2379 clientURLs=https://172.31.46.201:2379 isLeader=true
+[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
+6248d01c5701: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.201:2379 clientURLs=https://172.31.46.201:2379 isLeader=true
 ```
 
 ---
