@@ -55,7 +55,7 @@ node1.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5
 If everthing is ok, you can apply all OS patches and make a reboot.
 We exclude the Openshift repository, because these packages are managed by the Openshift playbooks.
 ```
-[ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m shell -a 'yum update -y'
+[ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m yum -a "name='*' state=latest"
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m shell -a 'systemctl reboot'
 ```
 
