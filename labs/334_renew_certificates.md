@@ -34,7 +34,7 @@ First, we check the current etcd certificates creation time.
         Validity
             Not Before: Mar 23 12:50:41 2018 GMT
             Not After : Mar 22 12:50:41 2023 GMT
-[ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/etcd.server.crt -text -noout | grep -i validity -A 2
+[ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
         Validity
             Not Before: Mar 23 12:51:34 2018 GMT
             Not After : Mar 22 12:51:35 2020 GMT
