@@ -54,7 +54,7 @@ node2.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5
 node3.user[X].lab.openshift.ch     Ready,SchedulingDisabled   1m        v1.6.1+5115d708d7
 ```
 
-Schedule the new node, drain another worker node and see, if the pods are running correctly on the new node. If you don't see any pod make sure there is at least one pod running in your Openshift.
+Schedule the new node, drain another worker node and see, if the pods are running correctly on the new node. If you don't see any pod make sure there is at least one "non-infra-pod" running in your Openshift.
 ```
 [ec2-user@master0 ~]$ oc adm manage-node node3.user[X].lab.openshift.ch --schedulable
 [ec2-user@master0 ~]$ oc adm drain node2.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
