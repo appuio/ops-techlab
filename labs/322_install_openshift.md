@@ -78,8 +78,8 @@ Create a project, run a build, push/pull from the internal registry and deploy a
 [ec2-user@master0 ~]$ oc new-project test
 [ec2-user@master0 ~]$ oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
 [ec2-user@master0 ~]$ oc get pods -w
-[ec2-user@master0 ~]$ oc delete project test
 ```
+We keep this project so we have one pod running in our Openshift. If you decide to create other projects/pods you may delete this project with `oc delete project test`.
 
 ---
 
