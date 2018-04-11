@@ -74,7 +74,7 @@ If you create a pvc, Heketi will automatically create a pv and bind it to your p
 Create a new project, set default storageclass and create a pvc
 ```
 [ec2-user@master0 ~]$ oc new-project test
-Now using project "test" on server "https://console.[user].lab.openshift.ch:8443".
+Now using project "test" on server "https://console.user[X].lab.openshift.ch:8443".
 ...
 [ec2-user@master0 ~]$ oc patch storageclass glusterfs-storage -p  '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 [ec2-user@master0 ~]$ cat <<EOF >pvc.yaml
