@@ -131,8 +131,74 @@ node3.user[X].lab.openshift.ch     Ready                      32m       v1.6.1+5
 
 Check if the old masters see the new master:
 ```
-[ec2-user@master0 ~]$ journalctl -u atomic-openshift-master-api | grep master2.user[X].lab.openshift.ch
-Apr 04 07:31:00 master0.user[X].lab.openshift.ch atomic-openshift-master-api[3626]: I0404 07:31:00.942109    3626 rest.go:324] Starting watch for /api/v1/nodes, rv=8732 labels= fields=metadata.name=master2.user[X].lab.openshift.ch timeout=9m10s
+[ec2-user@master0 ~]$ curl https://master2.user2.lab.openshift.ch
+{
+  "paths": [
+    "/api",
+    "/api/v1",
+    "/apis",
+    "/apis/apps",
+    "/apis/apps.openshift.io",
+    "/apis/apps.openshift.io/v1",
+    "/apis/apps/v1beta1",
+    "/apis/authentication.k8s.io",
+    "/apis/authentication.k8s.io/v1",
+    "/apis/authentication.k8s.io/v1beta1",
+    "/apis/authorization.k8s.io",
+    "/apis/authorization.k8s.io/v1",
+    "/apis/authorization.k8s.io/v1beta1",
+    "/apis/authorization.openshift.io",
+    "/apis/authorization.openshift.io/v1",
+    "/apis/autoscaling",
+    "/apis/autoscaling/v1",
+    "/apis/batch",
+    "/apis/batch/v1",
+    "/apis/batch/v2alpha1",
+    "/apis/build.openshift.io",
+    "/apis/build.openshift.io/v1",
+    "/apis/certificates.k8s.io",
+    "/apis/certificates.k8s.io/v1beta1",
+    "/apis/extensions",
+    "/apis/extensions/v1beta1",
+    "/apis/image.openshift.io",
+    "/apis/image.openshift.io/v1",
+    "/apis/network.openshift.io",
+    "/apis/network.openshift.io/v1",
+    "/apis/oauth.openshift.io",
+    "/apis/oauth.openshift.io/v1",
+    "/apis/policy",
+    "/apis/policy/v1beta1",
+    "/apis/project.openshift.io",
+    "/apis/project.openshift.io/v1",
+    "/apis/quota.openshift.io",
+    "/apis/quota.openshift.io/v1",
+    "/apis/rbac.authorization.k8s.io",
+    "/apis/rbac.authorization.k8s.io/v1beta1",
+    "/apis/route.openshift.io",
+    "/apis/route.openshift.io/v1",
+    "/apis/security.openshift.io",
+    "/apis/security.openshift.io/v1",
+    "/apis/storage.k8s.io",
+    "/apis/storage.k8s.io/v1",
+    "/apis/storage.k8s.io/v1beta1",
+    "/apis/template.openshift.io",
+    "/apis/template.openshift.io/v1",
+    "/apis/user.openshift.io",
+    "/apis/user.openshift.io/v1",
+    "/controllers",
+    "/healthz",
+    "/healthz/ping",
+    "/healthz/poststarthook/bootstrap-controller",
+    "/healthz/poststarthook/ca-registration",
+    "/healthz/ready",
+    "/metrics",
+    "/oapi",
+    "/oapi/v1",
+    "/swaggerapi",
+    "/version",
+    "/version/openshift"
+  ]
+}
 ...
 ```
 
