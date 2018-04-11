@@ -30,9 +30,9 @@ Using project "openshift-infra".
 ## Add cluster role to user
 If the user is a cluster admin we should delete the created rolebinding for the project and give him the global clusterPolicyBinding "cluster-admin" role.
 
-Login as system:admin
+Login as shushu
 ```
-[ec2-user@master0 ~]$ oc login -u system:admin
+[ec2-user@master0 ~]$ oc login -u shushu
 ```
 
 Add the cluster-admin role to the created user.
@@ -113,7 +113,7 @@ Delete the user and the group:
 
 You can get all available clusterPolicies and clusterPoliciesBinding with the following oc command.
 ```
-[ec2-user@master0 ~]$ oc login -u system:admin
+[ec2-user@master0 ~]$ oc login -u shushu
 
 [ec2-user@master0 ~]$ oc describe clusterPolicy default
 [ec2-user@master0 ~]$ oc describe clusterPolicyBindings :default
