@@ -18,19 +18,19 @@ In order to answer this first question, we check the state of different vital co
 
 Check the masters' health state with a HTTP request:
 ```
-$ curl -v https://console.userX.lab.openshift.ch/healthz
+$ curl -v https://console.user[X].lab.openshift.ch/healthz
 ```
 
 As long as the response is a 200 status code at least one of the masters is still working and the API is accessible via Load Balancer (if there is one).
 
 **etcd** also exposes a similar health endpoint at https://`openshift_master_cluster_public_hostname`:2379/health, though it is only accessible using the client certificate and corresponding key stored on the masters at `/etc/origin/master/master.etcd-client.crt` and `/etc/origin/master/master.etcd-client.key`.
 ```
-# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key https://master0.userX.lab.openshift.ch:2379/health
+# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key https://master0.user[X].lab.openshift.ch:2379/health
 ```
 
 The **HAProxy router pods** are responsible for getting application traffic into OpenShift. Similar to the masters, HAProxy also exposes a /healthz endpoint on port 1936 which can be checked with e.g.:
 ```
-$ curl -v http://router.appX.lab.openshift.ch:1936/healthz
+$ curl -v http://router.app[X].lab.openshift.ch:1936/healthz
 ```
 
 Using the wildcard domain to access a router's health page results in a positive answer if at least one router is up and running and that's all we want to know right now.
