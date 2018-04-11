@@ -47,7 +47,7 @@ https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
 
 ## Verify Openshift installation
-After the completion of the installation, we can verify, if everything is running as expected. Most of the checks are already been done by the playbooks.
+After the completion of the installation, we can verify, if everything is running as expected. Most of the checks have already been done by the playbooks.
 First check if the API reachable and all nodes are ready with the right tags.
 ```
 [ec2-user@master0 ~]$ oc get nodes --show-labels
