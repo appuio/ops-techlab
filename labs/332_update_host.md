@@ -52,7 +52,7 @@ node1.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5
 ...
 
 ```
-If everthing is ok, you can apply all OS patches and make a reboot.
+If everthing is ok, you can apply all OS patches and make a reboot. The first command can take a while and doesn't output anything until it's done.
 ```
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m yum -a "name='*' state=latest"
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m shell -a 'systemctl reboot'
