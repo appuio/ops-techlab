@@ -1,7 +1,7 @@
 Lab 3.5: Backup / Restore
 ============
 
-In this techlab, we will create a Backup and learn, where the important files to backup are located. The full state of a cluster installation includes:
+In this techlab you will learn how to create a new backup and which files are important. The following items should be backuped:
 
 - etcd data on each master
 - API objects (stored in etcd, but it's a good idea to regularly export all objects)
@@ -12,51 +12,33 @@ In this techlab, we will create a Backup and learn, where the important files to
 
 Lab 3.5.1: Master Backup files
 -------------
-All files that are recommended to make a backup on the master are located in the following folders:
+The following files should be backuped on all masters:
 
-Ansible inventory file, that contains the information, how the cluster is build.
-```
-/etc/ansible/hosts
-```
-
-Here are the master Configuration files, certificates and htpasswd located
-```
-/etc/origin/master/
-```
-These files should be backed up on all masters.
+- Ansible inventory file (contains information about the cluster): `/etc/ansible/hosts`
+- Configuration files (for the master), certificates and htpasswd: `/etc/origin/master/`
 
 Lab 3.5.2: Node Backup files
 -------------
-All files that are recommended to make a backup on the nodes are located in the following folders:
+Backup the following folders on all nodes:
 
-Node Configuration files
-```
-/etc/origin/node/
-```
-
-On each node are the certs from the docker-registry.
-```
-/etc/docker/certs.d/
-```
-
-These files should be backed up on all nodes.
-
+- Node Configuration files: `/etc/origin/node/`
+- Certificates for the docker-registry: `/etc/docker/certs.d/`
 
 Lab 3.5.3: Application Backup
 -------------
 
-To make a backup of the data in the persistent volumes, you need to backup the volumes of your storage environment. If you are using glusterfs, it's recommended to mount all volumes and use an existing backup software to make a backup of all files in those mounts.
+To backup the data in persistent volumes, you should mount them somewhere. If you mount a Glusterfs volume, it is guaranteed to be consistent. The bricks directly on the Glusterfs servers can contain small inconsistencies that Glusterfs hasn't synced to the other instances yet.
 
 Lab 3.5.4: Project Backup
 -------------
-It is advisable to Backup regularly all project data.
-Login to the first master and run the script. It will create a folders for each project with all Openshift API Objects in json.
+It is advisable to regularly backup all project data.
+The following script on the first master will export all the Openshift API Objects (in json) of all projects and save them to the filesystem.
 ```
 [ec2-user@master0 ~]$ /home/ec2-user/resource/openshift-project-backup.sh
 [ec2-user@master0 ~]$ ls -al /home/ec2-user/openshift_backup_*/projects
 ```
 
-We will now delete the logging project and try to restore it from our backup.
+We will now delete the logging project and try to restore it from the backup.
 ```
 [ec2-user@master0 ~]$ oc delete project logging
 ```
@@ -66,7 +48,7 @@ Check if the project is being deleted
 [ec2-user@master0 ~]$ oc get project logging
 ```
 
-Now we will restore the logging project from our backup
+Restore the logging project from the backup
 ```
 [ec2-user@master0 ~]$ oc new-project logging
 
@@ -77,12 +59,12 @@ Now we will restore the logging project from our backup
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/project.json
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/daemonset.json
 ```
-Check if all pods are becoming ready
+Check if the pods are coming up again
 ```
 [ec2-user@master0 ~]$ oc get pods -w
 ```
 
-If everything is ready, you can check, if you can login to Kibana and see that it's receiving logs again.
+If all the pods are ready, Kibana should be receiving logs again.
 ```
 https://logging.app[USERID].lab.openshift.ch
 ```
@@ -90,7 +72,7 @@ https://logging.app[USERID].lab.openshift.ch
 Lab 3.5.5: etcd Backup and complete Restore
 -------------
 ## Create etcd Backup
-To make a consistent etcd backup, we need to login to the master and make a cold backup of the etcd server:
+To ensure a consistent etcd backup, we need to stop the daemon. Since there are 3 etcd servers, there is no downtime. All the new data that gets written during this period gets synced after the etcd daemon is started again.
 ```
 [root@master0 ~]# systemctl stop etcd.service
 [root@master0 ~]# etcdctl backup --data-dir /var/lib/etcd/ --backup-dir etcd.bak
@@ -105,7 +87,6 @@ member 92c764a37c90869 is healthy: got healthy result from https://172.31.46.235
 cluster is healthy
 ```
 ## Restore etcd cluster
-We will restore the etcd cluster now.
 
 First, we need to stop etcd on the first master.
 ```
@@ -137,7 +118,7 @@ The cluster is now initialized, so we need to remove the "--force-new-cluster" p
 [root@master0 ~]# systemctl status etcd
 ```
 
-Check if etcd is healthy again and check if "/openshift.io" exists in etcd
+Check if etcd is healthy and check if "/openshift.io" exists in etcd
 ```
 [root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
 member 92c764a37c90869 is healthy: got healthy result from https://127.0.0.1:2379
