@@ -28,7 +28,7 @@ These excludes are set by using the official Openshift playbooks or when using t
 ```
 
 ## Apply OS patches to masters and nodes
-First login as cluster-admin and drain the first node (this deleten all pods, so they migrate to other nodes and also disables scheduling). 
+First login as cluster-admin and drain the first node (this deletes all pods, so they migrate to other nodes and also disables scheduling of new pods on the node). 
 ```
 [ec2-user@master0 ~]$ oc get nodes
 [ec2-user@master0 ~]$ oc adm drain node1.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
