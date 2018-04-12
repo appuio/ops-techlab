@@ -3,7 +3,7 @@ Lab 3.3: Daily business
 
 Lab 3.3.5: Add a new OpenShift node and master
 -------------
-In this lab we take a look how to add a new node and a new master to our Openshift Cluster.
+In this lab we will add a new node and master to our Openshift Cluster.
 
 ## Scaleup node
 Uncomment the new_node (node3.user) in the Ansible inventory and uncomment new_nodes in the "[OSEv3:children]" section.
@@ -20,24 +20,22 @@ node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch
 ...
 
 ```
-Host preparation
-
-We will run an Ansible playbook, that will install all the required prerequisites and recommendations.
-- Enable the required Repos
--- rhel-7-server-rpms
--- rhel-7-server-extras-rpms
--- rhel-7-server-optional-rpms
--- rhel-7-fast-datapath-rpms
--- rhel-7-server-ose-3.6
+Like in lab 3.2.2 we need to run an Ansible playbook to prepare the new node for the Openshift installation.
+- Enable the required Repos:
+  - rhel-7-server-rpms
+  - rhel-7-server-extras-rpms
+  - rhel-7-server-optional-rpms
+  - rhel-7-fast-datapath-rpms
+  - rhel-7-server-ose-3.6
 - Install prerequisites packages https://docs.openshift.com/container-platform/3.6/install_config/install/host_preparation.html#installing-base-packages
 
-Check if the hosts are available on ssh with Ansible and run the pre-install playbook.
+Test the ssh connection and run the pre-install playbook.
 ```
 [ec2-user@master0 ~]$ ansible node3.user[X].lab.openshift.ch -m ping
 [ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=node3.user[X].lab.openshift.ch
 ```
 
-Now we can run the scaleup playbook provided by Red Hat for the node scaleup.
+Now scaleup the new node with the playbook provided by Red Hat.
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-node/scaleup.yml
 ```
