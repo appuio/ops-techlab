@@ -31,12 +31,12 @@ Run the installation in three steps.
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
 ```
 
-4. Add the cluster-admin role to the "shushu" user.
+4. Add the cluster-admin role to the "sheriff" user.
 ```
-[ec2-user@master0 ~]$ oc adm policy --as system:admin add-cluster-role-to-user cluster-admin shushu
+[ec2-user@master0 ~]$ oc adm policy --as system:admin add-cluster-role-to-user cluster-admin sheriff
 ```
 
-5. Now open your browser and access the master API with the user "shushu". Password is documented in the Ansible inventory.
+5. Now open your browser and access the master API with the user "sheriff". Password is documented in the Ansible inventory.
 ```
 https://console.user[X].lab.openshift.ch/console/
 ```
