@@ -42,9 +42,9 @@ Change the following Ansible variables in our Openshift inventory:
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 ....
-openshift_pkg_version=-3.7.42
-....
 openshift_release=v3.7
+....
+openshift_pkg_version=-3.7.42
 ```
 
 ## Upgrade procedure
