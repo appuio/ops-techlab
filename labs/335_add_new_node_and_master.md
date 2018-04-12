@@ -131,7 +131,7 @@ node3.user[X].lab.openshift.ch     Ready                      32m       v1.6.1+5
 
 Check if the old masters see the new master:
 ```
-[ec2-user@master0 ~]$ curl https://master2.user2.lab.openshift.ch
+[ec2-user@master0 ~]$ curl https://master2.user[X].lab.openshift.ch
 {
   "paths": [
     "/api",
