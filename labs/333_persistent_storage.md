@@ -68,15 +68,26 @@ Show the whole topology
 ...
 ```
 
-## Create and delete a pv
+## Set default storage class
+A StorageClass provides a way to describe a certain type of storage. Different classes might map to different storage types (e.g. nfs, gluster, ...), quality-of-service levels, to backup policies, or to arbitrary policies determined by the cluster administrators. In our case we only have one storage class which is `glusterfs-storage`:
+```
+[ec2-user@master0 ~]$ oc get storageclass
+```
+
+By setting the anotation `storageclass.kubernetes.io/is-default-class` on a StorageClass we set the DefaultStorageClass. In our case we set the default to `glusterfs-storage`:
+```
+[ec2-user@master0 ~]$ oc patch storageclass glusterfs-storage -p  '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+If then someone creates a pvc and does not specify the StorageClass, the [DefaultStorageClass admission controller](https://kubernetes.io/docs/admin/admission-controllers/#defaultstorageclass) does automatically set the StorageClass to the DefaultStorageClass, which is `glusterfs-storage` in our case.
+
+## Create and delete a pvc
 If you create a pvc, Heketi will automatically create a pv and bind it to your pvc. Also if you delete a pvc, Heketi will delete the pv.
 
-Create a new project, set default storageclass and create a pvc
+Create a new project and create a pvc
 ```
 [ec2-user@master0 ~]$ oc new-project test
 Now using project "test" on server "https://console.user[X].lab.openshift.ch:8443".
 ...
-[ec2-user@master0 ~]$ oc patch storageclass glusterfs-storage -p  '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 [ec2-user@master0 ~]$ cat <<EOF >pvc.yaml
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
