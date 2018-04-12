@@ -16,9 +16,9 @@ Lab 3.7.2: Upgrade to latest Openshift 3.7
 ## Upgrade preparation
 First we need to prepare our nodes and make sure, all instances have the new repository attached and the old removed.
 ```
-[ec2-user@master0 ~]$ ansible all -m shell -a "subscription-manager refresh"
-[ec2-user@master0 ~]$ ansible all -m shell -a 'subscription-manager repos --disable="rhel-7-server-ose-3.6-rpms" --enable="rhel-7-server-ose-3.7-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-fast-datapath-rpms"'
-[ec2-user@master0 ~]$ ansible all -m shell -a "yum clean all"
+[ec2-user@master0 ~]$ ansible all -a "subscription-manager refresh"
+[ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos --disable="rhel-7-server-ose-3.6-rpms" --enable="rhel-7-server-ose-3.7-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-fast-datapath-rpms"'
+[ec2-user@master0 ~]$ ansible all -a "yum clean all"
 ```
 
 Next we need to upgrade atomic-openshift-utils to version 3.7 on our first master.
