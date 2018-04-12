@@ -18,8 +18,8 @@ exclude= tuned-profiles-atomic-openshift-node  atomic-openshift-tests  atomic-op
 ...
 ```
 
-These excludes are set by using the official Openshift playbooks or when using the binary atomic-openshift-excluder and atomic-openshift-docker-excluder directly.
-We remove now the excludes and set it again for demonstration purpose. This is sometimes required, if you need to patch a system without using the Openshift playbooks and there are dependency errors.
+These excludes are set by using the official Openshift playbooks or when using the binary atomic-openshift-excluder and atomic-openshift-docker-excluder directly. For demonstration purposes, we will now remove and set the excludes again. This is required if you are manually patching a system or there are dependency errors. 
+
 ```
 [ec2-user@master0 ~]$ ansible all -m shell -a "atomic-openshift-excluder unexclude && atomic-openshift-docker-excluder unexclude"
 [ec2-user@master0 ~]$ ansible all -m shell -a "grep exclude /etc/yum.conf"
@@ -28,13 +28,13 @@ We remove now the excludes and set it again for demonstration purpose. This is s
 ```
 
 ## Apply OS patches to masters and nodes
-First login as cluster-admin and drain the first node.
+First login as cluster-admin and drain the first node (this deleten all pods, so they migrate to other nodes and also disables scheduling). 
 ```
 [ec2-user@master0 ~]$ oc get nodes
 [ec2-user@master0 ~]$ oc adm drain node1.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
 ```
 
-If you list all running pods on the node you should see, that just the DaemonSets (glusterfs-storage and logging-fluentd) are left.
+After draining a node, only the DaemonSets (glusterfs-storage and logging-fluentd) should be left running on the node.
 ```
 [ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --list-pods
 Listing matched pods on node: node1.user[X].lab.openshift.ch
@@ -44,7 +44,7 @@ glusterfs-storage-1758r   1/1       Running   1          2d
 logging-fluentd-s2k2j     1/1       Running   0          1h
 ```
 
-Let's check if the node is unscheduled.
+The node should now be unscheduled.
 ```
 [ec2-user@master0 ~]$ oc get nodes
 ...
@@ -52,19 +52,19 @@ node1.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5
 ...
 
 ```
-If everthing is ok, you can apply all OS patches and make a reboot.
+If everything looks ok, you can update the node and restart.
 ```
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m yum -a "name='*' state=latest"
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m shell -a 'systemctl reboot'
 ```
 
-Wait until the node becomes available again and schedule it again. Be careful, as it takes some time, until the node becomes unready.
+After the node becomes ready, set it schedulable again. Don't do this before the node has rebooted (the node can take a while to change to unready, during the reboot)
 ```
 [ec2-user@master0 ~]$ oc get nodes -w
 [ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --schedulable
 ```
 
-Check if all pods will be properly created again on this node.
+Check that pods are correctly starting.
 ```
 [ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --list-pods
 
@@ -76,7 +76,7 @@ router-1-cc21f            1/1       Running   0          4m
 logging-fluentd-s2k2j     1/1       Running   1          1h
 ```
 
-You need to repeat this steps on all other Instances to make sure, the whole cluster has the current OS Patches. Master don't need to be drained, as they are not scheduled and there are no running pods on them.
+Since we want to update the whole cluster, you will need to repeat these steps on all the instances. Masters don't need to be drained, because they do not run any pods (unschedulable by default).
 
 ---
 
