@@ -52,7 +52,7 @@ node1.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5
 ...
 
 ```
-If everything looks ok, you can update the node and restart.
+If everything looks ok, you can update the node and restart. The first command can take a while and doesn't output anything until it's done.
 ```
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m yum -a "name='*' state=latest"
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m shell -a 'systemctl reboot'
