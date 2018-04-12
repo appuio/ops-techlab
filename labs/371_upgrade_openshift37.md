@@ -68,7 +68,7 @@ usterfs-storage-b9xdl                       1/1       Running   0          23m  
 glusterfs-storage-lll7g                       1/1       Running   0          23m       172.31.43.209   node1.user6.lab.openshift.ch
 glusterfs-storage-mw5sz                       1/1       Running   0          23m       172.31.34.222   node2.user6.lab.openshift.ch
 [ec2-user@master0 ~]$ oc rsh <GlusterFS_pod_name>
-[ec2-user@master0 ~]$ for vol in `gluster volume list`; do gluster volume heal $vol info; done | grep -i "number of entries"
+sh-4.2# for vol in `gluster volume list`; do gluster volume heal $vol info; done | grep -i "number of entries"
 Number of entries: 0
 ```
 
