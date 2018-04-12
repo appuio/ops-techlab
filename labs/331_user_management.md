@@ -7,7 +7,7 @@ Lab 3.3.1: User management
 First we create a user and give him the admin role in the openshift-infra project.
 Login to the master and create the local user
 ```
-[ec2-user@master0 ~]$ sudo htpasswd -c /etc/origin/master/htpasswd test-user
+[ec2-user@master0 ~]$ sudo htpasswd /etc/origin/master/htpasswd test-user
 ```
 
 Add the admin role of the project openshift-infra to the created user.
