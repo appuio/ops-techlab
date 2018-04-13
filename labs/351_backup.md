@@ -48,7 +48,7 @@ Check if the project is being deleted
 [ec2-user@master0 ~]$ oc get project logging
 ```
 
-Restore the logging project from the backup
+Restore the logging project from the backup. Some objects still exist, because they are not namespaced and therefore not deleted. You will see during the restore, that these object will not be replaced.
 ```
 [ec2-user@master0 ~]$ oc new-project logging
 
@@ -59,6 +59,24 @@ Restore the logging project from the backup
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/project.json
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/daemonset.json
 ```
+
+Scale the logging components.
+```
+[ec2-user@master0 ~]$ oc get dc
+NAME                  REVISION   DESIRED   CURRENT   TRIGGERED BY
+logging-curator       5          1         1         config
+logging-es-a4nhrowo   5          1         1         config
+logging-kibana        7          1         0         config
+
+
+[ec2-user@master0 ~]$ oc scale dc logging-kibana --replicas=0
+[ec2-user@master0 ~]$ oc scale dc logging-curator --replicas=0
+[ec2-user@master0 ~]$ oc scale dc logging-es-[HASH] --replicas=0
+[ec2-user@master0 ~]$ oc scale dc logging-kibana --replicas=1
+[ec2-user@master0 ~]$ oc scale dc logging-curator --replicas=1
+[ec2-user@master0 ~]$ oc scale dc logging-es-[HASH] --replicas=1
+``` 
+
 Check if the pods are coming up again
 ```
 [ec2-user@master0 ~]$ oc get pods -w
