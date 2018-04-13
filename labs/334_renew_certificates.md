@@ -82,6 +82,9 @@ You can use the following playbooks to replace the certificates of the other mai
      -    /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-node-certificates.yml
 -    registry
      -    /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-registry-certificates.yml
+
+[Warning: Do not replace the router certificates with the following playbook. It will break your routers running on Openshift 3.6. If you like to replace the router certificates, you can use try after upgrading to Openshift 3.7.]
+[Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1490186]
 -    router
      -    /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-router-certificates.yml
 
