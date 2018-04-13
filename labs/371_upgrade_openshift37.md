@@ -88,12 +88,17 @@ If all volumes have "Number of entries: 0", we can proceed with the next node an
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
 ```
 
-5. To finish the upgrade it's best practice to run the config playbook
+5. Update the client package on all masters. We need to unexclude and exclude the openshift packages in order to update.
+```
+[ec2-user@master0 ~]$ ansible masters -a "yum install --assumeyes --disableexcludes=all atomic-openshift-clients-redistributable"
+```
+
+6. To finish the upgrade it's best practice to run the config playbook
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
 
-6. If you are using the oc client outside of the Openshift Platform, you need to download the latest binary for the client and replace it. The binary is available for Linux, macOS and Windows. You can get it here:
+7. If you are using the oc client outside of the Openshift Platform, you need to download the latest binary for the client and replace it. The binary is available for Linux, macOS and Windows. You can get it here:
 ```
 https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
