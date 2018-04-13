@@ -88,11 +88,9 @@ If all volumes have "Number of entries: 0", we can proceed with the next node an
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
 ```
 
-5. Update the client package on all master. We need to unexclude and exclude the openshift packages in order to update.
+5. Update the client package on all masters. We need to unexclude and exclude the openshift packages in order to update.
 ```
-[ec2-user@master0 ~]$ ansible masters -a "atomic-openshift-excluder unexclude"
-[ec2-user@master0 ~]$ ansible masters -m yum -a "name=atomic-openshift-clients-redistributable state=latest"
-[ec2-user@master0 ~]$ ansible masters -a "atomic-openshift-excluder exclude"
+[ec2-user@master0 ~]$ ansible masters -a "yum install --assumeyes --disableexcludes=all atomic-openshift-clients-redistributable"
 ```
 
 6. To finish the upgrade it's best practice to run the config playbook
