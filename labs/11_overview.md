@@ -2,7 +2,7 @@
 
 This is the environment we will build and work on. It is deployed on Amazon AWS.
 
-![Lab OpenShift cluster overview](11_ops-techlab.png)
+![Lab OpenShift cluster overview](../resources/11_ops-techlab.png)
 
 Out lab Platform consist of the following components:
 1. Two AWS | Elastic Load Balancer
