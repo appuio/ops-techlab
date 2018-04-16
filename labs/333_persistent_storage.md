@@ -3,7 +3,7 @@ Lab 3.3: Daily business
 
 Lab 3.3.3: Persistent storage
 -------------
-In this lab we take a look at the Openshift implementation of Container Native Storage using the heketi-cli to resize a volume.
+In this lab we take a look at the OpenShift implementation of Container Native Storage using the heketi-cli to resize a volume.
 
 ## heketi-cli
 First we need to install the Heketi client rpm. We will use the client from the community upstream project for this lab. In production enviroment, you should use the client, provided by RedHat.

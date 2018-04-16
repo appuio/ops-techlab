@@ -3,7 +3,7 @@ Lab 3.3: Daily business
 
 Lab 3.3.4: Renew certificates
 -------------
-In this lab we take a look at the Openshift certificates and how to renew them.
+In this lab we take a look at the OpenShift certificates and how to renew them.
 
 These are the main certificates, that needs to be maintained. For each component there is playbook provided by Red Hat, that will redeploy the certificates:
 -    masters (API server and controllers)
@@ -72,7 +72,7 @@ Now you can check, if the server certificate is also replaced.
 ```
 
 ## Replace the other main certificates
-You can use the following playbooks to replace the certificates of the other main components on Openshift:
+You can use the following playbooks to replace the certificates of the other main components on OpenShift:
 -    masters (API server and controllers)
      -    /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-master-certificates.yml
 -    etcd

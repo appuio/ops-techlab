@@ -32,7 +32,7 @@ To backup the data in persistent volumes, you should mount them somewhere. If yo
 Lab 3.5.4: Project Backup
 -------------
 It is advisable to regularly backup all project data.
-The following script on the first master will export all the Openshift API Objects (in json) of all projects and save them to the filesystem.
+The following script on the first master will export all the OpenShift API Objects (in json) of all projects and save them to the filesystem.
 ```
 [ec2-user@master0 ~]$ /home/ec2-user/resource/openshift-project-backup.sh
 [ec2-user@master0 ~]$ ls -al /home/ec2-user/openshift_backup_*/projects

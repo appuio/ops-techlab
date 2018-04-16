@@ -1,13 +1,13 @@
-Lab 3.2: Install Openshift Container Platform
+Lab 3.2: Install OpenShift Container Platform
 ============
 
-Lab 3.2.2: Install Openshift
+Lab 3.2.2: Install OpenShift
 -------------
-## Installation of Openshift
+## Installation of OpenShift
 In the previous lab we prepared the Ansible inventory to fit our test lab environment. Now we can prepare and run the installation.
 
 Now we run the pre-install.yml playbook. This will do the following:
-- Attach all needed repositories for the installation of Openshift on all nodes
+- Attach all needed repositories for the installation of OpenShift on all nodes
 - Install the prerequisite packages: wget git net-tools bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
 - Enable iptables on all nodes
 - Enable Ansible ssh pipelining (performance improvements for Ansible)
@@ -16,17 +16,17 @@ Now we run the pre-install.yml playbook. This will do the following:
 ```
 
 Run the installation in three steps.
-1. Install Openshift. This takes a while, get a coffee.
+1. Install OpenShift. This takes a while, get a coffee.
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
 
-2. Deploy the Openshift metrics
+2. Deploy the OpenShift metrics
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
 ```
 
-3. Deploy the Openshift logging
+3. Deploy the OpenShift logging
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
 ```
@@ -46,14 +46,14 @@ https://console.user[X].lab.openshift.ch/console/
 https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
 
-## Verify Openshift installation
+## Verify OpenShift installation
 After the completion of the installation, we can verify, if everything is running as expected. Most of the checks have already been done by the playbooks.
 First check if the API reachable and all nodes are ready with the right tags.
 ```
 [ec2-user@master0 ~]$ oc get nodes --show-labels
 ```
 
-Check if all pods are running and if Openshift could deploy all needed components
+Check if all pods are running and if OpenShift could deploy all needed components
 ```
 [ec2-user@master0 ~]$ oc get pods --all-namespaces
 ```
@@ -79,7 +79,7 @@ Create a project, run a build, push/pull from the internal registry and deploy a
 [ec2-user@master0 ~]$ oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
 [ec2-user@master0 ~]$ oc get pods -w
 ```
-We keep this project so we have one pod running in our Openshift. If you decide to create other projects/pods you may delete this project with `oc delete project test`.
+We keep this project so we have one pod running in our OpenShift. If you decide to create other projects/pods you may delete this project with `oc delete project test`.
 
 ---
 
