@@ -128,6 +128,6 @@ You can get all available clusterPolicies and clusterPoliciesBinding with the fo
 
 **End of lab 3.1**
 
-<p width="100px" align="right"><a href="32_update_host.md">3.2 Update hosts →</a></p>
+<p width="100px" align="right"><a href="32_update_hosts.md">3.2 Update hosts →</a></p>
 
 [← back to the chapter overview](30_daily_business.md)

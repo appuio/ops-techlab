@@ -5,9 +5,9 @@ In this chapter, we will upgrade OpenShift 3.6 to 3.7.
 
 ## Chapter content
 
-* [7.1: ](71_upgrade_openshift36.md)
-* [7.2: ](72_upgrade_openshift37.md)
-* [7.3: ](73_upgrade_verification.md)
+* [7.1: Upgrade to the latest version of OpenShift 3.6](71_upgrade_openshift36.md)
+* [7.2: Upgrade to OpenShift 3.7](72_upgrade_openshift37.md)
+* [7.3: Verify the upgrade](73_upgrade_verification.md)
 
 ---
 

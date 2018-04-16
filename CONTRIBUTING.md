@@ -1,4 +1,4 @@
-# How to contribute to the OpenShift Operations Techlab
+# How to contribute to the APPUiO OpenShift OPStechlab
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
