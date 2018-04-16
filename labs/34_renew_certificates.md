@@ -1,7 +1,7 @@
-Lab 3.3: Daily business
+Lab 3: Daily business
 ============
 
-Lab 3.3.4: Renew certificates
+Lab 3.4: Renew certificates
 -------------
 In this lab we take a look at the OpenShift certificates and how to renew them.
 
@@ -87,8 +87,8 @@ You can use the following playbooks to replace the certificates of the other mai
 
 ---
 
-**End of Lab 3.3.4**
+**End of Lab 3.4**
 
-<p width="100px" align="right"><a href="335_add_new_node_and_master.md">Add a new OpenShift node and master →</a></p>
+<p width="100px" align="right"><a href="35_add_new_node_and_master.md">Add a new OpenShift node and master →</a></p>
 
 [← back to overview](../README.md)

@@ -1,7 +1,7 @@
-Lab 3.3: Daily business
+Lab 3: Daily business
 ============
 
-Lab 3.3.1: User management
+Lab 3.1: User management
 -------------
 ## Add user to project
 First we create a user and give him the admin role in the openshift-infra project.
@@ -121,8 +121,8 @@ You can get all available clusterPolicies and clusterPoliciesBinding with the fo
 
 ---
 
-**End of Lab 3.3.1**
+**End of Lab 3.1**
 
-<p width="100px" align="right"><a href="332_update_host.md">Update Host →</a></p>
+<p width="100px" align="right"><a href="32_update_host.md">Update Host →</a></p>
 
 [← back to overview](../README.md)

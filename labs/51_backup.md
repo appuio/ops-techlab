@@ -1,4 +1,4 @@
-Lab 3.5: Backup / Restore
+Lab 5: Backup / Restore
 ============
 
 In this techlab you will learn how to create a new backup and which files are important. The following items should be backuped:
@@ -10,26 +10,26 @@ In this techlab you will learn how to create a new backup and which files are im
 - Certificates
 - Ansible hosts file
 
-Lab 3.5.1: Master Backup files
+Lab 5.1: Master Backup files
 -------------
 The following files should be backuped on all masters:
 
 - Ansible inventory file (contains information about the cluster): `/etc/ansible/hosts`
 - Configuration files (for the master), certificates and htpasswd: `/etc/origin/master/`
 
-Lab 3.5.2: Node Backup files
+Lab 5.2: Node Backup files
 -------------
 Backup the following folders on all nodes:
 
 - Node Configuration files: `/etc/origin/node/`
 - Certificates for the docker-registry: `/etc/docker/certs.d/`
 
-Lab 3.5.3: Application Backup
+Lab 5.3: Application Backup
 -------------
 
 To backup the data in persistent volumes, you should mount them somewhere. If you mount a Glusterfs volume, it is guaranteed to be consistent. The bricks directly on the Glusterfs servers can contain small inconsistencies that Glusterfs hasn't synced to the other instances yet.
 
-Lab 3.5.4: Project Backup
+Lab 5.4: Project Backup
 -------------
 It is advisable to regularly backup all project data.
 The following script on the first master will export all the OpenShift API Objects (in json) of all projects and save them to the filesystem.
@@ -87,7 +87,7 @@ If all the pods are ready, Kibana should be receiving logs again.
 https://logging.app[USERID].lab.openshift.ch
 ```
 
-Lab 3.5.5: etcd Backup and complete Restore
+Lab 5.5: etcd Backup and complete Restore
 -------------
 ## Create etcd Backup
 To ensure a consistent etcd backup, we need to stop the daemon. Since there are 3 etcd servers, there is no downtime. All the new data that gets written during this period gets synced after the etcd daemon is started again.
@@ -160,8 +160,8 @@ Updated member with ID 6248d01c5701 in cluster
 
 ---
 
-**End of Lab 3.5**
+**End of Lab 5**
 
-<p width="100px" align="right"><a href="360_monitoring_troubleshooting.md">Monitoring and Troubleshooting →</a></p>
+<p width="100px" align="right"><a href="60_monitoring_troubleshooting.md">Monitoring and Troubleshooting →</a></p>
 
 [← back to overview](../README.md)

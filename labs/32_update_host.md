@@ -1,7 +1,7 @@
-Lab 3.3: Daily business
+Lab 3: Daily business
 ============
 
-Lab 3.3.2: Update Host
+Lab 3.2: Update Host
 -------------
 
 ## OpenShift excluder
@@ -80,8 +80,8 @@ Since we want to update the whole cluster, you will need to repeat these steps o
 
 ---
 
-**End of Lab 3.3.2**
+**End of Lab 3.2**
 
-<p width="100px" align="right"><a href="333_persistent_storage.md">Persistent storage →</a></p>
+<p width="100px" align="right"><a href="33_persistent_storage.md">Persistent storage →</a></p>
 
 [← back to overview](../README.md)

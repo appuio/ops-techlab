@@ -1,7 +1,7 @@
-Lab 3.2: Install OpenShift Container Platform
+Lab 2: Install OpenShift Container Platform
 ============
 
-Lab 3.2.1: Create Ansible inventory
+Lab 2.1: Create Ansible inventory
 -------------
 In this lab, we will verify the Ansible inventory file, so it fits our lab cluster. The Inventory file describes, how the cluster will be built.
 First we will download the default example hosts file from the OpenShift GitHub repository and compare it to the prepared inventory for the lab. We will use the default OpenShift 3.7 template, as we will later upgrade to OCP 3.7 and like this we already have the right variables in place.
@@ -46,8 +46,8 @@ As we can see there are the following differences:
 
 ---
 
-**End of Lab 3.2.1**
+**End of Lab 2.1**
 
-<p width="100px" align="right"><a href="322_install_openshift.md">Install Openshift →</a></p>
+<p width="100px" align="right"><a href="22_install_openshift.md">Install Openshift →</a></p>
 
 [← back to overview](../README.md)

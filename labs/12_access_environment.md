@@ -1,7 +1,7 @@
-Lab 3.1: Warmup
+Lab 1: Warmup
 ============
 
-Lab 3.1.2: Learn how to access the lab environment
+Lab 1.2: Learn how to access the lab environment
 -------------
 We will write "user[X]" during the labs for user specific documentations. Everybody gets an ID an needs to use this ID, to use his environment.
 
@@ -23,8 +23,8 @@ There are three main ways we will access our environment. These ports need to be
 
 ---
 
-**End of Lab 3.1.2**
+**End of Lab 1.2**
 
-<p width="100px" align="right"><a href="321_ansible_hostsfile.md">Create Ansible inventory →</a></p>
+<p width="100px" align="right"><a href="21_ansible_hostsfile.md">Create Ansible inventory →</a></p>
 
 [← back to overview](../README.md)

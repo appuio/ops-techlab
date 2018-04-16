@@ -1,7 +1,7 @@
-Lab 3.2: Install OpenShift Container Platform
+Lab 2: Install OpenShift Container Platform
 ============
 
-Lab 3.2.2: Install OpenShift
+Lab 2.2: Install OpenShift
 -------------
 ## Installation of OpenShift
 In the previous lab we prepared the Ansible inventory to fit our test lab environment. Now we can prepare and run the installation.
@@ -83,8 +83,8 @@ We keep this project so we have one pod running in our OpenShift. If you decide 
 
 ---
 
-**End of Lab 3.2.2**
+**End of Lab 2.2**
 
-<p width="100px" align="right"><a href="331_user_management.md">User management →</a></p>
+<p width="100px" align="right"><a href="31_user_management.md">User management →</a></p>
 
 [← back to overview](../README.md)

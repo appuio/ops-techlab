@@ -1,7 +1,7 @@
-Lab 3.3: Daily business
+Lab 3: Daily business
 ============
 
-Lab 3.3.5: Add a new OpenShift node and master
+Lab 3.5: Add a new OpenShift node and master
 -------------
 In this lab we will add a new node and master to our OpenShift Cluster.
 
@@ -20,7 +20,7 @@ node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch
 ...
 
 ```
-Like in lab 3.2.2 we need to run an Ansible playbook to prepare the new node for the OpenShift installation.
+Like in lab 2.2 we need to run an Ansible playbook to prepare the new node for the OpenShift installation.
 - Enable the required Repos:
   - rhel-7-server-rpms
   - rhel-7-server-extras-rpms
@@ -236,8 +236,8 @@ Now, you need to add the new master as a target to your Load Balancers, so it re
 
 ---
 
-**End of Lab 3.3.5**
+**End of Lab 3.5**
 
-<p width="100px" align="right"><a href="351_backup.md">Backup / Restore →</a></p>
+<p width="100px" align="right"><a href="51_backup.md">Backup / Restore →</a></p>
 
 [← back to overview](../README.md)

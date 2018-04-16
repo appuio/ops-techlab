@@ -1,17 +1,17 @@
-Lab 3.7: Upgrade OpenShift from 3.6 to 3.7
+Lab 7: Upgrade OpenShift from 3.6 to 3.7
 ============
 
 In this techlab, we will upgrade our Openshifft 3.6 installation to OpenShift 3.7
 
-Lab 3.7.1: Upgrade to latest OpenShift 3.6
+Lab 7.1: Upgrade to latest OpenShift 3.6
 -------------
 Before upgrading to the next minor release, you need to upgrade to the latest asynchronous release of version 3.6.
 https://docs.openshift.com/container-platform/3.6/release_notes/ocp_3_6_release_notes.html#ocp-36-asynchronous-errata-updates
 
-The procedure is the same as upgrading to the next minor version. See next lab (Lab 3.5.2: Upgrade to latest OpenShift 3.7)
+The procedure is the same as upgrading to the next minor version. See next lab (Lab 7.2: Upgrade to latest OpenShift 3.7)
 As our lab is already on the latest asynchronous release of version 3.6, we can proceed to upgrade to latest OpenShift 3.7.
 
-Lab 3.7.2: Upgrade to latest OpenShift 3.7
+Lab 7.2: Upgrade to latest OpenShift 3.7
 -------------
 ## Upgrade preparation
 First we need to prepare our nodes and make sure, all instances have the new repository attached and the old removed.
@@ -99,7 +99,7 @@ https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
 Important: You need to tell all users of the platform to update their client.
 
-Lab 3.7.3: Verify upgrade
+Lab 7.3: Verify upgrade
 -------------
 Check rpm package version of docker and openshift on all nodes and master.
 ```
@@ -114,11 +114,11 @@ Check image version of registry, router, metrics and logging
 [ec2-user@master0 ~]$ oc get pod -o yaml --all-namespaces | grep -i "image:.*.openshift3"
 ```
 
-Now we need to verify our installation according to: "322_install_openshift => Verify OpenShift installation"
-- 3.2.2 [Install OpenShift](322_install_openshift.md)
+Now we need to verify our installation according to: "22_install_openshift => Verify OpenShift installation"
+- 2.2 [Install OpenShift](22_install_openshift.md)
 
 ---
 
-**End of Lab 3.7**
+**End of Lab 7**
 
 [← back to overview](../README.md)

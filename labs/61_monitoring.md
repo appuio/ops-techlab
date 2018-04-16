@@ -1,4 +1,4 @@
-## Lab 3.6.1: Monitoring
+## Lab 6.1: Monitoring
 
 OpenShift monitoring can be categorized into three different categories which each try to answer their own question:
 1. Is our cluster in an operational state right now?
@@ -70,8 +70,8 @@ Speaking of garbage collection, there's another component that needs frequent ga
 
 ---
 
-**End of Lab 3.6.1**
+**End of Lab 6.1**
 
-<p width="100px" align="right"><a href="362_logs.md">Troubleshooting Using Logs →</a></p>
+<p width="100px" align="right"><a href="62_logs.md">Troubleshooting Using Logs →</a></p>
 
 [← back to overview](../README.md)

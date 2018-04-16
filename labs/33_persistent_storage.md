@@ -1,7 +1,7 @@
-Lab 3.3: Daily business
+Lab 3: Daily business
 ============
 
-Lab 3.3.3: Persistent storage
+Lab 3.3: Persistent storage
 -------------
 In this lab we take a look at the OpenShift implementation of Container Native Storage using the heketi-cli to resize a volume.
 
@@ -170,8 +170,8 @@ registry-volume   6Gi        RWX           Retain          Bound     default/reg
 
 ---
 
-**End of Lab 3.3.3**
+**End of Lab 3.3**
 
-<p width="100px" align="right"><a href="334_renew_certificates.md">Renew certificates →</a></p>
+<p width="100px" align="right"><a href="34_renew_certificates.md">Renew certificates →</a></p>
 
 [← back to overview](../README.md)

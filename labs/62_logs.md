@@ -1,4 +1,4 @@
-## Lab 3.6.2: Troubleshooting Using Logs
+## Lab 6.2: Troubleshooting Using Logs
 
 As soon as basic functionality of OpenShift itself is reduced or not working at all, we have to have a closer look at the underlying components' log messages. We find these logs either in the journal on the different servers or in Elasticsearch.
 
@@ -72,8 +72,8 @@ Or if we wanted to filter for error messages we could simply use "error" in the 
 
 ---
 
-**End of Lab 3.6.2**
+**End of Lab 6.2**
 
-<p width="100px" align="right"><a href="371_upgrade_openshift37.md">Upgrade OpenShift from 3.6 to 3.7 →</a></p>
+<p width="100px" align="right"><a href="71_upgrade_openshift37.md">Upgrade OpenShift from 3.6 to 3.7 →</a></p>
 
 [← back to overview](../README.md)
