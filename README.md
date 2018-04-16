@@ -1,10 +1,17 @@
 # OpenShift Operations Techlab
 
-This techlab is a hands on workshop where you learn on how to operate [OpenShift Container Platform](https://www.openshift.com/).
+## Introduction
 
-## Content
+In the following guided and hands-on techlab we show the participants how to operate [OpenShift Container Platform](https://www.openshift.com/).
+If you did not already see the slides please have a look at [them](https://appuio.github.io/ops-techlab/#/).
 
-- [Introduction](labs/00_introduction.md)
+The lab covers automated installation and upgrades of OpenShift, troubleshooting and maintenance procedures as well as backup and restore of cluster configuration and resources.
+
+If you find errors, bugs or missing information please help us to improve our techlab and [contribute](../CONTRIBUTING.md) pull-requests and issues.
+
+
+## Labs
+
 - [Getting started Slides](https://appuio.github.io/ops-techlab/#/)
 
 - 1.1 [Get a short architectural overview of the environment](labs/11_overview.md)
