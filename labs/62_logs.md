@@ -22,6 +22,7 @@ General services include the following:
 * `openvswitch`
 * `dnsmasq`
 * `NetworkManager`
+* `iptables`
 
 
 ### Service states
