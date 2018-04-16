@@ -1,8 +1,5 @@
-Lab 1: Warmup
-============
+## Lab 1.2: How to access the lab environment
 
-Lab 1.2: Learn how to access the lab environment
--------------
 We will write "user[X]" during the labs for user specific documentations. Everybody gets an ID an needs to use this ID, to use his environment.
 
 For example for ID 1:
@@ -23,8 +20,8 @@ There are three main ways we will access our environment. These ports need to be
 
 ---
 
-**End of Lab 1.2**
+**End of lab 1.2**
 
-<p width="100px" align="right"><a href="21_ansible_hostsfile.md">Create Ansible inventory →</a></p>
+<p width="100px" align="right"><a href="20_installation.md">2. OpenShift installation →</a></p>
 
-[← back to overview](../README.md)
+[← back to the chapter overview](10_warmup.md)

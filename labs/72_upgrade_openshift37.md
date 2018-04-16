@@ -1,19 +1,7 @@
-Lab 7: Upgrade OpenShift from 3.6 to 3.7
-============
+## Lab 7.2: Upgrade to OpenShift 3.7
 
-In this techlab, we will upgrade our Openshifft 3.6 installation to OpenShift 3.7
+### Upgrade preparation
 
-Lab 7.1: Upgrade to latest OpenShift 3.6
--------------
-Before upgrading to the next minor release, you need to upgrade to the latest asynchronous release of version 3.6.
-https://docs.openshift.com/container-platform/3.6/release_notes/ocp_3_6_release_notes.html#ocp-36-asynchronous-errata-updates
-
-The procedure is the same as upgrading to the next minor version. See next lab (Lab 7.2: Upgrade to latest OpenShift 3.7)
-As our lab is already on the latest asynchronous release of version 3.6, we can proceed to upgrade to latest OpenShift 3.7.
-
-Lab 7.2: Upgrade to latest OpenShift 3.7
--------------
-## Upgrade preparation
 First we need to prepare our nodes and make sure, all instances have the new repository attached and the old removed.
 ```
 [ec2-user@master0 ~]$ ansible all -a "subscription-manager refresh"
@@ -47,7 +35,9 @@ openshift_release=v3.7
 openshift_pkg_version=-3.7.42
 ```
 
-## Upgrade procedure
+
+### Upgrade procedure
+
 1. Upgrade the master and API Objects.
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_control_plane.yml
@@ -99,26 +89,11 @@ https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
 Important: You need to tell all users of the platform to update their client.
 
-Lab 7.3: Verify upgrade
--------------
-Check rpm package version of docker and openshift on all nodes and master.
-```
-[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi atomic-openshift | grep -i name -A1"
-[ec2-user@master0 ~]$ ansible masters -m shell -a "rpm -qi atomic-openshift-master | grep -i name -A1"
-[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi atomic-openshift-node | grep -i name -A1"
-[ec2-user@master0 ~]$ ansible all -m shell -a "rpm -qi docker | grep -i name -A3"
-```
-
-Check image version of registry, router, metrics and logging
-```
-[ec2-user@master0 ~]$ oc get pod -o yaml --all-namespaces | grep -i "image:.*.openshift3"
-```
-
-Now we need to verify our installation according to: "22_install_openshift => Verify OpenShift installation"
-- 2.2 [Install OpenShift](22_install_openshift.md)
 
 ---
 
-**End of Lab 7**
+**End of lab 7.2**
 
-[← back to overview](../README.md)
+<p width="100px" align="right"><a href="73_upgrade_verification.md">7.3 Verify the upgrade →</a></p>
+
+[← back to the chapter overview](70_upgrade.md)

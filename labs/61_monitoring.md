@@ -70,8 +70,8 @@ Speaking of garbage collection, there's another component that needs frequent ga
 
 ---
 
-**End of Lab 6.1**
+**End of lab 6.1**
 
-<p width="100px" align="right"><a href="62_logs.md">Troubleshooting Using Logs →</a></p>
+<p width="100px" align="right"><a href="62_logs.md">6.2 Troubleshooting using logs →</a></p>
 
-[← back to overview](../README.md)
+[← back to the chapter overview](60_monitoring_troubleshooting.md)

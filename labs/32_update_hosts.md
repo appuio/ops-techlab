@@ -1,10 +1,6 @@
-Lab 3: Daily business
-============
+## Lab 3.2: Update hosts
 
-Lab 3.2: Update Host
--------------
-
-## OpenShift excluder
+### OpenShift excluder
 In this lab we take a look at the OpenShift excluders, apply OS updates to all nodes, drain, reboot and schedule them again.
 
 During the installation of OpenShift or when running the config Playbook, OpenShift removes and adds excludes for certain rpm packages. This can cause trouble during upgrade of non OCP packages.
@@ -27,7 +23,9 @@ These excludes are set by using the official OpenShift playbooks or when using t
 [ec2-user@master0 ~]$ ansible all -m shell -a "grep exclude /etc/yum.conf"
 ```
 
-## Apply OS patches to masters and nodes
+
+### Apply OS patches to masters and nodes
+
 First login as cluster-admin and drain the first node (this deletes all pods, so they migrate to other nodes and also disables scheduling of new pods on the node). 
 ```
 [ec2-user@master0 ~]$ oc get nodes
@@ -80,8 +78,8 @@ Since we want to update the whole cluster, you will need to repeat these steps o
 
 ---
 
-**End of Lab 3.2**
+**End of lab 3.2**
 
-<p width="100px" align="right"><a href="33_persistent_storage.md">Persistent storage →</a></p>
+<p width="100px" align="right"><a href="33_persistent_storage.md">3.3 Persistent storage →</a></p>
 
-[← back to overview](../README.md)
+[← back to the chapter overview](30_daily_business.md)

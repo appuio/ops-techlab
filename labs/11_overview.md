@@ -1,11 +1,7 @@
-Lab 1: Warmup
-============
+## Lab 1.1: Architectural overview
 
-Lab 1.1: Get a short architectural overview of the environment
--------------
 This is the environment, we will build and work on. It's deployed on Amazon AWS.
 
-## Architecture
 ![Lab OpenShift cluster overview](11_ops-techlab.png)
 
 Out lab Platform consist of the following components:
@@ -26,8 +22,8 @@ Out lab Platform consist of the following components:
 
 ---
 
-**End of Lab 1.1**
+**End of lab 1.1**
 
-<p width="100px" align="right"><a href="12_access_environment.md">Learn how to access the lab environment →</a></p>
+<p width="100px" align="right"><a href="12_access_environment.md">1.2 Access the lab environment →</a></p>
 
-[← back to overview](../README.md)
+[← back to the chapter overview](10_warmup.md)

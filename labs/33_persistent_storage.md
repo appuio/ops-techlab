@@ -1,11 +1,10 @@
-Lab 3: Daily business
-============
+## Lab 3.3: Persistent storage
 
-Lab 3.3: Persistent storage
--------------
 In this lab we take a look at the OpenShift implementation of Container Native Storage using the heketi-cli to resize a volume.
 
-## heketi-cli
+
+### heketi-cli
+
 First we need to install the Heketi client rpm. We will use the client from the community upstream project for this lab. In production enviroment, you should use the client, provided by RedHat.
 ```
 [ec2-user@master0 ~]$ sudo yum install -y https://buildlogs.centos.org/centos/7/storage/x86_64/gluster-4.0/heketi-client-6.0.0-1.el7.x86_64.rpm
@@ -68,7 +67,9 @@ Show the whole topology
 ...
 ```
 
-## Set default storage class
+
+### Set default storage class
+
 A StorageClass provides a way to describe a certain type of storage. Different classes might map to different storage types (e.g. nfs, gluster, ...), quality-of-service levels, to backup policies, or to arbitrary policies determined by the cluster administrators. In our case we only have one storage class which is `glusterfs-storage`:
 ```
 [ec2-user@master0 ~]$ oc get storageclass
@@ -80,7 +81,9 @@ By setting the anotation `storageclass.kubernetes.io/is-default-class` on a Stor
 ```
 If then someone creates a pvc and does not specify the StorageClass, the [DefaultStorageClass admission controller](https://kubernetes.io/docs/admin/admission-controllers/#defaultstorageclass) does automatically set the StorageClass to the DefaultStorageClass, which is `glusterfs-storage` in our case.
 
-## Create and delete a pvc
+
+### Create and delete a pvc
+
 If you create a pvc, Heketi will automatically create a pv and bind it to your pvc. Also if you delete a pvc, Heketi will delete the pv.
 
 Create a new project and create a pvc
@@ -126,7 +129,9 @@ persistentvolumeclaim "testclaim" deleted
 [ec2-user@master0 ~]$ oc delete project test
 ```
 
-## Resize existing volume
+
+### Resize existing volume
+
 We will resize the registry volume with heketi-cli.
 
 First we need to know, which volume name is used for the registry.
@@ -156,7 +161,6 @@ Check if the gluster volume has the new size:
 172.31.40.96:glusterfs-registry-volume  6.0G  317M  5.7G   3% /var/lib/origin/openshift.local.volumes/pods/d8dc2712-3bcf-11e8-90a6-066961eacc9a/volumes/kubernetes.io~glusterfs/registry-volume
 ```
 
-
 To use the space, we need to extend the pv also.
 ```
 [ec2-user@master0 ~]$ oc get pv
@@ -170,8 +174,8 @@ registry-volume   6Gi        RWX           Retain          Bound     default/reg
 
 ---
 
-**End of Lab 3.3**
+**End of lab 3.3**
 
-<p width="100px" align="right"><a href="34_renew_certificates.md">Renew certificates →</a></p>
+<p width="100px" align="right"><a href="34_renew_certificates.md">3.4 Renew certificates →</a></p>
 
-[← back to overview](../README.md)
+[← back to the chapter overview](30_daily_business.md)

@@ -1,8 +1,5 @@
-Lab 3: Daily business
-============
+## Lab 3.4: Renew certificates
 
-Lab 3.4: Renew certificates
--------------
 In this lab we take a look at the OpenShift certificates and how to renew them.
 
 These are the main certificates, that needs to be maintained. For each component there is playbook provided by Red Hat, that will redeploy the certificates:
@@ -12,7 +9,8 @@ These are the main certificates, that needs to be maintained. For each component
 -    registry
 -    router
 
-## Check the expiration of the certificates
+### Check the expiration of the certificates
+
 To check all your certificates you can run the playbook "certificate_expiry/easy-mode.yaml" provided from Red Hat.
 ```
 [ec2-user@master0 ~]$ ansible-playbook -v -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/certificate_expiry/easy-mode.yaml
@@ -24,7 +22,9 @@ It will generate the following files with a dump of all information of each cert
 /tmp/cert-expiry-report.json
 ```
 
-## Redeploy etcd certificates
+
+### Redeploy etcd certificates
+
 To get a feeling for the process of redeploying certficates, we will redeploy the ca certificate and the depending certificates of etcd.
 WARNING: This will lead to a restart of etcd and master services.
 
@@ -71,7 +71,9 @@ Now you can check, if the server certificate is also replaced.
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
 ```
 
-## Replace the other main certificates
+
+### Replace the other main certificates
+
 You can use the following playbooks to replace the certificates of the other main components on OpenShift:
 -    masters (API server and controllers)
      -    /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-master-certificates.yml
@@ -87,8 +89,8 @@ You can use the following playbooks to replace the certificates of the other mai
 
 ---
 
-**End of Lab 3.4**
+**End of lab 3.4**
 
-<p width="100px" align="right"><a href="35_add_new_node_and_master.md">Add a new OpenShift node and master →</a></p>
+<p width="100px" align="right"><a href="35_add_new_node_and_master.md">3.5 Add a new OpenShift node and master →</a></p>
 
-[← back to overview](../README.md)
+[← back to the chapter overview](30_daily_business.md)

@@ -1,9 +1,7 @@
-Lab 3: Daily business
-============
+## Lab 3.1: Manage users
 
-Lab 3.1: User management
--------------
-## Add user to project
+### Add user to project
+
 First we create a user and give him the admin role in the openshift-infra project.
 Login to the master and create the local user
 ```
@@ -27,7 +25,8 @@ You have one project on this server: "openshift-infra"
 Using project "openshift-infra".
 ```
 
-## Add cluster role to user
+### Add cluster role to user
+
 If the user is a cluster admin we should delete the created rolebinding for the project and give him the global clusterPolicyBinding "cluster-admin" role.
 
 Login as sheriff
@@ -64,7 +63,9 @@ You have access to the following projects and can switch between them with 'oc p
 Using project "openshift-infra".
 ```
 
-## Create a group and add user to the group
+
+### Create a group and add user to the group
+
 It is also possible to add a group with users to a cluster policy.
 Create a local group and add cowboy to it. (It's also possible to work with ldap/AD groups)
 ```
@@ -85,7 +86,9 @@ Verifiy that the group is added to the cluster-admins
 cluster-admin                                                         /cluster-admin                                                         sheriff, cowboy                system:masters, test-group               
 ```
 
-## Evaluate authorizations
+
+### Evaluate authorizations
+
 It's possible to evaluate authorizations. This can be done with the following pattern.
 ```
 oc policy who-can VERB RESOURCE_NAME
@@ -102,7 +105,9 @@ Who can create configmaps in the default project.
 oc policy who-can create configmaps -n default
 ```
 
-## Delete resource
+
+### Delete resource
+
 Delete the user and the group:
 ```
 [ec2-user@master0 ~]$ oc delete group test-group
@@ -121,8 +126,8 @@ You can get all available clusterPolicies and clusterPoliciesBinding with the fo
 
 ---
 
-**End of Lab 3.1**
+**End of lab 3.1**
 
-<p width="100px" align="right"><a href="32_update_host.md">Update Host →</a></p>
+<p width="100px" align="right"><a href="32_update_host.md">3.2 Update hosts →</a></p>
 
-[← back to overview](../README.md)
+[← back to the chapter overview](30_daily_business.md)
