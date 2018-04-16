@@ -1,6 +1,6 @@
 ## Lab 1.1: Architectural overview
 
-This is the environment, we will build and work on. It's deployed on Amazon AWS.
+This is the environment we will build and work on. It is deployed on Amazon AWS.
 
 ![Lab OpenShift cluster overview](11_ops-techlab.png)
 

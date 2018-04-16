@@ -78,16 +78,22 @@ If all volumes have "Number of entries: 0", we can proceed with the next node an
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
 ```
 
-5. To finish the upgrade it's best practice to run the config playbook
+5. The `atomic-openshift-clients-redistributable` package which provides the `oc` binary for different operating systems needs to be updated separately:
+```
+[ec2-user@master0 ~]$ ansible masters -a "yum install --assumeyes --disableexcludes=all atomic-openshift-clients-redistributable"
+```
+
+6. To finish the upgrade, it is best practice to run the config playbook:
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ```
 
-6. If you are using the oc client outside of the OpenShift Platform, you need to download the latest binary for the client and replace it. The binary is available for Linux, macOS and Windows. You can get it here:
+7. Update the `oc` binary on your own client. As before, you can get it from:
 ```
 https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
-Important: You need to tell all users of the platform to update their client.
+
+**Note:** You should tell all users of your platform to update their client. Client and server version differences can lead to compatibility issues.
 
 
 ---
