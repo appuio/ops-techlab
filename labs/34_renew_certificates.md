@@ -26,8 +26,10 @@ It will generate the following files with a dump of all information of each cert
 
 ### Redeploy etcd certificates
 
-To get a feeling for the process of redeploying certficates, we will redeploy the ca certificate and the depending certificates of etcd.
-**Warning:** This will lead to a restart of etcd and master services.
+To get a feeling for the process of redeploying certificates, we will redeploy the etcd certificates.
+
+Redeploy the etcd ca certificate.
+**Warning:** This will lead to a restart of etcd and master services and consequently cause an outage for a few seconds of the OpenShift API.
 
 First, we check the current etcd certificates creation time.
 ```
@@ -40,7 +42,7 @@ First, we check the current etcd certificates creation time.
             Not Before: Mar 23 12:51:34 2018 GMT
             Not After : Mar 22 12:51:35 2020 GMT
 ```
-Note down the value for "Validity Not Before:", so you can compare after the new certificates will be deployed.
+Note down the value for "Validity Not Before:". We will later compare the time stamp with the freshly deployed certificates.
 
 Run the playbook, that takes care of redeploying the ca certificate of the etcd servers.
 ```
@@ -48,7 +50,7 @@ Run the playbook, that takes care of redeploying the ca certificate of the etcd 
 ...
 ```
 
-Check the current etcd ca certificate creation time again.
+Check the current etcd ca certificate creation time.
 ```
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
         Validity
@@ -59,15 +61,13 @@ Check the current etcd ca certificate creation time again.
             Not Before: Mar 23 12:51:34 2018 GMT
             Not After : Mar 22 12:51:35 2020 GMT
 ```
-
-You should see now, that a new etcd ca certificate has been generated, but etcd is still using the old server certificate. With the "redeploy-etcd-certificates.yml" playbook from Red Hat, we replace now the server certificate with new ones, signed by the newly created ca certificate.
-
-**Warning:** This will lead to a restart of etcd and master services.
+The etcd ca certificate has been generated, but etcd is still using the old server certificates. With the "redeploy-etcd-certificates.yml" playbook from Red Hat, we will replace the server certificate, signed by the newly created ca certificate.
+**Warning:** This will again lead to a restart of etcd and master services and consequently cause an outage for a few seconds of the OpenShift API.
 ```
 [ec2-user@master0 ~]$ ansible-playbook -v -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-certificates.yml
 ```
 
-Now you can check, if the server certificate is also replaced.
+Check, if the server certificate has been replaced.
 ```
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
