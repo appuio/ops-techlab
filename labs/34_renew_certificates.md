@@ -67,7 +67,7 @@ The etcd ca certificate has been generated, but etcd is still using the old serv
 [ec2-user@master0 ~]$ ansible-playbook -v -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-certificates.yml
 ```
 
-Check, if the server certificate has been replaced.
+Check if the server certificate has been replaced.
 ```
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
