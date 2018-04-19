@@ -2,10 +2,7 @@
 
 ## Introduction
 
-In the following guided and hands-on techlab we show the participants how to operate [OpenShift Container Platform](https://www.openshift.com/).
-If you did not already see the slides please have a look at [them](https://appuio.github.io/ops-techlab/#/).
-
-The lab covers automated installation and upgrades of OpenShift, troubleshooting and maintenance procedures as well as backup and restore of cluster configuration and resources.
+In the following guided and hands-on techlab we show the participants how to operate [OpenShift Container Platform](https://www.openshift.com/). The labs cover automated installation and upgrades of OpenShift, troubleshooting and maintenance procedures as well as backup and restore of cluster configuration and resources.
 
 
 ## Contribution
@@ -14,8 +11,6 @@ If you find errors, bugs or missing information please help us improve our techl
 
 
 ## Labs
-
-- [Getting started slides](https://appuio.github.io/ops-techlab/#/)
 
 1. [Warmup](labs/10_warmup.md)
 2. [OpenShift installation](labs/20_installation.md)
