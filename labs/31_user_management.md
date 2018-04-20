@@ -66,9 +66,11 @@ Using project "openshift-infra".
 
 ### Create a group and add user to the group
 
-It is also possible to add a group with users to a cluster policy.
+It is possible to add a group with users to a cluster policy.
 Create a local group and add cowboy to it. (It's also possible to work with ldap/AD groups)
 ```
+[ec2-user@master0 ~]$ oc login -u sheriff
+
 [ec2-user@master0 ~]$ oc adm groups new test-group cowboy
 NAME         USERS
 test-group   cowboy
@@ -105,23 +107,55 @@ Who can create configmaps in the default project.
 oc policy who-can create configmaps -n default
 ```
 
+You can also get a description of all available clusterPolicies and clusterPoliciesBindings with the following oc command.
+```
+[ec2-user@master0 ~]$ oc describe clusterPolicy default
+Name:				default
+Created:			4 hours ago
+Labels:				<none>
+Last Modified:			2015-06-10 17:22:25 +0000 UTC
+admin				Verbs					Resources																Resource Names	Non-Resource URLs				Extension
+				[create delete get list update watch]	[pods/proxy projects resourcegroup:exposedkube resourcegroup:exposedopenshift resourcegroup:granter secrets]				[][]
+				[get list watch]			[pods/exec pods/portforward resourcegroup:allkube resourcegroup:allkube-status resourcegroup:allopenshift-status resourcegroup:policy]	[][]
+				[get update]				[imagestreams/layers]															[][]
+basic-user			Verbs					Resources																Resource Names	Non-Resource URLs				Extension
+				[get]					[users]
+...
+
+
+[ec2-user@master0 ~]$ oc describe clusterPolicyBindings :default
+Name:						:default
+Created:					4 hours ago
+Labels:						<none>
+Last Modified:					2015-06-10 17:22:26 +0000 UTC
+Policy:						<none>
+RoleBinding[basic-users]:
+						Role:	basic-user
+						Users:	[]
+						Groups:	[system:authenticated]
+RoleBinding[cluster-admins]:
+						Role:	cluster-admin
+						Users:	[]
+						Groups:	[system:cluster-admins]
+...
+
+
+```
+
 
 ### Delete resource
-
-Delete the user and the group:
+Delete the group, entity and user:
 ```
+[ec2-user@master0 ~]$ oc get group
 [ec2-user@master0 ~]$ oc delete group test-group
+
+[ec2-user@master0 ~]$ oc get user
+[ec2-user@master0 ~]$ oc delete user cowboy
+
 [ec2-user@master0 ~]$ oc get identity
 [ec2-user@master0 ~]$ oc delete identity htpasswd_auth:cowboy
-[ec2-user@master0 ~]$ sudo htpasswd -D /etc/origin/master/htpasswd cowboy
-```
 
-You can get all available clusterPolicies and clusterPoliciesBinding with the following oc command.
-```
-[ec2-user@master0 ~]$ oc login -u sheriff
-
-[ec2-user@master0 ~]$ oc describe clusterPolicy default
-[ec2-user@master0 ~]$ oc describe clusterPolicyBindings :default
+[ec2-user@master0 ~]$ ansible nodes -a "htpasswd -D /etc/origin/master/htpasswd cowboy"
 ```
 
 ---
