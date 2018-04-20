@@ -67,14 +67,31 @@ Speaking of garbage collection, there's another component that needs frequent ga
 
 ### Does our cluster have enough capacity to run all pods?
 
-Besides the obvious components that need monitoring like CPU, memory and storage, this third question is tightly coupled with requests and limits we looked at in [chapter 4](FIXME). There's also a [blog post series](https://blog.openshift.com/full-cluster-capacity-management-monitoring-openshift/) from Red Hat that does a very good job at explaining the different relations and possibilities to finding an answer.
+Besides the obvious components that need monitoring like CPU, memory and storage, this third question is tightly coupled with requests and limits we looked at in [chapter 4](FIXME).
 
-Let's first get an overview manually of available resources using tools you might not have heard about before. One such tool is [Cockpit](http://cockpit-project.org/). Cockpit aims to ease administration tasks of Linux servers by making some basic tasks available via web interface. It is installed by default on every master by the OpenShift Ansible playbooks and listens on port 9090. We don't want to expose the web interface to the internet though, so we are going to use SSH port forwarding to access it:
+But let's first get an overview of available resources using tools you might not have heard about before. One such tool is [Cockpit](http://cockpit-project.org/). Cockpit aims to ease administration tasks of Linux servers by making some basic tasks available via web interface. It is installed by default on every master by the OpenShift Ansible playbooks and listens on port 9090. We don't want to expose the web interface to the internet though, so we are going to use SSH port forwarding to access it:
 ```
 $ ssh ec2-user@bastion.user[X].lab.openshift.ch -L 9090:localhost:9090
 ```
 
-After the SSH tunnel has been established, open http://localhost:9090 in your browser and log in using user `ec2-user` and the password provided by the instructor. Explore the available tabs.
+After the SSH tunnel has been established, open http://localhost:9090 in your browser and log in using user `ec2-user` and the password provided by the instructor. Explore the different tabs and sections of the web interface.
+
+Another possibility to get a quick overview of used and available resources is the [kube-ops-view](https://github.com/hjacobs/kube-ops-view) project. Install it on your OpenShift cluster:
+```
+oc new-project ocp-ops-view
+oc create sa kube-ops-view
+oc adm policy add-scc-to-user anyuid -z kube-ops-view
+oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:ocp-ops-view:kube-ops-view
+oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/kube-ops-view/ocp/deploy-openshift/kube-ops-view.yaml
+oc expose svc kube-ops-view
+oc get route | grep kube-ops-view | awk '{print $2}'
+```
+
+The design takes some getting used to, but at least the browser zoom can help with the small size.
+
+The information about kube-ops-view as well as its installation instructions are actually from a [blog post series](https://blog.openshift.com/full-cluster-capacity-management-monitoring-openshift/) from Red Hat that does a very good job at explaining the different relations and possibilities to finding an answer to our question about capacity.
+
+These two tools provide a quick look at resource availability. Implementing a mature, enterprise-grade monitoring of OpenShift resources depends on what tools are available already in an IT environment and would go beyond the scope and length of this techlab, but the referred blog post series certainly is a good start.
 
 
 ---
