@@ -10,6 +10,11 @@ In the following guided and hands-on techlab we show the participants how to ope
 If you find errors, bugs or missing information please help us improve our techlab and have a look at the [contribution guide](CONTRIBUTING.md).
 
 
+## Before you begin
+
+There's a [troubleshooting cheat sheet](resources/troubleshooting_cheat_sheet.md) that might be of help if you run into errors.
+
+
 ## Labs
 
 1. [Warmup](labs/10_warmup.md)
