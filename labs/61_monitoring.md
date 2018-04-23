@@ -67,7 +67,7 @@ Speaking of garbage collection, there's another component that needs frequent ga
 
 ### Does our cluster have enough capacity to run all pods?
 
-Besides the obvious components that need monitoring like CPU, memory and storage, this third question is tightly coupled with requests and limits we looked at in [chapter 4](FIXME).
+Besides the obvious components that need monitoring like CPU, memory and storage, this third question is tightly coupled with requests and limits we looked at in [chapter 4](41_out_of_resource_handling.md).
 
 But let's first get an overview of available resources using tools you might not have heard about before. One such tool is [Cockpit](http://cockpit-project.org/). Cockpit aims to ease administration tasks of Linux servers by making some basic tasks available via web interface. It is installed by default on every master by the OpenShift Ansible playbooks and listens on port 9090. We don't want to expose the web interface to the internet though, so we are going to use SSH port forwarding to access it:
 ```
