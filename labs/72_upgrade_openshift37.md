@@ -5,7 +5,7 @@
 First we need to prepare our nodes and make sure, all instances have the new repository attached and the old removed.
 ```
 [ec2-user@master0 ~]$ ansible all -a "subscription-manager refresh"
-[ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos --disable="rhel-7-server-ose-3.6-rpms" --enable="rhel-7-server-ose-3.7-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-fast-datapath-rpms"'
+[ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos --disable="rhel-7-server-ose-3.6-rpms" --enable="rhel-7-server-ose-3.7-rpms" --enable="rhel-7-fast-datapath-rpms"'
 [ec2-user@master0 ~]$ ansible all -a "yum clean all"
 ```
 
@@ -31,8 +31,9 @@ Change the following Ansible variables in our OpenShift inventory:
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 ....
 openshift_release=v3.7
-....
 openshift_pkg_version=-3.7.42
+...
+openshift_logging_image_version=v3.7
 ```
 
 
@@ -65,7 +66,7 @@ Number of entries: 0
 If all volumes have "Number of entries: 0", we can proceed with the next node and repeat the check of GlusterFS.
 
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e openshift_upgrade_nodes_label="kubernetes.io/hostname=node2.user[X].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e openshift_upgrade_nodes_label="kubernetes.io/hostname=node1.user[X].lab.openshift.ch"
 ...
 ```
 3. Upgrading the EFK Logging Stack
