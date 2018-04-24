@@ -88,8 +88,8 @@ If you create a PersistentVolumeClaim, Heketi will automatically create a Persis
 
 Create a new project and create a pvc:
 ```
-[ec2-user@master0 ~]$ oc project test
-Now using project "test" on server "https://console.user[X].lab.openshift.ch:8443".
+[ec2-user@master0 ~]$ oc project labelle
+Now using project "labelle" on server "https://console.user[X].lab.openshift.ch:8443".
 ...
 [ec2-user@master0 ~]$ cat <<EOF >pvc.yaml
 apiVersion: "v1"
@@ -116,7 +116,7 @@ testclaim   Bound     pvc-839223fd-30d4-11e8-89f3-067e4f48dfe4   1Gi        RWO 
 
 [ec2-user@master0 ~]$ oc get pv
 NAME                                       CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS    CLAIM                    STORAGECLASS        REASON    AGE
-pvc-839223fd-30d4-11e8-89f3-067e4f48dfe4   1Gi        RWO           Delete          Bound     test/testclaim           glusterfs-storage             41s
+pvc-839223fd-30d4-11e8-89f3-067e4f48dfe4   1Gi        RWO           Delete          Bound     labelle/testclaim        glusterfs-storage             41s
 ...
 ```
 
@@ -126,7 +126,7 @@ Delete the claim and check if the volume gets deleted:
 persistentvolumeclaim "testclaim" deleted
 [ec2-user@master0 ~]$ oc get pv
 
-[ec2-user@master0 ~]$ oc delete project test
+[ec2-user@master0 ~]$ oc delete project labelle
 ```
 
 
