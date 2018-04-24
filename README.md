@@ -26,6 +26,13 @@ There's a [troubleshooting cheat sheet](resources/troubleshooting_cheat_sheet.md
 7. [OpenShift upgrade](labs/70_upgrade.md)
 
 
+## Appendices
+
+1. [Monitoring with Prometheus](appendices/01_prometheus.md)
+2. [etcd Scaleup](appendices/02_etcd_scaleup.md)
+3. [Useful Internet Resources](appendices/03_internet_resources.md)
+
+
 ## License
 
 This techlab is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](LICENSE) license.
