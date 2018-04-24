@@ -20,7 +20,7 @@ There's a [troubleshooting cheat sheet](resources/troubleshooting_cheat_sheet.md
 1. [Warmup](labs/10_warmup.md)
 2. [OpenShift installation](labs/20_installation.md)
 3. [Daily business](labs/30_daily_business.md)
-4. [Configuration best practices](labs/40_configuration_best_practices)
+4. [Configuration best practices](labs/40_configuration_best_practices.md)
 5. [Backup and restore](labs/50_backup_restore.md)
 6. [Monitoring and troubleshooting](labs/60_monitoring_troubleshooting.md)
 7. [OpenShift upgrade](labs/70_upgrade.md)
