@@ -156,7 +156,7 @@ Delete the group, entity and user:
 [ec2-user@master0 ~]$ oc get identity
 [ec2-user@master0 ~]$ oc delete identity htpasswd_auth:cowboy
 
-[ec2-user@master0 ~]$ ansible nodes -a "htpasswd -D /etc/origin/master/htpasswd cowboy"
+[ec2-user@master0 ~]$ ansible masters -a "htpasswd -D /etc/origin/master/htpasswd cowboy"
 ```
 
 ---
