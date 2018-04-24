@@ -16,7 +16,7 @@ We can then set variables with this information:
 ```
 [ec2-user@master0 ~]$ export HEKETI_CLI_USER=admin
 [ec2-user@master0 ~]$ export HEKETI_CLI_KEY="[HEKETI_ADMIN_KEY]"
-[ec2-user@master0 ~]$ export HEKETI_CLI_SERVER=$(oc get svc/heketi-storage -n default --template "http://{{.spec.clusterIP}}:{{(index .spec.ports 0).port}}")
+[ec2-user@master0 ~]$ export HEKETI_CLI_SERVER=$(oc get svc/heketi-storage -n glusterfs --template "http://{{.spec.clusterIP}}:{{(index .spec.ports 0).port}}")
 ```
 
 Verify that everything is set as it should:
