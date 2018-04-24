@@ -29,7 +29,7 @@ For more information see [Quality of Service Tiers](https://docs.openshift.com/c
 Create a container which allocates memory till it's being killed.
 
     oc new-project out-of-memory
-    oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/configuration_best_practices/resources/membomb/pod_membomb.yaml
+    oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_membomb.yaml
 
 Wait till the container is up and being killed. `oc get pods` will then show:
 
@@ -88,7 +88,7 @@ Then restart the OpenShift node service on our `node2` and `node3` hosts:
 
 Now run the `membomb` pod again:
 
-    oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/configuration_best_practices/resources/membomb/pod_membomb.yaml
+    oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_membomb.yaml
 
 Wait till the container gets evicted. Run `oc describe pod -l app=membomb` to see the reason for the eviction:
 
