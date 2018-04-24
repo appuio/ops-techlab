@@ -75,7 +75,7 @@ router-1-cc21f            1/1       Running   0          4m
 logging-fluentd-s2k2j     1/1       Running   1          1h
 ```
 
-Since we want to update the whole cluster, you will need to repeat these steps on all the instances. Masters do not need to be drained, because they do not run any pods (unschedulable by default).
+Since we want to update the whole cluster, you will need to repeat these steps on all servers. Masters do not need to be drained because they do not run any pods (unschedulable by default).
 
 ---
 
