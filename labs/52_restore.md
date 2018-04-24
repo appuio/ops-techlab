@@ -14,7 +14,7 @@ Check if the project is being deleted
 
 Restore the logging project from the backup. Some objects still exist, because they are not namespaced and therefore not deleted. You will see during the restore, that these object will not be replaced.
 ```
-[ec2-user@master0 ~]$ oc new-project logging
+[ec2-user@master0 ~]$ oc adm new-project logging --node-selector=""
 
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/serviceaccount.json
 [ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/secret.json
