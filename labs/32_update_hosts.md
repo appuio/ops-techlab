@@ -57,7 +57,7 @@ If everything looks good, you can update the node and reboot it. The first comma
 [ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch --poll=0 --background=1 -a 'sleep 2 && reboot'
 ```
 
-After the node becomes ready again, enable schedulable anew. Do not do this before the node has rebooted (it takes a while for the node's status to change to "Not Ready"):
+After the node becomes ready again, enable schedulable anew. Do not do this before the node has rebooted (it takes a while for the node's status to change to `Not Ready`):
 ```
 [ec2-user@master0 ~]$ oc get nodes -w
 [ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --schedulable

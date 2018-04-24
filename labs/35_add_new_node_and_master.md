@@ -7,7 +7,7 @@ In this lab we will add a new node and a new master to our OpenShift cluster.
 
 Uncomment the new node (`node3.user...`) in the Ansible inventory and also uncomment the `new_nodes` group in the "[OSEv3:children]" section.
 ```
-[root@master0 ec2-user]# vi /etc/ansible/hosts
+[ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 ...
 glusterfs
 bastion
@@ -59,7 +59,7 @@ If everything works as expected, we schedule node2 again:
 
 Inside the Ansible inventory, we move the new node from the `[new_nodes]` to the `[app_nodes]` group:
 ```
-[root@master0 ~]$ cat /etc/ansible/hosts
+[ec2-user@master0 ~]$ cat /etc/ansible/hosts
 ...
 [nodes]
 master0.user[X].lab.openshift.ch openshift_hostname=master0.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
@@ -81,7 +81,7 @@ node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch
 
 Uncomment the new master inside the Ansible inventory. It needs to be in both the `[new_nodes]` and the `[new_masters]` groups.
 ```
-[root@master0 ~]# cat /etc/ansible/hosts
+[ec2-user@master0 ~]$ cat /etc/ansible/hosts
 ...
 glusterfs
 bastion
@@ -195,7 +195,7 @@ Check if the old masters see the new one:
 
 If everything works as expected, we move the new master from the `[new_masters]` to the `[masters]` group inside the Ansible inventory:
 ```
-[root@master0 ~]# vi /etc/ansible/hosts
+[ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 [masters]
 master0.user[X].lab.openshift.ch
 master1.user[X].lab.openshift.ch
@@ -205,7 +205,7 @@ master2.user[X].lab.openshift.ch
 
 This means we now have an empty `[new_nodes]` and `[new_masters]` groups.
 ```
-[root@master0 ~]# cat /etc/ansible/hosts
+[ec2-user@master0 ~]$ cat /etc/ansible/hosts
 ...
 [new_masters]
 ...
