@@ -57,7 +57,7 @@ If everything works as expected, we schedule node2 again:
 [ec2-user@master0 ~]$ oc adm manage-node node2.user[X].lab.openshift.ch --schedulable
 ```
 
-Inside the Ansible inventory, we move the new node from the `[new_nodes]` to the `[nodes]` group:
+Inside the Ansible inventory, we move the new node from the `[new_nodes]` to the `[app_nodes]` group:
 ```
 [root@master0 ~]$ cat /etc/ansible/hosts
 ...
