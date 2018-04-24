@@ -193,6 +193,11 @@ Check if the old masters see the new one:
 ...
 ```
 
+The new master and node need the right labels set for logging. To achieve this, run the OpenShift logging playbook again.
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
+```
+
 If everything works as expected, we move the new master from the `[new_masters]` to the `[masters]` group inside the Ansible inventory:
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
