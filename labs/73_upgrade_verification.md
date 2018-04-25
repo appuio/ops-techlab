@@ -13,8 +13,7 @@ Check the image version of the registry, router, metrics and logging
 [ec2-user@master0 ~]$ oc get pod -o yaml --all-namespaces | grep -i "image:.*.openshift3"
 ```
 
-Now we need to verify our installation according to: "23_verification => Verify OpenShift installation"
-- 2.3 [Verify OpenShift installation](23_verification.md)
+Now we need to verify our installation according to chapter "[2.3 Verify OpenShift Installation](23_verification.md)".
 
 
 ---
