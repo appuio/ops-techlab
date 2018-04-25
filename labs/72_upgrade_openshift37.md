@@ -55,7 +55,7 @@ Upgrade "node0.user[X].lab.openshift.ch":
 
 Wait until all GlusterFS Pods are ready again and check if GlusterFS volumes have heal entries.
 ```
-[ec2-user@master0 ~]$ oc project default
+[ec2-user@master0 ~]$ oc project glusterfs
 [ec2-user@master0 ~]$ oc get pods -o wide | grep glusterfs
 usterfs-storage-b9xdl                       1/1       Running   0          23m       172.31.33.43    node0.user6.lab.openshift.ch
 glusterfs-storage-lll7g                       1/1       Running   0          23m       172.31.43.209   node1.user6.lab.openshift.ch
