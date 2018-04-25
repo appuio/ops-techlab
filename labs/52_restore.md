@@ -48,7 +48,7 @@ Check if the pods are coming up again
 
 If all the pods are ready, Kibana should be receiving logs again.
 ```
-https://logging.app[USERID].lab.openshift.ch
+https://logging.app[X].lab.openshift.ch
 ```
 
 
@@ -56,53 +56,53 @@ https://logging.app[USERID].lab.openshift.ch
 
 First, we need to stop etcd on the first master.
 ```
-[root@master0 ~]# systemctl stop etcd
+[ec2-user@master0 ~]$ sudo systemctl stop etcd
 ```
 
 The cluster is now down and you can't get any resources through the console. We are now copying the files back from the backup and set the right permissions.
 ```
-[root@master0 ~]# ETCD_DIR=/var/lib/etcd/
-[root@master0 ~]# mv $ETCD_DIR /var/lib/etcd.orig
-[root@master0 ~]# cp -Rp etcd.bak $ETCD_DIR
-[root@master0 ~]# chcon -R --reference /var/lib/etcd.orig/ $ETCD_DIR
-[root@master0 ~]# chown -R etcd:etcd $ETCD_DIR
+[ec2-user@master0 ~]$ ETCD_DIR=/var/lib/etcd/
+[ec2-user@master0 ~]$ sudo mv $ETCD_DIR /var/lib/etcd.orig
+[ec2-user@master0 ~]$ sudo cp -Rp etcd.bak $ETCD_DIR
+[ec2-user@master0 ~]$ sudo chcon -R --reference /var/lib/etcd.orig/ $ETCD_DIR
+[ec2-user@master0 ~]$ sudo chown -R etcd:etcd $ETCD_DIR
 ```
 
 Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and check if it's running. This is needed, because initially it will create a new cluster with the existing data from the backup.
 ```
-[root@master0 ~]# sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /usr/lib/systemd/system/etcd.service
-[root@master0 ~]# systemctl daemon-reload
-[root@master0 ~]# systemctl start etcd
-[root@master0 ~]# systemctl status etcd
+[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /usr/lib/systemd/system/etcd.service
+[ec2-user@master0 ~]$ sudo systemctl daemon-reload
+[ec2-user@master0 ~]$ sudo systemctl start etcd
+[ec2-user@master0 ~]$ sudo systemctl status etcd
 ```
 
 The cluster is now initialized, so we need to remove the "--force-new-cluster" parameter again and restart etcd.
 ```
-[root@master0 ~]# sed -i '/ExecStart/s/ --force-new-cluster//' /usr/lib/systemd/system/etcd.service
-[root@master0 ~]# systemctl daemon-reload
-[root@master0 ~]# systemctl restart etcd
-[root@master0 ~]# systemctl status etcd
+[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/ --force-new-cluster//' /usr/lib/systemd/system/etcd.service
+[ec2-user@master0 ~]$ sudo systemctl daemon-reload
+[ec2-user@master0 ~]$ sudo systemctl restart etcd
+[ec2-user@master0 ~]$ sudo systemctl status etcd
 ```
 
 Check if etcd is healthy and check if "/openshift.io" exists in etcd
 ```
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
 member 92c764a37c90869 is healthy: got healthy result from https://127.0.0.1:2379
 cluster is healthy
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key ls /
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key ls /
 /openshift.io
 ```
 
 We need to change the peerURL of the etcd to it's private ip. Make sure to
 correctly copy the member_id and private_ip.
 ```
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
 [member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
 
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member update [member_id] https://[private_ip]:2379
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member update [member_id] https://[private_ip]:2379
 Updated member with ID 6248d01c5701 in cluster
 
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
 6248d01c5701: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.201:2379 clientURLs=https://172.31.46.201:2379 isLeader=true
 ```
 

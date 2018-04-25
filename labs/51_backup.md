@@ -45,15 +45,15 @@ The following script on the first master will export all the OpenShift API Objec
 
 To ensure a consistent etcd backup, we need to stop the daemon. Since there are 3 etcd servers, there is no downtime. All the new data that gets written during this period gets synced after the etcd daemon is started again.
 ```
-[root@master0 ~]# systemctl stop etcd.service
-[root@master0 ~]# etcdctl backup --data-dir /var/lib/etcd/ --backup-dir etcd.bak
-[root@master0 ~]# cp /var/lib/etcd/member/snap/db etcd.bak/member/snap/
-[root@master0 ~]# systemctl start etcd.service
+[ec2-user@master0 ~]$ sudo systemctl stop etcd.service
+[ec2-user@master0 ~]$ sudo etcdctl backup --data-dir /var/lib/etcd/ --backup-dir etcd.bak
+[ec2-user@master0 ~]$ sudo cp /var/lib/etcd/member/snap/db etcd.bak/member/snap/
+[ec2-user@master0 ~]$ sudo systemctl start etcd.service
 ```
 
 Check if the etcd cluster is healthy.
 ```
-[root@master0 ~]# etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
 member 92c764a37c90869 is healthy: got healthy result from https://172.31.46.235:2379
 cluster is healthy
 ```
