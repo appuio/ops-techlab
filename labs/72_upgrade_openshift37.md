@@ -41,7 +41,13 @@ openshift_logging_image_version=v3.7
 
 ### Upgrade Procedure
 
-1. Upgrade the master and API Objects.
+1. Upgrade the so-called control plane, consisting of:
+  - etcd
+  - master components
+  - node services running on masters
+  - Docker running on masters
+  - Docker running on any stand-alone etcd hosts
+
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_control_plane.yml
 ...
