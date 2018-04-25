@@ -85,9 +85,9 @@ The `eviction-max-pod-grace-period` setting enables graceful shutdown of evicted
 limits the grace period specified in each pod to a maximum value. The containers
 main processes in the pod first receive a **SIGTERM** signal, giving them a chance to shut down cleanly. If they are still running after the grace period they are killed with **SIGKILL**.
 
-Then restart the OpenShift node service on our `node2` and `node3` hosts:
+Then restart the OpenShift node service on our app nodes:
 ```
-[ec2-user@master0 ~]$ systemctl restart atomic-openshift-node
+[ec2-user@master0 ~]$ ansible app_nodes -m service -a "name=atomic-openshift-node state=restarted"
 ```
 
 Now run the `membomb` pod again:
