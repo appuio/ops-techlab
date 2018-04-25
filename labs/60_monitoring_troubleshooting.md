@@ -10,6 +10,6 @@ In this chapter, we are going to look at how to do monitoring and troubleshootin
 
 ---
 
-<p width="100px" align="right"><a href="61_monitoring.md">Monitoring →</a></p>
+<p width="100px" align="right"><a href="61_monitoring.md">6.1 Monitoring →</a></p>
 
 [← back to the Labs Overview](../README.md)
