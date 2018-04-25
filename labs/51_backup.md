@@ -10,7 +10,7 @@ In this techlab you will learn how to create a new backup and which files are im
 - Ansible hosts file
 
 
-### Master backup files
+### Master Backup Files
 
 The following files should be backuped on all masters:
 
@@ -18,7 +18,7 @@ The following files should be backuped on all masters:
 - Configuration files (for the master), certificates and htpasswd: `/etc/origin/master/`
 
 
-### Node backup files
+### Node Backup Files
 
 Backup the following folders on all nodes:
 
@@ -26,12 +26,12 @@ Backup the following folders on all nodes:
 - Certificates for the docker-registry: `/etc/docker/certs.d/`
 
 
-### Application backup
+### Application Backup
 
 To backup the data in persistent volumes, you should mount them somewhere. If you mount a Glusterfs volume, it is guaranteed to be consistent. The bricks directly on the Glusterfs servers can contain small inconsistencies that Glusterfs hasn't synced to the other instances yet.
 
 
-### Project backup
+### Project Backup
 
 It is advisable to regularly backup all project data.
 The following script on the first master will export all the OpenShift API Objects (in json) of all projects and save them to the filesystem.
@@ -41,7 +41,7 @@ The following script on the first master will export all the OpenShift API Objec
 ```
 
 
-### Create etcd backup
+### Create etcd Backup
 
 To ensure a consistent etcd backup, we need to stop the daemon. Since there are 3 etcd servers, there is no downtime. All the new data that gets written during this period gets synced after the etcd daemon is started again.
 ```
@@ -61,8 +61,8 @@ cluster is healthy
 
 ---
 
-**End of lab 5.1**
+**End of Lab 5.1**
 
 <p width="100px" align="right"><a href="52_restore.md">5.2 Restore →</a></p>
 
-[← back to the chapter overview](50_backup_restore.md)
+[← back to the Chapter Overview](50_backup_restore.md)

@@ -1,9 +1,9 @@
-## Lab 3.5: Add a new OpenShift node and master
+## Lab 3.5: Add New OpenShift Node and Master
 
 In this lab we will add a new node and a new master to our OpenShift cluster.
 
 
-### Add a new node
+### Add a New Node
 
 Uncomment the new node (`node3.user...`) in the Ansible inventory and also uncomment the `new_nodes` group in the "[OSEv3:children]" section.
 ```
@@ -77,7 +77,7 @@ node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch
 ...
 ```
 
-### Add a new master
+### Add a New Master
 
 Uncomment the new master inside the Ansible inventory. It needs to be in both the `[new_nodes]` and the `[new_masters]` groups.
 ```
@@ -219,8 +219,8 @@ This means we now have an empty `[new_nodes]` and `[new_masters]` groups.
 
 ---
 
-**End of lab 3.5**
+**End of Lab 3.5**
 
-<p width="100px" align="right"><a href="40_configuration_best_practices.md">4. Configuration best practices →</a></p>
+<p width="100px" align="right"><a href="40_configuration_best_practices.md">4. Configuration Best Practices →</a></p>
 
-[← back to the chapter overview](30_daily_business.md)
+[← back to the Chapter Overview](30_daily_business.md)

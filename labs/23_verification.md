@@ -1,4 +1,4 @@
-## 2.3 Verify the installation
+## 2.3 Verify the Installation
 
 After the completion of the installation, we can verify, if everything is running as expected. Most of the checks have already been done by the playbooks.
 First check if the API reachable and all nodes are ready with the right tags.
@@ -36,6 +36,6 @@ We keep this project so we have at least one pod running on OpenShift. If you de
 
 **End of Lab 2.3**
 
-<p width="100px" align="right"><a href="30_daily_business.md">3. Daily business →</a></p>
+<p width="100px" align="right"><a href="30_daily_business.md">3. Daily Business →</a></p>
 
-[← back to the chapter overview](20_installation.md)
+[← back to the Chapter Overview](20_installation.md)

@@ -1,4 +1,4 @@
-## Lab 4.1: Out of resource handling
+## Lab 4.1: Out of Resource Handling
 
 This lab deals with out of resource handling on OpenShift platforms, most importantly the handling of out-of-memory conditions. Out of resource conditions can occur either on the container level because of resource limits or on the node level because a node runs out of memory as a result of overcommitting.
 They are either handled by OpenShift or directly by the kernel.
@@ -24,7 +24,7 @@ The QoS class in turn is defined by resource requests and limits developers conf
 For more information see [Quality of Service Tiers](https://docs.openshift.com/container-platform/3.6/dev_guide/compute_resources.html#quality-of-service-tiers).
 
 
-### Out of memory killer in action
+### Out of Memory Killer in Action
 
 Create a container which allocates memory till it's being killed.
 
@@ -57,7 +57,7 @@ Because of this OpenShift provides the "Pod Eviction" mechanism to kill and resc
 an out of resource condition.
 
 
-### Pod eviction
+### Pod Eviction
 
 OpenShift offers hard and soft evictions. Hard evictions act immediately when the configured threshold is reached.
 Soft evictions allow the threshold to be exceeded for a configurable grace period before taking action.
@@ -127,8 +127,8 @@ and [Out of Resource Handling](https://docs.openshift.com/container-platform/3.6
 
 ---
 
-**End of lab 4.1**
+**End of Lab 4.1**
 
-<p width="100px" align="right"><a href="42_outgoing_http_proxies.md">4.2. Outgoing HTTP proxies →</a></p>
+<p width="100px" align="right"><a href="42_outgoing_http_proxies.md">4.2. Outgoing HTTP Proxies →</a></p>
 
-[← back to the chapter overview](40_configuration_best_practices.md)
+[← back to the Chapter Overview](40_configuration_best_practices.md)

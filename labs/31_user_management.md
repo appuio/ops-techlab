@@ -1,6 +1,6 @@
-## Lab 3.1: Manage users
+## Lab 3.1: Manage Users
 
-### Add user to project
+### Add User to Project
 
 First we create a user and give him the admin role in the openshift-infra project.
 Login to the master and create the local user:
@@ -25,7 +25,7 @@ You have one project on this server: "openshift-infra"
 Using project "openshift-infra".
 ```
 
-### Add cluster-role to user
+### Add Cluster Role to User
 
 In order to keep things clean, we delete the created rolebinding for the `openshift-infra` project again and give the user "cowboy" the global "cluster-admin" role.
 
@@ -65,7 +65,7 @@ Using project "openshift-infra".
 ```
 
 
-### Create a group and add user
+### Create Group and Add User
 
 Instead of giving privileges to single users, we can also create a group and assign a role to that group.
 
@@ -91,7 +91,7 @@ cluster-admin                                                         /cluster-a
 ```
 
 
-### Evaluate authorizations
+### Evaluate Authorizations
 
 It's possible to evaluate authorizations. This can be done with the following pattern:
 ```
@@ -161,8 +161,8 @@ Delete the group, entity and user:
 
 ---
 
-**End of lab 3.1**
+**End of Lab 3.1**
 
-<p width="100px" align="right"><a href="32_update_hosts.md">3.2 Update hosts →</a></p>
+<p width="100px" align="right"><a href="32_update_hosts.md">3.2 Update Hosts →</a></p>
 
-[← back to the chapter overview](30_daily_business.md)
+[← back to the Chapter Overview](30_daily_business.md)

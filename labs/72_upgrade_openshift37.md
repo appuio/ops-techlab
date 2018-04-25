@@ -39,7 +39,7 @@ openshift_logging_image_version=v3.7
 ```
 
 
-### Upgrade procedure
+### Upgrade Procedure
 
 1. Upgrade the master and API Objects.
 ```
@@ -101,8 +101,8 @@ https://console.user[X].lab.openshift.ch/console/extensions/clients/
 
 ---
 
-**End of lab 7.2**
+**End of Lab 7.2**
 
-<p width="100px" align="right"><a href="73_upgrade_verification.md">7.3 Verify the upgrade →</a></p>
+<p width="100px" align="right"><a href="73_upgrade_verification.md">7.3 Verify the Upgrade →</a></p>
 
-[← back to the chapter overview](70_upgrade.md)
+[← back to the Chapter Overview](70_upgrade.md)

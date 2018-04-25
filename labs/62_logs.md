@@ -1,4 +1,4 @@
-## Lab 6.2: Troubleshooting using logs
+## Lab 6.2: Troubleshooting Using Logs
 
 As soon as basic functionality of OpenShift itself is reduced or not working at all, we have to have a closer look at the underlying components' log messages. We find these logs either in the journal on the different servers or in Elasticsearch.
 
@@ -7,7 +7,7 @@ As soon as basic functionality of OpenShift itself is reduced or not working at 
 **Note:** While it is convenient to use the EFK stack to analyze log messages in a central place, be aware that depending on the problem, relevant log messages might not be received by Elasticsearch (e.g. SDN problems).
 
 
-### Services overview
+### Services Overview
 
 The master usually houses two to three master-specific services:
 * `atomic-openshift-master` (in a single-master setup)
@@ -25,7 +25,7 @@ General services include the following:
 * `iptables`
 
 
-### Service states
+### Service States
 
 Check different service states from the first master using ansible. Check the OpenShift master services first:
 ```
@@ -73,8 +73,8 @@ Or if we wanted to filter for error messages we could simply use "error" in the 
 
 ---
 
-**End of lab 6.2**
+**End of Lab 6.2**
 
 <p width="100px" align="right"><a href="70_upgrade.md">Upgrade OpenShift from 3.6 to 3.7 →</a></p>
 
-[← back to the chapter overview](60_monitoring_troubleshooting.md)
+[← back to the Chapter Overview](60_monitoring_troubleshooting.md)

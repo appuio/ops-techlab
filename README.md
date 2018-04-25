@@ -7,23 +7,23 @@ In the following guided and hands-on techlab we show the participants how to ope
 
 ## Contribution
 
-If you find errors, bugs or missing information please help us improve our techlab and have a look at the [contribution guide](CONTRIBUTING.md).
+If you find errors, bugs or missing information please help us improve our techlab and have a look at the [Contribution Guide](CONTRIBUTING.md).
 
 
-## Before you begin
+## Before You Begin
 
-There's a [troubleshooting cheat sheet](resources/troubleshooting_cheat_sheet.md) that might be of help if you run into errors.
+There's a [Troubleshooting Cheat Sheet](resources/troubleshooting_cheat_sheet.md) that might be of help if you run into errors.
 
 
 ## Labs
 
 1. [Warmup](labs/10_warmup.md)
-2. [OpenShift installation](labs/20_installation.md)
-3. [Daily business](labs/30_daily_business.md)
-4. [Configuration best practices](labs/40_configuration_best_practices.md)
-5. [Backup and restore](labs/50_backup_restore.md)
-6. [Monitoring and troubleshooting](labs/60_monitoring_troubleshooting.md)
-7. [OpenShift upgrade](labs/70_upgrade.md)
+2. [OpenShift Installation](labs/20_installation.md)
+3. [Daily Business](labs/30_daily_business.md)
+4. [Configuration Best Practices](labs/40_configuration_best_practices.md)
+5. [Backup and Restore](labs/50_backup_restore.md)
+6. [Monitoring and Troubleshooting](labs/60_monitoring_troubleshooting.md)
+7. [OpenShift Upgrade](labs/70_upgrade.md)
 
 
 ## Appendices

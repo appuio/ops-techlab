@@ -1,4 +1,4 @@
-## Lab 3.4: Renew certificates
+## Lab 3.4: Renew Certificates
 
 In this lab we take a look at the OpenShift certificates and how to renew them.
 
@@ -10,7 +10,7 @@ These are the certificates that need to be maintained. For each component there 
 - router
 
 
-### Check the expiration of the certificates
+### Check the Expiration of the Certificates
 
 To check all your certificates, run the playbook `certificate_expiry/easy-mode.yaml`:
 ```
@@ -23,7 +23,7 @@ The playbook will generate the following reports with the information of each ce
 ```
 
 
-### Redeploy etcd certificates
+### Redeploy etcd Certificates
 
 To get a feeling for the process of redeploying certificates, we will redeploy the etcd certificates.
 
@@ -93,8 +93,8 @@ Use the following playbooks to replace the certificates of the other main compon
 
 ---
 
-**End of lab 3.4**
+**End of Lab 3.4**
 
-<p width="100px" align="right"><a href="35_add_new_node_and_master.md">3.5 Add a new OpenShift node and master →</a></p>
+<p width="100px" align="right"><a href="35_add_new_node_and_master.md">3.5 Add New OpenShift Node and Master →</a></p>
 
-[← back to the chapter overview](30_daily_business.md)
+[← back to the Chapter Overview](30_daily_business.md)

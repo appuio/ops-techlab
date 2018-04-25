@@ -6,7 +6,7 @@ OpenShift monitoring can be categorized into three different categories which ea
 3. Does our cluster have enough capacity to run all pods?
 
 
-### Is our cluster in an operational state at the moment?
+### Is Our Cluster in an Operational State at the Moment?
 
 In order to answer this first question, we check the state of different vital components:
 * Masters
@@ -40,7 +40,7 @@ Using the wildcard domain to access a router's health page results in a positive
 **Apps** running on OpenShift should of course be (end-to-end) monitored as well, however, we are not interested in a single application per se. We want to know if all applications of a group of monitored applications do not respond. The more applications not responding the more probable a platform-wide problem is the cause.
 
 
-### Will our cluster remain in an operational state in the near future?
+### Will our Cluster Remain in an Operational State in the Near Future?
 
 The second category is based on a wider array of checks. It includes checks that take a more "classic" approach such as storage monitoring, but also includes above checks to find out if single cluster members are not healthy.
 
@@ -65,7 +65,7 @@ Next to the usual monitoring of storage per partition/logical volume, there's on
 Speaking of garbage collection, there's another component that needs frequent garbage collection: the registry. Contrary to the Docker storage on each node, OpenShift only provides a command to prune the registry but does not offer a means to execute it on a regular basis. Until it does, setup the [appuio-pruner](https://github.com/appuio/appuio-pruner) as described in its README.
 
 
-### Does our cluster have enough capacity to run all pods?
+### Does our Cluster Have Enough Capacity to Run All Pods?
 
 Besides the obvious components that need monitoring like CPU, memory and storage, this third question is tightly coupled with requests and limits we looked at in [chapter 4](41_out_of_resource_handling.md).
 
@@ -96,8 +96,8 @@ These two tools provide a quick look at resource availability. Implementing a ma
 
 ---
 
-**End of lab 6.1**
+**End of Lab 6.1**
 
-<p width="100px" align="right"><a href="62_logs.md">6.2 Troubleshooting using logs →</a></p>
+<p width="100px" align="right"><a href="62_logs.md">6.2 Troubleshooting Using Logs →</a></p>
 
-[← back to the chapter overview](60_monitoring_troubleshooting.md)
+[← back to the Chapter Overview](60_monitoring_troubleshooting.md)

@@ -1,4 +1,4 @@
-## Lab 3.3: Persistent storage
+## Lab 3.3: Persistent Storage
 
 In this lab we take a look at the OpenShift implementation of Container Native Storage using the `heketi-cli` to resize a volume.
 
@@ -65,7 +65,7 @@ Show the whole topology:
 ```
 
 
-### Set default storage class
+### Set Default Storage Class
 
 A StorageClass provides a way to describe a certain type of storage. Different classes might map to different storage types (e.g. nfs, gluster, ...), quality-of-service levels, to backup policies or to arbitrary policies determined by the cluster administrators. In our case we only have one storage class which is `glusterfs-storage`:
 ```
@@ -82,7 +82,7 @@ If then someone creates a pvc and does not specify the StorageClass, the [Defaul
 **Note:** We could have set the Ansible inventory variable `openshift_storage_glusterfs_storageclass_default` to `true` during installation in order to let the playbooks automatically do what we just did by hand. For demonstration purposes however we set it to `false`.
 
 
-### Create and delete a pvc
+### Create and Delete a Persistent Volume Claim
 
 If you create a PersistentVolumeClaim, Heketi will automatically create a PersistentVolume and bind it to your claim. Likewise if you delete a claim, Heketi will delete the PersistentVolume.
 
@@ -130,7 +130,7 @@ persistentvolumeclaim "testclaim" deleted
 ```
 
 
-### Resize existing volume
+### Resize Existing Volume
 
 We will resize the registry volume with heketi-cli.
 
@@ -174,8 +174,8 @@ registry-volume   6Gi        RWX           Retain          Bound     default/reg
 
 ---
 
-**End of lab 3.3**
+**End of Lab 3.3**
 
-<p width="100px" align="right"><a href="34_renew_certificates.md">3.4 Renew certificates →</a></p>
+<p width="100px" align="right"><a href="34_renew_certificates.md">3.4 Renew Certificates →</a></p>
 
-[← back to the chapter overview](30_daily_business.md)
+[← back to the Chapter Overview](30_daily_business.md)

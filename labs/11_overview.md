@@ -1,8 +1,8 @@
-## Lab 1.1: Architectural overview
+## Lab 1.1: Architectural Overview
 
 This is the environment we will build and work on. It is deployed on Amazon AWS.
 
-![Lab OpenShift cluster overview](../resources/11_ops-techlab.png)
+![Lab OpenShift Cluster Overview](../resources/11_ops-techlab.png)
 
 Our lab installation consists of the following components:
 1. Two Load Balancers
@@ -21,8 +21,8 @@ Our lab installation consists of the following components:
 
 ---
 
-**End of lab 1.1**
+**End of Lab 1.1**
 
-<p width="100px" align="right"><a href="12_access_environment.md">1.2 Access the lab environment →</a></p>
+<p width="100px" align="right"><a href="12_access_environment.md">1.2 Access the Lab Environment →</a></p>
 
-[← back to the chapter overview](10_warmup.md)
+[← back to the Chapter Overview](10_warmup.md)

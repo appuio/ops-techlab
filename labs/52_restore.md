@@ -1,6 +1,6 @@
 ## Lab 5.2: Restore
 
-### Restore a project
+### Restore a Project
 
 We will now delete the logging project and try to restore it from the backup.
 ```
@@ -52,7 +52,7 @@ https://logging.app[USERID].lab.openshift.ch
 ```
 
 
-### Restore the etcd cluster
+### Restore the etcd Cluster
 
 First, we need to stop etcd on the first master.
 ```
@@ -109,8 +109,8 @@ Updated member with ID 6248d01c5701 in cluster
 
 ---
 
-**End of lab 5.2**
+**End of Lab 5.2**
 
-<p width="100px" align="right"><a href="60_monitoring_troubleshooting.md">6. Monitoring and troubleshooting →</a></p>
+<p width="100px" align="right"><a href="60_monitoring_troubleshooting.md">6. Monitoring and Troubleshooting →</a></p>
 
-[← back to the chapter overview](50_backup_restore.md)
+[← back to the Chapter Overview](50_backup_restore.md)

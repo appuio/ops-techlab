@@ -1,4 +1,4 @@
-## Lab 1.2: How to access the lab environment
+## Lab 1.2: How to Access the Lab Environment
 
 In the following labs, we are going to use `user[X]` as a placeholder for the user id that was assigned to you.
 
@@ -30,8 +30,8 @@ There are three main ways we will access our environment. The mentioned ports ne
 
 ---
 
-**End of lab 1.2**
+**End of Lab 1.2**
 
-<p width="100px" align="right"><a href="20_installation.md">2. OpenShift installation →</a></p>
+<p width="100px" align="right"><a href="20_installation.md">2. OpenShift Installation →</a></p>
 
-[← back to the chapter overview](10_warmup.md)
+[← back to the Chapter Overview](10_warmup.md)

@@ -1,4 +1,4 @@
-## Lab 7.3: Verify the upgrade
+## Lab 7.3: Verify the Upgrade
 
 Check the version of the `docker` and `atomic-openshift` packages on all nodes and master.
 ```
@@ -21,4 +21,4 @@ Now we need to verify our installation according to: "23_verification => Verify 
 
 **End of Lab 7**
 
-[← back to the chapter overview](70_upgrade.md)
+[← back to the Chapter Overview](70_upgrade.md)

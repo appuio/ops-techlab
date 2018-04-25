@@ -1,4 +1,4 @@
-## Lab 4.2: Outgoing HTTP proxies
+## Lab 4.2: Outgoing HTTP Proxies
 
 Large corporations often allow internet access only via outgoing HTTP proxies for security reasons.
 To use OpenShift Container Platform in such an environment the various OpenShift components and 
@@ -10,7 +10,7 @@ We haven't yet added an outgoing HTTP proxy to our lab environment. Therefore th
 contain hands-on exercises.
 
 
-### Configure the Ansible inventory
+### Configure the Ansible Inventory
 
 The OpenShift Ansible playbooks support three groups of variables for outgoing HTTP proxy configuration.
 
@@ -50,7 +50,7 @@ Finally an outgoing HTTP proxy can be configured to allow OpenShift builds to ch
     openshift_builddefaults_git_no_proxy=<no_proxy list>
 
 
-### Internal Docker registry
+### Internal Docker Registry
 
 It's recommended to add the IP address of the internal registry to the `no_proxy`
 lists. The IP addressed of the internal registry can be looked up after cluster installation with:
@@ -98,7 +98,7 @@ Also Ansible inventories in INI format do not support line folding, so this has 
 If you use Java base images other than the ones provided by Red Hat you have to implement your own solution to configure an outgoing HTTP proxy for Maven.
 
 
-### Apply outgoing HTTP proxy configuration to cluster
+### Apply Outgoing HTTP Proxy Configuration to Cluster
 
 To apply the outgoing HTTP proxy configuration to the cluster you have to run the master and node config playbooks:
 
@@ -106,8 +106,8 @@ To apply the outgoing HTTP proxy configuration to the cluster you have to run th
 
 ---
 
-**End of lab 4.2**
+**End of Lab 4.2**
 
-<p width="100px" align="right"><a href="50_backup_restore.md">5. Backup and restore →</a></p>
+<p width="100px" align="right"><a href="50_backup_restore.md">5. Backup and Restore →</a></p>
 
-[← back to the chapter overview](40_configuration_best_practices.md)
+[← back to the Chapter Overview](40_configuration_best_practices.md)

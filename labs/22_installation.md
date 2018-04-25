@@ -44,8 +44,8 @@ https://console.user[X].lab.openshift.ch/console/extensions/clients/
 
 ---
 
-**End of lab 2.2**
+**End of Lab 2.2**
 
-<p width="100px" align="right"><a href="23_verification.md">2.3 Verify the installation →</a></p>
+<p width="100px" align="right"><a href="23_verification.md">2.3 Verify the Installation →</a></p>
 
-[← back to the chapter overview](20_installation.md)
+[← back to the Chapter Overview](20_installation.md)
