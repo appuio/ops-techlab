@@ -1,15 +1,17 @@
 ## Lab 7.2: Upgrade to OpenShift 3.7
 
-### Upgrade preparation
+### Upgrade Preparation
 
-First we need to prepare our nodes and make sure, all instances have the new repository attached and the old removed.
+We first need to make sure our lab environment fulfills the requirements mentioned in the official documentation. We are going to do an "[Automated In-place Cluster Upgrade](https://docs.openshift.com/container-platform/3.7/upgrading/automated_upgrades.html#install-config-upgrading-automated-upgrades)" which lists part of these requirements and explains how to verify the current installation. Also check the [Prerequisites](https://docs.openshift.com/container-platform/3.7/install_config/install/prerequisites.html#install-config-install-prerequisites) of the new release.
+
+Conveniently, our lab environment already fulfills all the requirements, so we can move on to the next step. Let's attach the repositories for the new OpenShift release:
 ```
 [ec2-user@master0 ~]$ ansible all -a "subscription-manager refresh"
 [ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos --disable="rhel-7-server-ose-3.6-rpms" --enable="rhel-7-server-ose-3.7-rpms" --enable="rhel-7-fast-datapath-rpms"'
 [ec2-user@master0 ~]$ ansible all -a "yum clean all"
 ```
 
-Next we need to upgrade atomic-openshift-utils to version 3.7 on our first master.
+Next we need to upgrade `atomic-openshift-utils` to version 3.7 on our first master.
 ```
 [ec2-user@master0 ~]$ sudo yum update -y atomic-openshift-utils
 ....
