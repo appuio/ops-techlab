@@ -1,22 +1,32 @@
 ## Lab 1.2: How to access the lab environment
 
-We will write "user[X]" during the labs for user specific documentations. Everybody gets an ID an needs to use this ID, to use his environment.
+In the following labs, we are going to use `user[X]` as a placeholder for the user id that was assigned to you.
 
-For example for ID 1:
-- https://console.user[X].lab.openshift.ch
-=>
-- https://console.user1.lab.openshift.ch
+If you e.g. had user id 1 you would change
+```
+https://console.user[X].lab.openshift.ch
+```
+to
+```
+https://console.user1.lab.openshift.ch
+```
 
 
-There are three main ways we will access our environment. These ports need to be open from our place outgoing to Amazon AWS.
+There are three main ways we will access our environment. The mentioned ports need to be open from our own location to Amazon AWS.
 
-1. API: Using the oc client or through a web browser. (443/HTTPS)
-    1. The console API will be available through: console.user[X].lab.openshift.ch
+- **API** / **Console**
+  - Address: https://console.user[X].lab.openshift.ch
+  - Port: 443/tcp
 
-1. Router: The deployed apps will be available through the routers. We will access them mainly through a web browser. (443/HTTPS and 80/HTTP)
+- **Applications**
+  - Address: https://console.user[X].lab.openshift.ch
+  - Ports: 80/tcp and 443/tcp
 
-1. Architecture: We will connect through ssh to the bastion host. This will be our main control instance. (22/SSH)
-    1. You can connect to the bastion host through: ssh ec2-user@bastion.user[X].lab.openshift.ch
+- **Administration**
+  - Address: bastion.user[X].lab.openshift.ch
+  - User: ec2-user
+  - Command: `ssh ec2-user@bastion.user[X].lab.openshift.ch`
+  - Port: 22/tcp
 
 ---
 
