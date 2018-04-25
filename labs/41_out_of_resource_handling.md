@@ -27,22 +27,25 @@ For more information see [Quality of Service Tiers](https://docs.openshift.com/c
 ### Out of Memory Killer in Action
 
 Create a container which allocates memory till it's being killed.
-
-    oc new-project out-of-memory
-    oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_membomb.yaml
+```
+[ec2-user@master0 ~]$ oc new-project out-of-memory
+[ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_membomb.yaml
+```
 
 Wait till the container is up and being killed. `oc get pods` will then show:
-
-    NAME              READY     STATUS      RESTARTS   AGE
-    membomb-1-3gcjg   0/1       OOMKilled   0          31s
+```
+NAME              READY     STATUS      RESTARTS   AGE
+membomb-1-3gcjg   0/1       OOMKilled   0          31s
+```
 
 Run `oc describe pod -l app=membomb` to get more information about the container state which should look like this:
-
-    State:              Terminated
-      Reason:           OOMKilled
-      Exit Code:        137
-      Started:          Sun, 22 Apr 2018 15:38:22 +0200
-      Finished:         Sun, 22 Apr 2018 15:38:48 +0200
+```
+State:              Terminated
+  Reason:           OOMKilled
+  Exit Code:        137
+  Started:          Sun, 22 Apr 2018 15:38:22 +0200
+  Finished:         Sun, 22 Apr 2018 15:38:48 +0200
+```
 
 Exit code 137 [indicates](http://tldp.org/LDP/abs/html/exitcodes.html) that the container main process was killed by the `SIGKILL` signal.
 With the default `restartPolicy` of `Always` the container would now restart on the same node. For this lab the `restartPolicy`
@@ -83,18 +86,21 @@ limits the grace period specified in each pod to a maximum value. The containers
 main processes in the pod first receive a **SIGTERM** signal, giving them a chance to shut down cleanly. If they are still running after the grace period they are killed with **SIGKILL**.
 
 Then restart the OpenShift node service on our `node2` and `node3` hosts:
-
-    systemctl restart atomic-openshift-node
+```
+[ec2-user@master0 ~]$ systemctl restart atomic-openshift-node
+```
 
 Now run the `membomb` pod again:
-
-    oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_membomb.yaml
+```
+[ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_membomb.yaml
+```
 
 Wait till the container gets evicted. Run `oc describe pod -l app=membomb` to see the reason for the eviction:
-
-    Status:                 Failed
-    Reason:                 Evicted
-    Message:                The node was low on resource: memory.
+```
+Status:                 Failed
+Reason:                 Evicted
+Message:                The node was low on resource: memory.
+```
 
 After a pod eviction a node is flagged as beeing under memory pressure for a short time, by default 5 minutes.
 Nodes under memory pressure are not considered for scheduling new pods.
@@ -103,8 +109,9 @@ Nodes under memory pressure are not considered for scheduling new pods.
 ### Recommendations
 
 Beginning with OCP 3.6 the memory available for pods on a node is determined by this formula:
-
-    <allocatable memory> = <node capacity> - <kube-reserved> - <system-reserved> - <hard eviction thresholds>
+```
+<allocatable memory> = <node capacity> - <kube-reserved> - <system-reserved> - <hard eviction thresholds>
+```
 
 Where
 * `<node capacity>` is the memory (RAM) of a node.
