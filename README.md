@@ -28,8 +28,8 @@ There's a [troubleshooting cheat sheet](resources/troubleshooting_cheat_sheet.md
 
 ## Appendices
 
-1. [Monitoring with Prometheus](appendices/01_prometheus.md)
-2. [etcd Scaleup](appendices/02_etcd_scaleup.md)
+1. [etcd Scaleup](appendices/01_etcd_scaleup.md)
+2. [Monitoring with Prometheus](appendices/02_prometheus.md)
 3. [Useful Internet Resources](appendices/03_internet_resources.md)
 
 
