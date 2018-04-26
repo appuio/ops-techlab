@@ -193,12 +193,7 @@ Check if the old masters see the new one:
 ...
 ```
 
-The new master and node need the right labels set for logging. To achieve this, run the OpenShift logging playbook again.
-```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
-```
-
-If everything works as expected, we move the new master from the `[new_masters]` to the `[masters]` group inside the Ansible inventory:
+If everything worked as expected, we are going to move the new master from the `[new_masters]` to the `[masters]` group inside the Ansible inventory:
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 [masters]
@@ -216,6 +211,36 @@ This means we now have an empty `[new_nodes]` and `[new_masters]` groups.
 ...
 [new_nodes]
 ```
+
+
+### Fix Logging
+
+The default logging stack on OpenShift mainly consists of Elasticsearch, fluentd and Kibana, where fluentd is a DaemonSet. This means that a fluentd pod is automatically deployed on every node, even if scheduling is disabled for that node. The limiting factor for the deployment of DaemonSet pods is the node selector which is set by default to the label `logging-infra-fluentd=true`. The logging playbook attaches this label to all nodes by default, so if you wanted to prevent the deployment of fluentd on certain hosts you had to add the label `logging-infra-fluentd=false` in the inventory. As you may have seen, we do not specify the label specifically in the inventory, which means:
+- Every node gets the `logging-infra-fluentd=true` attached by the logging playbook
+- fluentd is deployed on every node
+
+This means the new nodes did not yet get the fluentd label because the logging playbook had only been executed when they were not yet active. We can confirm this by looking at what labels each node has:
+```
+oc get nodes --show-labels
+```
+
+Then we correct it either by executing the logging playbook or by manually labelling the nodes with `oc`. Executing the playbook takes quite some time but we leave this choice to you:
+- So either execute the playbook:
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
+```
+
+- Or label the nodes manually with `oc`:
+```
+[ec2-user@master0 ~]$ oc label node node3.user[X].lab.openshift.ch logging-infra-fluentd=true
+[ec2-user@master0 ~]$ oc label node master2.user[X].lab.openshift.ch logging-infra-fluentd=true
+```
+
+Confirm that the nodes now have the correct label:
+```
+oc get nodes --show-labels
+```
+
 
 ---
 
