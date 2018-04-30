@@ -16,7 +16,7 @@ new_nodes
 ...
 
 [new_nodes]
-node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}" openshift_schedulable=false
+node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}" openshift_schedulable=false
 ...
 
 ```
@@ -68,8 +68,8 @@ master1.user[X].lab.openshift.ch openshift_hostname=master1.user[X].lab.openshif
 node0.user[X].lab.openshift.ch openshift_hostname=node0.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 node1.user[X].lab.openshift.ch openshift_hostname=node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 node2.user[X].lab.openshift.ch openshift_hostname=node2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}"
-node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}"
+node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 ...
 
 [new_nodes]
