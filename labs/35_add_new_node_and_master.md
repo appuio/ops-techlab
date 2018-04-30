@@ -11,12 +11,12 @@ Uncomment the new node (`node3.user...`) in the Ansible inventory and also uncom
 ...
 glusterfs
 bastion
-#new_masters
+new_masters
 new_nodes
 ...
 
 [new_nodes]
-node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}" openshift_schedulable=false
+node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_public_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 ...
 
 ```
@@ -61,13 +61,9 @@ Inside the Ansible inventory, we move the new node from the `[new_nodes]` to the
 ```
 [ec2-user@master0 ~]$ cat /etc/ansible/hosts
 ...
-[nodes]
-master0.user[X].lab.openshift.ch openshift_hostname=master0.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
-master1.user[X].lab.openshift.ch openshift_hostname=master1.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
-node0.user[X].lab.openshift.ch openshift_hostname=node0.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-node1.user[X].lab.openshift.ch openshift_hostname=node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-node2.user[X].lab.openshift.ch openshift_hostname=node2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}"
-node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'main', 'zone': 'default'}"
+[app_nodes]
+node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_public_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_public_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 ...
 
 [new_nodes]
@@ -89,10 +85,10 @@ new_masters
 new_nodes
 ...
 [new_masters]
-master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
+master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_public_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
 ...
 [new_nodes]
-master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'zone': 'default'}" openshift_schedulable=false
+master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_public_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
 ...
 ```
 
@@ -117,7 +113,8 @@ master2.user[X].lab.openshift.ch   Ready,SchedulingDisabled   10m       v1.6.1+5
 node0.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
 node1.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
 node2.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node3.user[X].lab.openshift.ch     Ready                      32m       v1.6.1+5115d708d7
+node3.user[X].lab.openshift.ch     Ready                      6d       v1.6.1+5115d708d7
+node4.user[X].lab.openshift.ch     Ready                      32m       v1.6.1+5115d708d7
 ```
 
 Check if the old masters see the new one:
@@ -197,9 +194,9 @@ If everything worked as expected, we are going to move the new master from the `
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 [masters]
-master0.user[X].lab.openshift.ch
-master1.user[X].lab.openshift.ch
-master2.user[X].lab.openshift.ch
+master0.user[X].lab.openshift.ch openshift_hostname=master0.user[X].lab.openshift.ch openshift_public_hostname=master0.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
+master1.user[X].lab.openshift.ch openshift_hostname=master1.user[X].lab.openshift.ch openshift_public_hostname=master1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
+master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_public_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
 ...
 ```
 
