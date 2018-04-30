@@ -71,7 +71,7 @@ shutdown of evicted pods.
 
 Usually you would configure pod eviction in the `openshift_node_kubelet_args` key of your Ansible inventory. However since the config playbook that applies the configuration to the cluster takes about 10 minutes to run on OCP 3.6 we apply the configuration directly to the nodes in this lab.
 
-For your `node2` and `node3` host enhance `kubeletArguments` in `/etc/origin/node/node-config.yaml` as follows: 
+For your `node3` and `node4` host enhance `kubeletArguments` in `/etc/origin/node/node-config.yaml` as follows: 
 
 ```yaml
 kubeletArguments:
