@@ -5,21 +5,14 @@ This appendix is going to show you how to do a scaleup of etcd hosts.
 
 ## Adapt Inventory
 
-Add the new etcd host into the group `[new_etcd]` to the Ansible inventory at `/etc/ansible/hosts` so it looks something like:
+Uncomment the new etcd hosts in the Ansible inventory in the (`[new_etcd]`) section.
 ```
-[OSEv3:children]
-masters
-nodes
-etcd
-glusterfs
-bastion
-new_etcd
 ...
 [etcd]
 master0.user8.lab.openshift.ch
-master1.user8.lab.openshift.ch
 
 [new_etcd]
+master1.user8.lab.openshift.ch
 master2.user8.lab.openshift.ch
 ...
 ```
@@ -39,7 +32,7 @@ Verify your installation now consists of the original cluster plus one new etcd 
 sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
 ```
 
-Move the now functional etcd member from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
+Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
 ```
 ...
 [etcd]
