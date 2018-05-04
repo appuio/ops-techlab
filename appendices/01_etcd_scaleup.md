@@ -9,11 +9,11 @@ Uncomment the new etcd hosts in the Ansible inventory in the (`[new_etcd]`) sect
 ```
 ...
 [etcd]
-master0.user8.lab.openshift.ch
+master0.user[X].lab.openshift.ch
 
 [new_etcd]
-master1.user8.lab.openshift.ch
-master2.user8.lab.openshift.ch
+master1.user[X].lab.openshift.ch
+master2.user[X].lab.openshift.ch
 ...
 ```
 
