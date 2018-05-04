@@ -114,7 +114,7 @@ master2.user[X].lab.openshift.ch   Ready,SchedulingDisabled   10m       v1.6.1+5
 node0.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
 node1.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
 node2.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node3.user[X].lab.openshift.ch     Ready                      6d       v1.6.1+5115d708d7
+node3.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
 node4.user[X].lab.openshift.ch     Ready                      32m       v1.6.1+5115d708d7
 ```
 
