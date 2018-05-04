@@ -1,5 +1,10 @@
 ## Lab 3.1: Manage Users
 
+### OpenShift Authorization
+
+Before you begin with this lab, make sure you roughly understand the authorization concept of OpenShift.
+[Authorization](https://docs.openshift.com/container-platform/3.6/architecture/additional_concepts/authorization.html)
+
 ### Add User to Project
 
 First we create a user and give him the admin role in the openshift-infra project.
