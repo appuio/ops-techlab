@@ -33,7 +33,7 @@ Change the following Ansible variables in our OpenShift inventory:
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 ....
 openshift_release=v3.7
-openshift_pkg_version=-3.7.42
+openshift_pkg_version=-3.7.44
 ...
 openshift_logging_image_version=v3.7
 ```
