@@ -44,7 +44,7 @@ There is also the possibility of checking etcd's health using `etcdctl`:
 # etcdctl --cert-file=/etc/etcd/peer.crt \
           --key-file=/etc/etcd/peer.key \
           --ca-file=/etc/etcd/ca.crt \
-          --peers="https://master0.user[X].lab.openshift.ch:2379"
+          --peers="https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379"
           cluster-health
 ```
 

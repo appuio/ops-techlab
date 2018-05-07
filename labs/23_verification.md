@@ -18,12 +18,14 @@ Check if all pvc are bound and glusterfs runs fine
 
 Check the etcd health status. Do not forget to change the *[X]* of *user[X]* with your number.
 ```
-[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
-member 92c764a37c90869 is healthy: got healthy result from https://172.31.46.235:2379
+[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
+member 633a80df3001 is healthy: got healthy result from https://172.31.37.65:2379
+member aadb46077a7f58a is healthy: got healthy result from https://172.31.32.131:2379
 cluster is healthy
 
-[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member list
-92c764a37c90869: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.235:2380 clientURLs=https://172.31.46.235:2379 isLeader=true
+[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member list
+633a80df3001: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.37.65:2380 clientURLs=https://172.31.37.65:2379 isLeader=true
+aadb46077a7f58a: name=master1.user[X].lab.openshift.ch peerURLs=https://172.31.32.131:2380 clientURLs=https://172.31.32.131:2379 isLeader=false
 ```
 
 Create a project, run a build, push/pull from the internal registry and deploy a test application.
