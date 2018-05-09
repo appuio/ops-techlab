@@ -30,7 +30,7 @@ oc get dc router -n default -o jsonpath='{.spec.template.spec.containers[*].env[
 
 Add router scrape configuration and add the output from the command above to `[ROUTER_PW]`:
 ```
-[ec2-user@master0 ~]$ oc edit configmap prometheus
+[ec2-user@master0 ~]$ oc edit configmap prometheus -n openshift-metrics
     scrape_configs:
 ...
     - job_name: 'openshift-routers'
@@ -49,10 +49,10 @@ Add router scrape configuration and add the output from the command above to `[R
 ### Deploy node-exporter
 Delete the project node-selector, grant prometheus-node-exporter serviceaccount hostaccess and deploy the node-exporter DaemonSet.
 ```
-oc annotate namespace openshift-metrics openshift.io/node-selector="" --overwrite
-oc adm policy add-scc-to-user -z prometheus-node-exporter -n openshift-metrics hostaccess
-oc create -f resource/node-exporter.yaml -n openshift-metrics
-``` 
+[ec2-user@master0 ~]$ oc annotate namespace openshift-metrics openshift.io/node-selector="" --overwrite
+[ec2-user@master0 ~]$ oc adm policy add-scc-to-user -z prometheus-node-exporter -n openshift-metrics hostaccess
+[ec2-user@master0 ~]$ oc create -f resource/node-exporter.yaml -n openshift-metrics
+```
 
 Add scrape configuration for node-exporter:
 ```
@@ -88,8 +88,8 @@ Open port for Prometheus node-exporter:
 
 ### Deploy kube-state-metrics
 Documentation: https://github.com/kubernetes/kube-state-metrics
-``` 
-oc create -f resource/kube-state-metrics.yaml -n openshift-metrics
+```
+[ec2-user@master0 ~]$ oc create -f resource/kube-state-metrics.yaml -n openshift-metrics
 ```
 
 Add kube-state-metric scrape configuration.
@@ -105,6 +105,22 @@ Add kube-state-metric scrape configuration.
 ...
     alerting:
       alertmanagers:
+```
+
+### Restart Prometheus
+Delete the Prometheus pod load the changed configuration.
+```
+[ec2-user@master0 ~]$ oc get pods -n openshift-metrics
+NAME                             READY     STATUS             RESTARTS   AGE
+kube-state-2718312193-flwhj      1/1       Running            0          1m
+prometheus-0                     5/5       Running            0          52m
+prometheus-node-exporter-6zptr   0/1       CrashLoopBackOff   4          2m
+prometheus-node-exporter-rz95k   0/1       CrashLoopBackOff   4          2m
+prometheus-node-exporter-spnkh   0/1       CrashLoopBackOff   4          2m
+prometheus-node-exporter-tndjs   0/1       CrashLoopBackOff   4          2m
+prometheus-node-exporter-zqv2l   0/1       CrashLoopBackOff   4          2m
+[ec2-user@master0 ~]$ oc delete pod prometheus-0 -n openshift-metrics
+pod "prometheus-0" deleted
 ```
 
 ### Access Prometheus
