@@ -80,6 +80,7 @@ If all volumes have "Number of entries: 0", we can proceed with the next node an
 3. Upgrading the EFK Logging Stack
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
+[ec2-user@master0 ~]$ oc delete pod --selector="component=fluentd" -n logging
 ```
 
 4. Upgrading Cluster Metrics
