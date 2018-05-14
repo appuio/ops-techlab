@@ -19,13 +19,14 @@ openshift_prometheus_additional_rules_file=/usr/share/ansible/prometheus/prometh
 
 Execute the playbook to install Prometheus:
 ```
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-prometheus.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-prometheus.yml
 ```
 
 ### Monitor OpenShift routers with Prometheus
+
 Get the router password for basic authentication to scrape information from the router healthz endpoint:
 ```
-oc get dc router -n default -o jsonpath='{.spec.template.spec.containers[*].env[?(@.name=="STATS_PASSWORD")].value}{"\n"}'
+[ec2-user@master0 ~]$ oc get dc router -n default -o jsonpath='{.spec.template.spec.containers[*].env[?(@.name=="STATS_PASSWORD")].value}{"\n"}'
 ```
 
 Add router scrape configuration and add the output from the command above to `[ROUTER_PW]`:
@@ -47,6 +48,7 @@ Add router scrape configuration and add the output from the command above to `[R
 ```
 
 ### Deploy node-exporter
+
 Delete the project node-selector, grant prometheus-node-exporter serviceaccount hostaccess and deploy the node-exporter DaemonSet.
 ```
 [ec2-user@master0 ~]$ oc annotate namespace openshift-metrics openshift.io/node-selector="" --overwrite
@@ -80,13 +82,13 @@ Add scrape configuration for node-exporter:
       alertmanagers:
 ```
 
-Open port for Prometheus node-exporter:
+Check port for Prometheus node-exporter:
 ```
 [ec2-user@master0 ~]$ ansible nodes -m iptables -a "chain=OS_FIREWALL_ALLOW protocol=tcp destination_port=9100 jump=ACCEPT comment=node-exporter"
-[ec2-user@master0 ~]$ ansible nodes -m shell -a "iptables-save | tee /etc/sysconfig/iptables"
 ```
 
 ### Deploy kube-state-metrics
+
 Documentation: https://github.com/kubernetes/kube-state-metrics
 ```
 [ec2-user@master0 ~]$ oc create -f resource/kube-state-metrics.yaml -n openshift-metrics
@@ -108,22 +110,28 @@ Add kube-state-metric scrape configuration.
 ```
 
 ### Restart Prometheus
+
 Delete the Prometheus pod load the changed configuration.
 ```
 [ec2-user@master0 ~]$ oc get pods -n openshift-metrics
 NAME                             READY     STATUS             RESTARTS   AGE
-kube-state-2718312193-flwhj      1/1       Running            0          1m
-prometheus-0                     5/5       Running            0          52m
-prometheus-node-exporter-6zptr   0/1       CrashLoopBackOff   4          2m
-prometheus-node-exporter-rz95k   0/1       CrashLoopBackOff   4          2m
-prometheus-node-exporter-spnkh   0/1       CrashLoopBackOff   4          2m
-prometheus-node-exporter-tndjs   0/1       CrashLoopBackOff   4          2m
-prometheus-node-exporter-zqv2l   0/1       CrashLoopBackOff   4          2m
+kube-state-2718312193-kgs9w	 1/1	   Running   0          24s	  10.131.2.14     node4.user8.lab.openshift.ch
+prometheus-0                     5/5	   Running   0          4m        10.129.2.88     node2.user8.lab.openshift.ch
+prometheus-node-exporter-22hwn   1/1	   Running   0          37s	  172.31.39.136   master2.user8.lab.openshift.ch
+prometheus-node-exporter-2hq7j   1/1	   Running   0          37s	  172.31.35.184   node2.user8.lab.openshift.ch
+prometheus-node-exporter-2rfj8   1/1	   Running   0          37s	  172.31.41.6     node1.user8.lab.openshift.ch
+prometheus-node-exporter-995tx   1/1	   Running   0          37s	  172.31.36.128   master0.user8.lab.openshift.ch
+prometheus-node-exporter-c4jlz   1/1	   Running   0          37s	  172.31.46.123   node3.user8.lab.openshift.ch
+prometheus-node-exporter-c7v76   1/1	   Running   0          37s	  172.31.40.35    master1.user8.lab.openshift.ch
+prometheus-node-exporter-jk7q7   1/1	   Running   0          37s	  172.31.43.182   node0.user8.lab.openshift.ch
+prometheus-node-exporter-sgpmm   1/1	   Running   0          37s	  172.31.41.93    node4.user8.lab.openshift.ch
+
 [ec2-user@master0 ~]$ oc delete pod prometheus-0 -n openshift-metrics
 pod "prometheus-0" deleted
 ```
 
 ### Access Prometheus
+
 This creates a new project called `openshift-metrics`. As soon as the pod is running you will be able to access it with the user `cheyenne`.
 https://prometheus-openshift-metrics.app[X].lab.openshift.ch/
 
