@@ -6,14 +6,12 @@ metadata:
     app: membomb
 spec:
   containers:
-  - image: quay.io/appuio/membomb:latest
+  - image: quay.io/appuio/membomb:evict
     imagePullPolicy: Always
     name: membomb
     env:
     - name: START_SIZE
-      value: "-4000"
+      value: "0"
     - name: SIZE_INCR
-      value: "25"
-    - name: PYTHONUNBUFFERED
-      value: "1"
+      value: "9"
   restartPolicy: Never
