@@ -11,9 +11,7 @@ spec:
     name: membomb
     env:
     - name: START_SIZE
-      value: "-4000"
+      value: "-1"
     - name: SIZE_INCR
-      value: "100"
-    - name: PYTHONUNBUFFERED
-      value: "1"
+      value: "9"
   restartPolicy: Never
