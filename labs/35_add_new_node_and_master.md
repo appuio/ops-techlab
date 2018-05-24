@@ -27,7 +27,7 @@ Test the ssh connection and run the pre-install playbook:
 ```
 [ec2-user@master0 ~]$ ansible node4.user[X].lab.openshift.ch -m ping
 [ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=node4.user[X].lab.openshift.ch
-[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml -limit=node4.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml --limit=node4.user[X].lab.openshift.ch
 ```
 
 Now add the new node with the scaleup playbook:
@@ -98,7 +98,7 @@ Check if the host is accessible and run the pre-install playbook:
 ```
 [ec2-user@master0 ~]$ ansible master2.user[X].lab.openshift.ch -m ping
 [ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=master2.user[X].lab.openshift.ch
-[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml -limit=master2.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml --limit=master2.user[X].lab.openshift.ch
 ```
 
 Now we can add the new master:
