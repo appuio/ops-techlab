@@ -88,7 +88,7 @@ If you create a PersistentVolumeClaim, Heketi will automatically create a Persis
 
 Create a new project and create a pvc:
 ```
-[ec2-user@master0 ~]$ oc project labelle
+[ec2-user@master0 ~]$ oc new-project labelle
 Now using project "labelle" on server "https://console.user[X].lab.openshift.ch:8443".
 ...
 [ec2-user@master0 ~]$ cat <<EOF >pvc.yaml
