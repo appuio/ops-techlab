@@ -232,7 +232,7 @@ Then we correct it either by executing the logging playbook or by manually label
 
 - Or label the nodes manually with `oc`:
 ```
-[ec2-user@master0 ~]$ oc label node node3.user[X].lab.openshift.ch logging-infra-fluentd=true
+[ec2-user@master0 ~]$ oc label node node4.user[X].lab.openshift.ch logging-infra-fluentd=true
 [ec2-user@master0 ~]$ oc label node master2.user[X].lab.openshift.ch logging-infra-fluentd=true
 ```
 
