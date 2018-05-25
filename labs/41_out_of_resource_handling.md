@@ -57,7 +57,7 @@ You can see on which node the pod ran in the output of either the `oc get` or `o
 In this example this would look like:
 
 ```
-ssh node4.user8.lab.openshift.ch
+ssh node4.user[X].lab.openshift.ch
 journalctl -ke
 ```
 
