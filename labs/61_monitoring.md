@@ -25,7 +25,7 @@ As long as the response is a 200 status code at least one of the masters is stil
 
 **etcd** also exposes a similar health endpoint at https://`openshift_master_cluster_public_hostname`:2379/health, though it is only accessible using the client certificate and corresponding key stored on the masters at `/etc/origin/master/master.etcd-client.crt` and `/etc/origin/master/master.etcd-client.key`.
 ```
-# curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key https://master0.user[X].lab.openshift.ch:2379/health
+$ sudo curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key https://master0.user[X].lab.openshift.ch:2379/health
 ```
 
 The **HAProxy router pods** are responsible for getting application traffic into OpenShift. Similar to the masters, HAProxy also exposes a /healthz endpoint on port 1936 which can be checked with e.g.:
