@@ -100,10 +100,10 @@ We need to change the peerURL of the etcd to it's private ip. Make sure to corre
 [member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
 
 [ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member update [member_id] https://[private_ip]:2380
-Updated member with ID 6248d01c5701 in cluster
+Updated member with ID [member_id] in cluster
 
 [ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
-6248d01c5701: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.201:2380 clientURLs=https://172.31.46.201:2379 isLeader=true
+[member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.201:2380 clientURLs=https://172.31.46.201:2379 isLeader=true
 ```
 
 Add the second etcd `master1.user[X].lab.openshift.ch` to the etcd cluster
