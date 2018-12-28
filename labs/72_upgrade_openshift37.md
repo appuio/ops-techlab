@@ -15,16 +15,16 @@ Next we need to upgrade `atomic-openshift-utils` to version 3.7 on our first mas
 ```
 [ec2-user@master0 ~]$ sudo yum update -y atomic-openshift-utils
 ....
-Updating:
- atomic-openshift-utils                              noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  354 k
+Updating
+ atomic-openshift-utils                                                  noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      374 k
 Updating for dependencies:
- openshift-ansible                                   noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  328 k
- openshift-ansible-callback-plugins                  noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  319 k
- openshift-ansible-docs                              noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  341 k
- openshift-ansible-filter-plugins                    noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  331 k
- openshift-ansible-lookup-plugins                    noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  309 k
- openshift-ansible-playbooks                         noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  418 k
- openshift-ansible-roles                             noarch                  3.7.23-1.git.0.bc406aa.el7                     rhel-7-server-ose-3.7-rpms                  2.0 M
+ openshift-ansible                                                       noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      349 k
+ openshift-ansible-callback-plugins                                      noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      340 k
+ openshift-ansible-docs                                                  noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      362 k
+ openshift-ansible-filter-plugins                                        noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      354 k
+ openshift-ansible-lookup-plugins                                        noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      330 k
+ openshift-ansible-playbooks                                             noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      440 k
+ openshift-ansible-roles                                                 noarch                                      3.7.72-1.git.0.5c45a8a.el7                                         rhel-7-server-ose-3.7-rpms                                      2.0 M
 ....
 ```
 
@@ -32,8 +32,9 @@ Change the following Ansible variables in our OpenShift inventory:
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 ....
+openshift_image_tag=v3.7
 openshift_release=v3.7
-openshift_pkg_version=-3.7.44
+openshift_pkg_version=-3.7.72
 ...
 openshift_logging_image_version=v3.7
 ```
@@ -53,9 +54,9 @@ openshift_logging_image_version=v3.7
 ...
 ```
 2. Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes.
-Upgrade "node0.user[X].lab.openshift.ch":
+Upgrade "infra-node0.user[X].lab.openshift.ch":
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=node0.user[X].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node0.user[X].lab.openshift.ch"
 ...
 ```
 
@@ -63,9 +64,9 @@ Wait until all GlusterFS Pods are ready again and check if GlusterFS volumes hav
 ```
 [ec2-user@master0 ~]$ oc project glusterfs
 [ec2-user@master0 ~]$ oc get pods -o wide | grep glusterfs
-usterfs-storage-b9xdl                       1/1       Running   0          23m       172.31.33.43    node0.user6.lab.openshift.ch
-glusterfs-storage-lll7g                       1/1       Running   0          23m       172.31.43.209   node1.user6.lab.openshift.ch
-glusterfs-storage-mw5sz                       1/1       Running   0          23m       172.31.34.222   node2.user6.lab.openshift.ch
+usterfs-storage-b9xdl                       1/1       Running   0          23m       172.31.33.43    infra-node0.user6.lab.openshift.ch
+glusterfs-storage-lll7g                       1/1       Running   0          23m       172.31.43.209   infra-node1.user6.lab.openshift.ch
+glusterfs-storage-mw5sz                       1/1       Running   0          23m       172.31.34.222   infra-node2.user6.lab.openshift.ch
 [ec2-user@master0 ~]$ oc rsh <GlusterFS_pod_name>
 sh-4.2# for vol in `gluster volume list`; do gluster volume heal $vol info; done | grep -i "number of entries"
 Number of entries: 0
@@ -74,7 +75,7 @@ Number of entries: 0
 If all volumes have "Number of entries: 0", we can proceed with the next node and repeat the check of GlusterFS.
 
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e openshift_upgrade_nodes_label="kubernetes.io/hostname=node1.user[X].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node1.user[X].lab.openshift.ch"
 ...
 ```
 3. Upgrading the EFK Logging Stack

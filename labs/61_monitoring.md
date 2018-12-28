@@ -55,7 +55,7 @@ The **etcd** check above is already run against single members of the cluster an
 
 The approach used for the masters also applies to the **HAProxy routers**. A router pod is effectively listening on the node's interface it is running on. So instead of connecting via load balancer, we use the nodes' IP addresses the router pods are running on. In our case, these are nodes 0 and 1:
 ```
-$ for i in {0..1}; do curl -v http://node${i}.user[X].lab.openshift.ch:1936/healthz; done
+$ for i in {0..2}; do curl -v http://infra-node${i}.user[X].lab.openshift.ch:1936/healthz; done
 ```
 
 As already mentioned, finding out if our cluster will remain in an operational state in the near future also includes some better known checks we could call a more conventional **components monitoring**.

@@ -23,11 +23,14 @@ There are three main ways we will access our environment. The mentioned ports ne
   - Ports: 80/tcp and 443/tcp
 
 - **Administration**
-  - Address: bastion.user[X].lab.openshift.ch
+  - Address: jump.lab.openshift.ch
   - User: ec2-user
-  - Command: `ssh ec2-user@bastion.user[X].lab.openshift.ch`
   - Port: 22/tcp
-
+  - Command:
+```
+ssh ec2-user@jump.lab.openshift.ch
+ssh ec2-user@master0.user[X].lab.openshift.ch
+```
 ---
 
 **End of Lab 1.2**
