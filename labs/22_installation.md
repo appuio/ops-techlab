@@ -40,7 +40,7 @@ Run the installation
 https://console.user[X].lab.openshift.ch/console/
 ```
 
-6. You can download the client binary from the OpenShift console and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
+6. You can download the client binary and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
 ```
 https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```

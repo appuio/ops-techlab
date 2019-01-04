@@ -26,8 +26,8 @@ As in lab 2.2 we need to run an Ansible playbook to prepare the new node for the
 Test the ssh connection and run the pre-install playbook:
 ```
 [ec2-user@master0 ~]$ ansible app-node1.user[X].lab.openshift.ch -m ping
-[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=app-node1.user[X].lab.openshift.ch
-[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml --limit=app-node1.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_hosts_for_ose.yml --limit=app-node1.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_docker_storage.yml --limit=app-node1.user[X].lab.openshift.ch
 ```
 
 Now add the new node with the scaleup playbook:
@@ -55,7 +55,7 @@ Enable scheduling for the new node app-node1, drain another one (e.g. app-node0)
 [ec2-user@master0 ~]$ watch "oc adm manage-node app-node1.user[X].lab.openshift.ch --list-pods"
 ```
 
-If everything works as expected, we schedule app-node again:
+If everything works as expected, we schedule app-node0 again:
 ```
 [ec2-user@master0 ~]$ oc adm manage-node app-node0.user[X].lab.openshift.ch --schedulable
 ```
@@ -98,8 +98,8 @@ master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshif
 Check if the host is accessible and run the pre-install playbook:
 ```
 [ec2-user@master0 ~]$ ansible master2.user[X].lab.openshift.ch -m ping
-[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=master2.user[X].lab.openshift.ch
-[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml --limit=master2.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_hosts_for_ose.yml --limit=master2.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_docker_storage.yml --limit=master2.user[X].lab.openshift.ch
 ```
 
 Now we can add the new master:

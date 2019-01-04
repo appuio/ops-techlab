@@ -3,7 +3,7 @@
 ### OpenShift Authorization
 
 Before you begin with this lab, make sure you roughly understand the authorization concept of OpenShift.
-[Authorization](https://docs.openshift.com/container-platform/3.9/architecture/additional_concepts/authorization.html)
+[Authorization](https://docs.openshift.com/container-platform/3.6/architecture/additional_concepts/authorization.html)
 
 ### Add User to Project
 
