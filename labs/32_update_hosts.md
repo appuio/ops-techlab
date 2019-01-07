@@ -7,10 +7,11 @@ The config playbook we use to install and configure OpenShift removes yum exclud
 
 First, let's check if the excludes have been set on all nodes. Connect to the first master and run:
 ```
-[ec2-user@master0 ~]$ ansible nodes -a "grep exclude /etc/yum.conf"
+[ec2-user@master0 ~]$ ansible nodes -m shell -a "atomic-openshift-excluder status && atomic-openshift-docker-excluder status"
 ...
 app-node0.user[X].lab.openshift.ch | SUCCESS | rc=0 >>
-exclude= tuned-profiles-atomic-openshift-node  atomic-openshift-tests  atomic-openshift-sdn-ovs  atomic-openshift-recycle  atomic-openshift-pod  atomic-openshift-node  atomic-openshift-master  atomic-openshift-dockerregistry  atomic-openshift-clients-redistributable  atomic-openshift-clients  atomic-openshift  docker*1.20*  docker*1.19*  docker*1.18*  docker*1.17*  docker*1.16*  docker*1.15*  docker*1.14*  docker*1.13*
+exclude -- All packages excluded
+exclude -- All packages excluded
 ...
 ```
 
@@ -18,9 +19,9 @@ These excludes are set by using the OpenShift Ansible playbooks or when using th
 
 ```
 [ec2-user@master0 ~]$ ansible nodes -m shell -a "atomic-openshift-excluder unexclude && atomic-openshift-docker-excluder unexclude"
-[ec2-user@master0 ~]$ ansible nodes -a "grep exclude /etc/yum.conf"
+[ec2-user@master0 ~]$ ansible nodes -m shell -a "atomic-openshift-excluder status && atomic-openshift-docker-excluder status"
 [ec2-user@master0 ~]$ ansible nodes -m shell -a "atomic-openshift-excluder exclude && atomic-openshift-docker-excluder exclude"
-[ec2-user@master0 ~]$ ansible nodes -a "grep exclude /etc/yum.conf"
+[ec2-user@master0 ~]$ ansible nodes -m shell -a "atomic-openshift-excluder status && atomic-openshift-docker-excluder status"
 ```
 
 
