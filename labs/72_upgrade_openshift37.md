@@ -64,7 +64,7 @@ Wait until all GlusterFS Pods are ready again and check if GlusterFS volumes hav
 ```
 [ec2-user@master0 ~]$ oc project glusterfs
 [ec2-user@master0 ~]$ oc get pods -o wide | grep glusterfs
-usterfs-storage-b9xdl                       1/1       Running   0          23m       172.31.33.43    infra-node0.user6.lab.openshift.ch
+glusterfs-storage-b9xdl                       1/1       Running   0          23m       172.31.33.43    infra-node0.user6.lab.openshift.ch
 glusterfs-storage-lll7g                       1/1       Running   0          23m       172.31.43.209   infra-node1.user6.lab.openshift.ch
 glusterfs-storage-mw5sz                       1/1       Running   0          23m       172.31.34.222   infra-node2.user6.lab.openshift.ch
 [ec2-user@master0 ~]$ oc rsh <GlusterFS_pod_name>
