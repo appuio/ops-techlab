@@ -2,16 +2,19 @@
 
 In the previous lab we prepared the Ansible inventory to fit our test lab environment. Now we can prepare and run the installation.
 
-Now we run the pre-install.yml playbook. This will do the following:
-- Attach all needed repositories for the installation of OpenShift on all nodes
+Now we run the prepare_hosts_for_ose.yml playbook. This will do the following:
 - Install the prerequisite packages: wget git net-tools bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
-- Enable iptables on all nodes
 - Enable Ansible ssh pipelining (performance improvements for Ansible)
+- Set timezone
+- Ensure hostname is preserved in cloud-init
+- Set default passwords
+- Install oc clients for various platforms on all master
+
 ```
-[ec2-user@master0 ~]$ ansible-playbook /home/ec2-user/resource/pre-install.yml
+[ec2-user@master0 ~]$ ansible-playbook /home/ec2-user/resource/prepare_hosts_for_ose.yml
 ```
 
-Run the installation in three steps.
+Run the installation
 1. Install OpenShift. This takes a while, get a coffee.
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
@@ -37,7 +40,7 @@ Run the installation in three steps.
 https://console.user[X].lab.openshift.ch/console/
 ```
 
-6. You can download the binary for the client and use it from your local workstation. The binary is available for Linux, macOS and Windows. You can get it here:
+6. You can download the client binary and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
 ```
 https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```

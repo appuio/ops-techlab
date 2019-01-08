@@ -5,7 +5,7 @@ In this lab we will add a new node and a new master to our OpenShift cluster.
 
 ### Add a New Node
 
-Uncomment the new node (`node4.user...`) in the Ansible inventory and also uncomment the `new_nodes` group in the "[OSEv3:children]" section.
+Uncomment the new node (`app-node1.user...`) in the Ansible inventory and also uncomment the `new_nodes` group in the "[OSEv3:children]" section.
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 ...
@@ -16,7 +16,7 @@ new_nodes
 ...
 
 [new_nodes]
-node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_public_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+app-node1.user[X].lab.openshift.ch openshift_hostname=app-node1.user[X].lab.openshift.ch openshift_public_hostname=app-node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 ...
 
 ```
@@ -25,9 +25,9 @@ As in lab 2.2 we need to run an Ansible playbook to prepare the new node for the
 
 Test the ssh connection and run the pre-install playbook:
 ```
-[ec2-user@master0 ~]$ ansible node4.user[X].lab.openshift.ch -m ping
-[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=node4.user[X].lab.openshift.ch
-[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml --limit=node4.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible app-node1.user[X].lab.openshift.ch -m ping
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_hosts_for_ose.yml --limit=app-node1.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_docker_storage.yml --limit=app-node1.user[X].lab.openshift.ch
 ```
 
 Now add the new node with the scaleup playbook:
@@ -38,25 +38,26 @@ Now add the new node with the scaleup playbook:
 Check if the node is ready:
 ```
 [ec2-user@master0 ~]$ oc get nodes
-NAME                             STATUS                     AGE       VERSION
-master0.user[X].lab.openshift.ch   Ready,SchedulingDisabled   6d        v1.6.1+5115d708d7
-master1.user[X].lab.openshift.ch   Ready,SchedulingDisabled   6d        v1.6.1+5115d708d7
-node0.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node1.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node2.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node3.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node4.user[X].lab.openshift.ch     Ready,SchedulingDisabled   1m        v1.6.1+5115d708d7
+NAME                                 STATUS                     AGE       VERSION
+app-node0.user2.lab.openshift.ch     Ready                      3h        v1.6.1+5115d708d7
+app-node1.user2.lab.openshift.ch     Ready,SchedulingDisabled   4m        v1.6.1+5115d708d7
+infra-node0.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
+infra-node1.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
+infra-node2.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
+master0.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
+master1.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
 ```
 
-Enable scheduling for the new node node4, drain another one (e.g. node3) and check if pods are running correctly on the new node. If you don't see any pods on it make sure there is at least one "non-infra-pod" running on your OpenShift cluster.
+Enable scheduling for the new node app-node1, drain another one (e.g. app-node0) and check if pods are running correctly on the new node. If you don't see any pods on it make sure there is at least one "non-infra-pod" running on your OpenShift cluster.
 ```
-[ec2-user@master0 ~]$ oc adm drain node3.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
-[ec2-user@master0 ~]$ watch "oc adm manage-node node4.user[X].lab.openshift.ch --list-pods"
+[ec2-user@master0 ~]$ oc adm manage-node app-node1.user2.lab.openshift.ch --schedulable
+[ec2-user@master0 ~]$ oc adm drain app-node0.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
+[ec2-user@master0 ~]$ watch "oc adm manage-node app-node1.user[X].lab.openshift.ch --list-pods"
 ```
 
-If everything works as expected, we schedule node3 again:
+If everything works as expected, we schedule app-node0 again:
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node3.user[X].lab.openshift.ch --schedulable
+[ec2-user@master0 ~]$ oc adm manage-node app-node0.user[X].lab.openshift.ch --schedulable
 ```
 
 Inside the Ansible inventory, we move the new node from the `[new_nodes]` to the `[app_nodes]` group:
@@ -64,8 +65,8 @@ Inside the Ansible inventory, we move the new node from the `[new_nodes]` to the
 [ec2-user@master0 ~]$ cat /etc/ansible/hosts
 ...
 [app_nodes]
-node3.user[X].lab.openshift.ch openshift_hostname=node3.user[X].lab.openshift.ch openshift_public_hostname=node3.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-node4.user[X].lab.openshift.ch openshift_hostname=node4.user[X].lab.openshift.ch openshift_public_hostname=node4.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+app-node0.user[X].lab.openshift.ch openshift_hostname=app-node0.user[X].lab.openshift.ch openshift_public_hostname=app-node0.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+app-node1.user[X].lab.openshift.ch openshift_hostname=app-node1.user[X].lab.openshift.ch openshift_public_hostname=app-node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 ...
 
 [new_nodes]
@@ -97,8 +98,8 @@ master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshif
 Check if the host is accessible and run the pre-install playbook:
 ```
 [ec2-user@master0 ~]$ ansible master2.user[X].lab.openshift.ch -m ping
-[ec2-user@master0 ~]$ ansible-playbook resource/pre-install.yml --limit=master2.user[X].lab.openshift.ch
-[ec2-user@master0 ~]$ ansible-playbook resource/setup-storage.yaml --limit=master2.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_hosts_for_ose.yml --limit=master2.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_docker_storage.yml --limit=master2.user[X].lab.openshift.ch
 ```
 
 Now we can add the new master:
@@ -110,14 +111,14 @@ Let's check if the node daemon on the new master is ready:
 ```
 [ec2-user@master0 ~]$ oc get nodes
 NAME                             STATUS                     AGE       VERSION
-master0.user[X].lab.openshift.ch   Ready,SchedulingDisabled   6d        v1.6.1+5115d708d7
-master1.user[X].lab.openshift.ch   Ready,SchedulingDisabled   6d        v1.6.1+5115d708d7
-master2.user[X].lab.openshift.ch   Ready,SchedulingDisabled   10m       v1.6.1+5115d708d7
-node0.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node1.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node2.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node3.user[X].lab.openshift.ch     Ready                      6d        v1.6.1+5115d708d7
-node4.user[X].lab.openshift.ch     Ready                      32m       v1.6.1+5115d708d7
+app-node0.user2.lab.openshift.ch     Ready                      3h        v1.6.1+5115d708d7
+app-node1.user2.lab.openshift.ch     Ready                      14m       v1.6.1+5115d708d7
+infra-node0.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
+infra-node1.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
+infra-node2.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
+master0.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
+master1.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
+master2.user2.lab.openshift.ch       Ready,SchedulingDisabled   1m        v1.6.1+5115d708d7
 ```
 
 Check if the old masters see the new one:
@@ -197,9 +198,9 @@ If everything worked as expected, we are going to move the new master from the `
 ```
 [ec2-user@master0 ~]$ sudo vim /etc/ansible/hosts
 [masters]
-master0.user[X].lab.openshift.ch openshift_hostname=master0.user[X].lab.openshift.ch openshift_public_hostname=master0.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
-master1.user[X].lab.openshift.ch openshift_hostname=master1.user[X].lab.openshift.ch openshift_public_hostname=master1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
-master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_public_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=false
+master0.user[X].lab.openshift.ch openshift_hostname=master0.user[X].lab.openshift.ch openshift_public_hostname=master0.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+master1.user[X].lab.openshift.ch openshift_hostname=master1.user[X].lab.openshift.ch openshift_public_hostname=master1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+master2.user[X].lab.openshift.ch openshift_hostname=master2.user[X].lab.openshift.ch openshift_public_hostname=master2.user[X].lab.openshift.ch openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 ...
 ```
 
@@ -232,7 +233,7 @@ Then we correct it either by executing the logging playbook or by manually label
 
 - Or label the nodes manually with `oc`:
 ```
-[ec2-user@master0 ~]$ oc label node node4.user[X].lab.openshift.ch logging-infra-fluentd=true
+[ec2-user@master0 ~]$ oc label node app-node1.user[X].lab.openshift.ch logging-infra-fluentd=true
 [ec2-user@master0 ~]$ oc label node master2.user[X].lab.openshift.ch logging-infra-fluentd=true
 ```
 

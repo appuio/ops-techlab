@@ -135,6 +135,8 @@ member aadb46077a7f58a is healthy: got healthy result from https://172.31.32.131
 cluster is healthy
 ```
 
+Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X].
+
 ---
 
 **End of Lab 5.2**

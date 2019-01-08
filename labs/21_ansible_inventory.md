@@ -7,10 +7,10 @@ Take a look at the prepared inventory file:
 [ec2-user@master0 ~]$ less /etc/ansible/hosts
 ```
 
-Download the default example hosts file from the OpenShift GitHub repository and compare it to the prepared inventory for the lab. We will use the default OpenShift 3.7 template, as we will later upgrade to OCP 3.7 and like this we already have the right variables in place.
+Download the default example hosts file from the OpenShift GitHub repository and compare it to the prepared inventory for the lab.
 ```
-[ec2-user@master0 ~]$ wget https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.7/inventory/byo/hosts.example
-[ec2-user@master0 ~]$ less hosts.example
+[ec2-user@master0 ~]$ wget https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.6/inventory/byo/hosts.ose.example
+[ec2-user@master0 ~]$ less hosts.ose.example
 ```
 ---
 

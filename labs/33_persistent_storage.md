@@ -157,7 +157,7 @@ Size: 6
 
 Check if the gluster volume has the new size:
 ```
-[ec2-user@master0 ~]$ ansible all -m shell -a "df -ah" | grep glusterfs-registry-volume
+[ec2-user@master0 ~]$ ansible infra_nodes -m shell -a "df -ah" | grep glusterfs-registry-volume
 172.31.40.96:glusterfs-registry-volume  6.0G  317M  5.7G   3% /var/lib/origin/openshift.local.volumes/pods/d8dc2712-3bcf-11e8-90a6-066961eacc9a/volumes/kubernetes.io~glusterfs/registry-volume
 ```
 
