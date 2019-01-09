@@ -25,9 +25,9 @@ As in lab 2.2 we need to run an Ansible playbook to prepare the new node for the
 
 Test the ssh connection and run the pre-install playbook:
 ```
-[ec2-user@master0 ~]$ ansible app_nodes[1] -m ping
-[ec2-user@master0 ~]$ ansible-playbook resource/prepare_hosts_for_ose.yml --limit=app_nodes[1]
-[ec2-user@master0 ~]$ ansible-playbook resource/prepare_docker_storage.yml --limit=app_nodes[1]
+[ec2-user@master0 ~]$ ansible new_nodes[0] -m ping
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_hosts_for_ose.yml --limit=new_nodes[0]
+[ec2-user@master0 ~]$ ansible-playbook resource/prepare_docker_storage.yml --limit=new_nodes[0]
 ```
 
 Now add the new node with the scaleup playbook:
