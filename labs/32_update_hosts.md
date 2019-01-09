@@ -73,7 +73,7 @@ NAME                      READY     STATUS    RESTARTS   AGE
 logging-fluentd-s2k2j     1/1       Running   1          1h
 ```
 
-Since we want to update the whole cluster, you will need to repeat these steps on all servers. Masters do not need to be drained because they do not run any pods (unschedulable by default).
+Since we want to update the whole cluster, <b>you will need to repeat these steps on all servers</b>. Masters do not need to be drained because they do not run any pods (unschedulable by default).
 
 ---
 
