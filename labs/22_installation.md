@@ -2,6 +2,8 @@
 
 In the previous lab we prepared the Ansible inventory to fit our test lab environment. Now we can prepare and run the installation.
 
+To make sure the playbook keeps on running even if there are network issues or something similar, we strongly encourage you to e.g. use `screen` or `tmux`.
+
 Now we run the prepare_hosts_for_ose.yml playbook. This will do the following:
 - Install the prerequisite packages: wget git net-tools bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct
 - Enable Ansible ssh pipelining (performance improvements for Ansible)
