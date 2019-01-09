@@ -50,7 +50,7 @@ master1.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1
 
 Enable scheduling for the new node app-node1, drain another one (e.g. app-node0) and check if pods are running correctly on the new node. If you don't see any pods on it make sure there is at least one "non-infra-pod" running on your OpenShift cluster.
 ```
-[ec2-user@master0 ~]$ oc adm manage-node app-node1.user2.lab.openshift.ch --schedulable
+[ec2-user@master0 ~]$ oc adm manage-node app-node1.user[X].lab.openshift.ch --schedulable
 [ec2-user@master0 ~]$ oc adm drain app-node0.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
 [ec2-user@master0 ~]$ watch "oc adm manage-node app-node1.user[X].lab.openshift.ch --list-pods"
 ```
