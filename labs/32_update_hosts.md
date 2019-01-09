@@ -70,8 +70,6 @@ Check that pods are correctly starting:
 Listing matched pods on node: app-node0.user[X].lab.openshift.ch
 
 NAME                      READY     STATUS    RESTARTS   AGE
-glusterfs-storage-1758r   1/1       Running   2          2d
-router-1-cc21f            1/1       Running   0          4m
 logging-fluentd-s2k2j     1/1       Running   1          1h
 ```
 
