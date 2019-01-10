@@ -53,8 +53,8 @@ app-node0.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6
 
 If everything looks good, you can update the node and reboot it. The first command can take a while and doesn't output anything until it's done:
 ```
-[ec2-user@master0 ~]$ ansible app_nodes[0] -m yum -a "name='*' state=latest exclude='atomic-openshift-* openshift-* docker-*'"
-[ec2-user@master0 ~]$ ansible app_nodes[0] --poll=0 --background=1 -m shell -a 'sleep 2 && reboot'
+[ec2-user@master0 ~]$ ansible app_nodes -m yum -a "name='*' state=latest exclude='atomic-openshift-* openshift-* docker-*'"
+[ec2-user@master0 ~]$ ansible app_nodes --poll=0 --background=1 -m shell -a 'sleep 2 && reboot'
 ```
 
 After the node becomes ready again, enable schedulable anew. Do not do this before the node has rebooted (it takes a while for the node's status to change to `Not Ready`):
