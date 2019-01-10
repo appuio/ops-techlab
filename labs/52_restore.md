@@ -71,7 +71,8 @@ The cluster is now down and you can't get any resources through the console. We 
 
 Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and check if it's running. This is needed, because initially it will create a new cluster with the existing data from the backup.
 ```
-[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /usr/lib/systemd/system/etcd.service
+[ec2-user@master0 ~]$ sudo cp /usr/lib/systemd/system/etcd.service /etc/systemd/system
+[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /etc/systemd/system/etcd.service
 [ec2-user@master0 ~]$ sudo systemctl daemon-reload
 [ec2-user@master0 ~]$ sudo systemctl start etcd
 [ec2-user@master0 ~]$ sudo systemctl status etcd
@@ -79,7 +80,7 @@ Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and ch
 
 The cluster is now initialized, so we need to remove the "--force-new-cluster" parameter again and restart etcd.
 ```
-[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/ --force-new-cluster//' /usr/lib/systemd/system/etcd.service
+[ec2-user@master0 ~]$ sudo rm /etc/systemd/system/etcd.service
 [ec2-user@master0 ~]$ sudo systemctl daemon-reload
 [ec2-user@master0 ~]$ sudo systemctl restart etcd
 [ec2-user@master0 ~]$ sudo systemctl status etcd
