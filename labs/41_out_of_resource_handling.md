@@ -63,8 +63,10 @@ journalctl -ke
 
 The following lines should be highlighted:
 
+```
 May 17 10:51:04 app-node0.user8.lab.openshift.ch kernel: Memory cgroup out of memory: Kill process 5806 (python) score 1990 or sacrifice child
 May 17 10:51:04 app-node0.user8.lab.openshift.ch kernel: Killed process 5806 (python) total-vm:7336912kB, anon-rss:5987524kB, file-rss:0kB, shmem-rss:0kB
+```
 
 This log messages indicate that the OOM killer has been invoked because a cgroup memory limit has been exceeded
 and that it killed a python process which consumed 5987524kB memory. Cgroup is a kernel mechanism which limits
