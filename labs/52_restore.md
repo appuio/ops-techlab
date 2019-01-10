@@ -94,7 +94,7 @@ cluster is healthy
 /openshift.io
 ```
 
-We need to change the peerURL of the etcd to it's private ip. Make sure to correctly copy the member_id and private_ip.
+We need to change the peerURL of the etcd to it's private ip. Make sure to correctly copy the **member_id** and **private_ip**.
 ```
 [ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
 [member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
