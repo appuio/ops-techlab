@@ -33,7 +33,7 @@ To observe how the OOM killer in action create a container which allocates all m
 [ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_oom.yaml
 ```
 
-Wait till the container is up and being killed. `oc get pods -o wide` will then show:
+Wait and watch till the container is up and being killed. `oc get pods -o wide -w` will then show:
 ```
 NAME              READY     STATUS      RESTARTS   AGE       IP            NODE
 membomb-1-z6md2   0/1       OOMKilled   0          7s        10.131.2.24   app-node0.user8.lab.openshift.ch
