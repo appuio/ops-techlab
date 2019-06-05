@@ -28,7 +28,7 @@ https://console.user[X].lab.openshift.ch/console/
 ```
 Password is documented in the Ansible inventory:
 ```
-grep keepass /home/ec2-user/resource/techlab-inventory
+[ec2-user@master0 ~]$ grep keepass /etc/ansible/hosts
 ```
 
 4. You can download the client binary from the OpenShift console and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
