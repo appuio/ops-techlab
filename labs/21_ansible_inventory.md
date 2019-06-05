@@ -9,7 +9,7 @@ Take a look at the prepared inventory file:
 
 Download the default example hosts file from the OpenShift GitHub repository and compare it to the prepared inventory for the lab.
 ```
-[ec2-user@master0 ~]$ wget https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.9/inventory/hosts.example
+[ec2-user@master0 ~]$ wget https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.11/inventory/hosts.example
 [ec2-user@master0 ~]$ less hosts.example
 ```
 ---
