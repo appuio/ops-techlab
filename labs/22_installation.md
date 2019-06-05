@@ -22,7 +22,12 @@ Run the installation
 [ec2-user@master0 ~]$ oc adm policy --as system:admin add-cluster-role-to-user cluster-admin sheriff
 ```
 
-3. Now open your browser and access the master API with the user "sheriff". Password is documented in the Ansible inventory.
+3. Now open your browser and access the master API with the user "sheriff". 
+Password is documented in the Ansible inventory:
+```
+grep keepass /home/ec2-user/resource/techlab-inventory
+```
+
 ```
 https://console.user[X].lab.openshift.ch/console/
 ```
