@@ -42,13 +42,13 @@ Hint: root on master-node always is system:admin
 
 ```
 [ec2-user@master0 ~]$ oc get nodes
-[ec2-user@master0 ~]$ oc adm drain node1.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
+[ec2-user@master0 ~]$ oc adm drain infra-node1.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
 ```
 
 After draining a node, only the DaemonSets (`glusterfs-storage` and `logging-fluentd`) should remain on the node:
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --list-pods
-Listing matched pods on node: node1.user[X].lab.openshift.ch
+[ec2-user@master0 ~]$ oc adm manage-node infra-node1.user[X].lab.openshift.ch --list-pods
+Listing matched pods on node: infra-node1.user[X].lab.openshift.ch
 
 NAME                      READY     STATUS    RESTARTS   AGE
 glusterfs-storage-1758r   1/1       Running   1          2d
@@ -66,21 +66,21 @@ node1.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5
 
 If everything looks good, you can update the node and reboot it. The first command can take a while and doesn't output anything until it's done:
 ```
-[ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch -m yum -a "name='*' state=latest"
-[ec2-user@master0 ~]$ ansible node1.user[X].lab.openshift.ch --poll=0 --background=1 -a 'sleep 2 && reboot'
+[ec2-user@master0 ~]$ ansible infra-node1.user[X].lab.openshift.ch -m yum -a "name='*' state=latest"
+[ec2-user@master0 ~]$ ansible infra-node1.user[X].lab.openshift.ch --poll=0 --background=1 -a 'sleep 2 && reboot'
 ```
 
 After the node becomes ready again, enable schedulable anew. Do not do this before the node has rebooted (it takes a while for the node's status to change to `Not Ready`):
 ```
 [ec2-user@master0 ~]$ oc get nodes -w
-[ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --schedulable
+[ec2-user@master0 ~]$ oc adm manage-node infra-node1.user[X].lab.openshift.ch --schedulable
 ```
 
 Check that pods are correctly starting:
 ```
-[ec2-user@master0 ~]$ oc adm manage-node node1.user[X].lab.openshift.ch --list-pods
+[ec2-user@master0 ~]$ oc adm manage-node infra-node1.user[X].lab.openshift.ch --list-pods
 
-Listing matched pods on node: node1.user[X].lab.openshift.ch
+Listing matched pods on node: infra-node1.user[X].lab.openshift.ch
 
 NAME                      READY     STATUS    RESTARTS   AGE
 glusterfs-storage-1758r   1/1       Running   2          2d
