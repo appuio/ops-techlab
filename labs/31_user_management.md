@@ -10,7 +10,7 @@ Before you begin with this lab, make sure you roughly understand the authorizati
 First we create a user and give him the admin role in the openshift-infra project.
 Login to the master and create the local user:
 ```
-[ec2-user@master0 ~]$ sudo htpasswd /etc/origin/master/htpasswd cowboy
+[ec2-user@master0 ~]$ ansible masters -a "htpasswd -b /etc/origin/master/htpasswd cowboy [password]"
 ```
 
 Add the admin role to the newly created user, but only for the project `openshift-infra`:
