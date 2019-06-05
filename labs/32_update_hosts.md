@@ -27,6 +27,19 @@ These excludes are set by using the OpenShift Ansible playbooks or when using th
 ### Apply OS Patches to Masters and Nodes
 
 First, login as cluster-admin and drain the first node (this deletes all pods so the OpenShift scheduler creates them on other nodes and also disables scheduling of new pods on the node).
+
+If you don't know if you're cluster-admin or not:
+Install JQ on Master:
+```
+yum-config-manager --enable epel && yum install -y jq-1.5-1.el7.x86_64 && yum-config-manager --disable epel
+```
+Query all users with rolebindings=cluster-admin:
+```
+oc get --all-namespaces --output json clusterPolicyBindings | jq '.items[].roleBindings[] | select(.name=="cluster-admin") | .roleBinding.userNames'
+```
+
+Hint: root on master-node always is system:admin
+
 ```
 [ec2-user@master0 ~]$ oc get nodes
 [ec2-user@master0 ~]$ oc adm drain node1.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
