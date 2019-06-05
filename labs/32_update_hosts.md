@@ -59,7 +59,7 @@ Scheduling should now be disabled for this node:
 ```
 [ec2-user@master0 ~]$ oc get nodes
 ...
-node1.user[X].lab.openshift.ch     Ready,SchedulingDisabled   2d        v1.6.1+5115d708d7
+infra-node1.user[X].lab.openshift.ch   Ready,SchedulingDisabled   infra     22h       v1.11.0+d4cacc0
 ...
 
 ```
