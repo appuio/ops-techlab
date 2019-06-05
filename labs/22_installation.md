@@ -22,14 +22,13 @@ Run the installation
 [ec2-user@master0 ~]$ oc adm policy --as system:admin add-cluster-role-to-user cluster-admin sheriff
 ```
 
-3. Now open your browser and access the master API with the user "sheriff". 
+3. Now open your browser and access the master API with the user "sheriff":
+```
+https://console.user[X].lab.openshift.ch/console/
+```
 Password is documented in the Ansible inventory:
 ```
 grep keepass /home/ec2-user/resource/techlab-inventory
-```
-
-```
-https://console.user[X].lab.openshift.ch/console/
 ```
 
 4. You can download the client binary from the OpenShift console and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
