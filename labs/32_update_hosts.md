@@ -35,7 +35,7 @@ yum-config-manager --enable epel && yum install -y jq-1.5-1.el7.x86_64 && yum-co
 ```
 Query all users with rolebindings=cluster-admin:
 ```
-oc get --all-namespaces --output json clusterPolicyBindings | jq '.items[].roleBindings[] | select(.name=="cluster-admin") | .roleBinding.userNames'
+oc get clusterrolebinding -o json | jq '.items[] | select(.metadata.name |  startswith("cluster-admin")) | .userNames'
 ```
 
 Hint: root on master-node always is system:admin
