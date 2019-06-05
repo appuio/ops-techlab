@@ -114,39 +114,15 @@ Who can create configmaps in the `default` project:
 oc policy who-can create configmaps -n default
 ```
 
-You can also get a description of all available clusterPolicies and clusterPoliciesBindings with the following oc command:
+You can also get a description of all available clusterroles and clusterrolebinding with the following oc command:
 ```
-[ec2-user@master0 ~]$ oc describe clusterPolicy default
-Name:				default
-Created:			4 hours ago
-Labels:				<none>
-Last Modified:			2015-06-10 17:22:25 +0000 UTC
-admin				Verbs					Resources																Resource Names	Non-Resource URLs				Extension
-				[create delete get list update watch]	[pods/proxy projects resourcegroup:exposedkube resourcegroup:exposedopenshift resourcegroup:granter secrets]				[][]
-				[get list watch]			[pods/exec pods/portforward resourcegroup:allkube resourcegroup:allkube-status resourcegroup:allopenshift-status resourcegroup:policy]	[][]
-				[get update]				[imagestreams/layers]															[][]
-basic-user			Verbs					Resources																Resource Names	Non-Resource URLs				Extension
-				[get]					[users]
-...
-
-
-[ec2-user@master0 ~]$ oc describe clusterPolicyBindings :default
-Name:						:default
-Created:					4 hours ago
-Labels:						<none>
-Last Modified:					2015-06-10 17:22:26 +0000 UTC
-Policy:						<none>
-RoleBinding[basic-users]:
-						Role:	basic-user
-						Users:	[]
-						Groups:	[system:authenticated]
-RoleBinding[cluster-admins]:
-						Role:	cluster-admin
-						Users:	[]
-						Groups:	[system:cluster-admins]
-...
+[ec2-user@master0 ~]$ oc describe clusterrole.rbac
 ```
 
+```
+[ec2-user@master0 ~]$ oc describe clusterrolebinding.rbac
+```
+https://docs.openshift.com/container-platform/3.11/admin_guide/manage_rbac.html
 
 ### Cleanup
 
