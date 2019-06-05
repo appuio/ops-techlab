@@ -50,9 +50,12 @@ After draining a node, only the DaemonSets (`glusterfs-storage` and `logging-flu
 [ec2-user@master0 ~]$ oc adm manage-node infra-node1.user[X].lab.openshift.ch --list-pods
 Listing matched pods on node: infra-node1.user[X].lab.openshift.ch
 
-NAME                      READY     STATUS    RESTARTS   AGE
-glusterfs-storage-1758r   1/1       Running   1          2d
-logging-fluentd-s2k2j     1/1       Running   0          1h
+NAMESPACE              NAME                      READY     STATUS    RESTARTS   AGE
+glusterfs              glusterfs-storage-wh9xc   1/1       Running   1          22h
+openshift-monitoring   node-exporter-ghhhp       2/2       Running   0          21h
+openshift-node         sync-xrsqk                1/1       Running   1          6h
+openshift-sdn          ovs-8sgqm                 1/1       Running   1          22h
+openshift-sdn          sdn-49p6c                 1/1       Running   2          22h
 ```
 
 Scheduling should now be disabled for this node:
