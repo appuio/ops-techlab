@@ -71,7 +71,8 @@ The cluster is now down and you can't get any resources through the console. We 
 
 Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and check if it's running. This is needed, because initially it will create a new cluster with the existing data from the backup.
 ```
-[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /usr/lib/systemd/system/etcd.service
+[ec2-user@master0 ~]$ sudo cp /usr/lib/systemd/system/etcd.service /etc/systemd/system
+[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /etc/systemd/system/etcd.service
 [ec2-user@master0 ~]$ sudo systemctl daemon-reload
 [ec2-user@master0 ~]$ sudo systemctl start etcd
 [ec2-user@master0 ~]$ sudo systemctl status etcd
@@ -79,7 +80,7 @@ Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and ch
 
 The cluster is now initialized, so we need to remove the "--force-new-cluster" parameter again and restart etcd.
 ```
-[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/ --force-new-cluster//' /usr/lib/systemd/system/etcd.service
+[ec2-user@master0 ~]$ sudo rm /etc/systemd/system/etcd.service
 [ec2-user@master0 ~]$ sudo systemctl daemon-reload
 [ec2-user@master0 ~]$ sudo systemctl restart etcd
 [ec2-user@master0 ~]$ sudo systemctl status etcd
@@ -94,7 +95,7 @@ cluster is healthy
 /openshift.io
 ```
 
-We need to change the peerURL of the etcd to it's private ip. Make sure to correctly copy the member_id and private_ip.
+We need to change the peerURL of the etcd to it's private ip. Make sure to correctly copy the **member_id** and **private_ip**.
 ```
 [ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
 [member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
@@ -134,6 +135,8 @@ member 633a80df3001 is healthy: got healthy result from https://172.31.37.65:237
 member aadb46077a7f58a is healthy: got healthy result from https://172.31.32.131:2379
 cluster is healthy
 ```
+
+Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X].
 
 ---
 

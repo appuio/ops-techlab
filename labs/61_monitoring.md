@@ -55,7 +55,7 @@ The **etcd** check above is already run against single members of the cluster an
 
 The approach used for the masters also applies to the **HAProxy routers**. A router pod is effectively listening on the node's interface it is running on. So instead of connecting via load balancer, we use the nodes' IP addresses the router pods are running on. In our case, these are nodes 0 and 1:
 ```
-$ for i in {0..1}; do curl -v http://node${i}.user[X].lab.openshift.ch:1936/healthz; done
+$ for i in {0..2}; do curl -v http://infra-node${i}.user[X].lab.openshift.ch:1936/healthz; done
 ```
 
 As already mentioned, finding out if our cluster will remain in an operational state in the near future also includes some better known checks we could call a more conventional **components monitoring**.
@@ -71,7 +71,7 @@ Besides the obvious components that need monitoring like CPU, memory and storage
 
 But let's first get an overview of available resources using tools you might not have heard about before. One such tool is [Cockpit](http://cockpit-project.org/). Cockpit aims to ease administration tasks of Linux servers by making some basic tasks available via web interface. It is installed by default on every master by the OpenShift Ansible playbooks and listens on port 9090. We don't want to expose the web interface to the internet though, so we are going to use SSH port forwarding to access it:
 ```
-$ ssh ec2-user@bastion.user[X].lab.openshift.ch -L 9090:localhost:9090
+$ ssh ec2-user@jump.lab.openshift.ch -L 9090:master0.user[X].lab.openshift.ch:9090
 ```
 
 After the SSH tunnel has been established, open http://localhost:9090 in your browser and log in using user `ec2-user` and the password provided by the instructor. Explore the different tabs and sections of the web interface.
