@@ -14,7 +14,7 @@ These are the certificates that need to be maintained. For each component there 
 
 To check all your certificates, run the playbook `certificate_expiry/easy-mode.yaml`:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/certificate_expiry/easy-mode.yaml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-checks/certificate_expiry/easy-mode.yaml
 ```
 The playbook will generate the following reports with the information of each certificate in JSON and HTML format:
 ```
