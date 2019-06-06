@@ -28,17 +28,13 @@ These excludes are set by using the OpenShift Ansible playbooks or when using th
 
 First, login as cluster-admin and drain the first node (this deletes all pods so the OpenShift scheduler creates them on other nodes and also disables scheduling of new pods on the node).
 
-If you don't know if you're cluster-admin or not:
-Install JQ on Master:
-```
-yum-config-manager --enable epel && yum install -y jq-1.5-1.el7.x86_64 && yum-config-manager --disable epel
-```
+If you don't know if you're cluster-admin or not.
 Query all users with rolebindings=cluster-admin:
 ```
 oc get clusterrolebinding -o json | jq '.items[] | select(.metadata.name |  startswith("cluster-admin")) | .userNames'
 ```
 
-Hint: root on master-node always is system:admin
+Hint: root on master-node always is system:admin, but don't use it for ansible-tasks. But you're able to grant permissions to other users.
 
 ```
 [ec2-user@master0 ~]$ oc get nodes
