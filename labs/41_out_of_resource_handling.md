@@ -33,10 +33,10 @@ To observe how the OOM killer in action create a container which allocates all m
 [ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_oom.yaml
 ```
 
-Wait till the container is up and being killed. `oc get pods -o wide` will then show:
+Wait and watch till the container is up and being killed. `oc get pods -o wide -w` will then show:
 ```
 NAME              READY     STATUS      RESTARTS   AGE       IP            NODE
-membomb-1-z6md2   0/1       OOMKilled   0          7s        10.131.2.24   node4.user8.lab.openshift.ch
+membomb-1-z6md2   0/1       OOMKilled   0          7s        10.131.2.24   app-node0.user8.lab.openshift.ch
 ```
 
 Run `oc describe pod -l app=membomb` to get more information about the container state which should look like this:
@@ -57,14 +57,16 @@ You can see on which node the pod ran in the output of either the `oc get` or `o
 In this example this would look like:
 
 ```
-ssh node4.user[X].lab.openshift.ch
+ssh app-node0.user[X].lab.openshift.ch
 journalctl -ke
 ```
 
 The following lines should be highlighted:
 
-May 17 10:51:04 node4.user8.lab.openshift.ch kernel: Memory cgroup out of memory: Kill process 5806 (python) score 1990 or sacrifice child
-May 17 10:51:04 node4.user8.lab.openshift.ch kernel: Killed process 5806 (python) total-vm:7336912kB, anon-rss:5987524kB, file-rss:0kB, shmem-rss:0kB
+```
+May 17 10:51:04 app-node0.user8.lab.openshift.ch kernel: Memory cgroup out of memory: Kill process 5806 (python) score 1990 or sacrifice child
+May 17 10:51:04 app-node0.user8.lab.openshift.ch kernel: Killed process 5806 (python) total-vm:7336912kB, anon-rss:5987524kB, file-rss:0kB, shmem-rss:0kB
+```
 
 This log messages indicate that the OOM killer has been invoked because a cgroup memory limit has been exceeded
 and that it killed a python process which consumed 5987524kB memory. Cgroup is a kernel mechanism which limits
@@ -72,7 +74,7 @@ resource usage of processes.
 Further up in the log you should see a line like the following, followed by usage and limits of the corresponding cgroup hierarchy:
 
 ```
-May 17 10:51:04 node4.user8.lab.openshift.ch kernel: Task in /kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod6ba0af16_59af_11e8_9a62_0672f11196a0.slice/docker-648ff0b111978161b0ac94fb72a4656ee3f98b8e73f7eb63c5910f5cf8cd9c53.scope killed as a result of limit of /kubepods.slice
+May 17 10:51:04 app-node0.user8.lab.openshift.ch kernel: Task in /kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod6ba0af16_59af_11e8_9a62_0672f11196a0.slice/docker-648ff0b111978161b0ac94fb72a4656ee3f98b8e73f7eb63c5910f5cf8cd9c53.scope killed as a result of limit of /kubepods.slice
 ```
 
 This message tells you that a limit of the cgroup `kubepods.slice` has been exceeded. That's the cgroup

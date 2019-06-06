@@ -31,6 +31,7 @@ There are three main ways we will access our environment. The mentioned ports ne
 ssh ec2-user@jump.lab.openshift.ch
 ssh ec2-user@master0.user[X].lab.openshift.ch
 ```
+---
 
 **End of Lab 1.2**
 

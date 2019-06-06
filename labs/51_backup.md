@@ -53,9 +53,10 @@ To ensure a consistent etcd backup, we need to stop the daemon. Since there are 
 
 Check if the etcd cluster is healthy.
 ```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
-member 633a80df3001 is healthy: got healthy result from https://172.31.37.65:2379
-member aadb46077a7f58a is healthy: got healthy result from https://172.31.32.131:2379
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379,https://master2.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
+member 3f511408a118b9fd is healthy: got healthy result from https://172.31.37.59:2379
+member 50953a25943f54a8 is healthy: got healthy result from https://172.31.35.180:2379
+member ec41afe89f86deaf is healthy: got healthy result from https://172.31.35.199:2379
 cluster is healthy
 ```
 
