@@ -89,12 +89,19 @@ Use the following playbooks to replace the certificates of the other main compon
 **Warning:** Do not yet replace the router certificates with the corresponding playbook as it will break your routers running on OpenShift 3.6. If you want to, replace the router certificates after upgrading to OpenShift 3.7. (Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1490186)
 
 - masters (API server and controllers)
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-master-certificates.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-master/redeploy-certificates.yml
 - etcd
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-ca.yml
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-certificates.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/redeploy-ca.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/redeploy-certificates.yml
+  
+  **Warning:** The documented redeploy-certificates.yml for Nodes doesn't exists anymore! (since 3.10) 
+  This is already reported: Red Hat Bugzilla – Bug 1635251. 
+  Red Hat provided this KCS: https://access.redhat.com/solutions/3782361
+  
 - nodes
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-node-certificates.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-node/redeploy-certificates.yml 
+  
+  
 - registry
   - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-registry-certificates.yml
 - router
