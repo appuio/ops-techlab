@@ -18,8 +18,8 @@ To check all your certificates, run the playbook `certificate_expiry/easy-mode.y
 ```
 The playbook will generate the following reports with the information of each certificate in JSON and HTML format:
 ```
-/tmp/cert-expiry-report.html
-/tmp/cert-expiry-report.json
+grep -A2 summary $HOME/cert-expiry-report*.json
+$HOME/cert-expiry-report*.html
 ```
 
 
