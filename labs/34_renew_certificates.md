@@ -44,7 +44,7 @@ Note the value for "Validity Not Before:". We will later compare this timestamp 
 
 Redeploy the CA certificate of the etcd servers:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-ca.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/redeploy-ca.yml
 ```
 
 Check the current etcd CA certificate creation time:
