@@ -34,7 +34,7 @@ Query all users with rolebindings=cluster-admin:
 oc get clusterrolebinding -o json | jq '.items[] | select(.metadata.name |  startswith("cluster-admin")) | .userNames'
 ```
 
-Hint: root on master-node always is system:admin, but don't use it for ansible-tasks. But you're able to grant permissions to other users.
+Hint: root on master-node always is system:admin (don't use it for ansible-tasks). But you're able to grant permissions to other users.
 
 ```
 [ec2-user@master0 ~]$ oc get nodes
