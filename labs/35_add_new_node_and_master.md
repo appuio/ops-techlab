@@ -16,7 +16,7 @@ new_nodes
 ...
 
 [new_nodes]
-app-node1.user[X].lab.openshift.ch openshift_hostname=app-node1.user[X].lab.openshift.ch openshift_public_hostname=app-node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+app-node1.user7.lab.openshift.ch openshift_node_group_name='node-config-compute'
 ...
 
 ```
