@@ -32,7 +32,7 @@ Test the ssh connection and run the pre-install playbook:
 
 Now add the new node with the scaleup playbook:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-node/scaleup.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-node/scaleup.yml
 ```
 
 Check if the node is ready:

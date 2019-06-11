@@ -14,12 +14,12 @@ These are the certificates that need to be maintained. For each component there 
 
 To check all your certificates, run the playbook `certificate_expiry/easy-mode.yaml`:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/certificate_expiry/easy-mode.yaml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-checks/certificate_expiry/easy-mode.yaml
 ```
 The playbook will generate the following reports with the information of each certificate in JSON and HTML format:
 ```
-/tmp/cert-expiry-report.html
-/tmp/cert-expiry-report.json
+grep -A2 summary $HOME/cert-expiry-report*.json
+$HOME/cert-expiry-report*.html
 ```
 
 
@@ -33,42 +33,52 @@ First, we check the current etcd certificates creation time:
 ```
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
         Validity
-            Not Before: Mar 23 12:50:41 2018 GMT
-            Not After : Mar 22 12:50:41 2023 GMT
+            Not Before: Jun  4 15:45:00 2019 GMT
+            Not After : Jun  2 15:45:00 2024 GMT
+
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
         Validity
-            Not Before: Mar 23 12:51:34 2018 GMT
-            Not After : Mar 22 12:51:35 2020 GMT
+            Not Before: Jun  4 15:45:00 2019 GMT
+            Not After : Jun  2 15:45:00 2024 GMT
+
 ```
 Note the value for "Validity Not Before:". We will later compare this timestamp with the freshly deployed certificates.
 
 Redeploy the CA certificate of the etcd servers:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-ca.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/redeploy-ca.yml
 ```
 
 Check the current etcd CA certificate creation time:
 ```
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
         Validity
-            Not Before: Mar 26 06:22:41 2018 GMT
-            Not After : Mar 25 06:22:41 2023 GMT
+            Not Before: Jun  6 12:58:04 2019 GMT
+            Not After : Jun  4 12:58:04 2024 GMT
+            
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
         Validity
-            Not Before: Mar 23 12:51:34 2018 GMT
-            Not After : Mar 22 12:51:35 2020 GMT
+            Not Before: Jun  4 15:45:00 2019 GMT
+            Not After : Jun  2 15:45:00 2024 GMT
 ```
 The etcd CA certificate has been generated, but etcd is still using the old server certificates. We will replace them with the `redeploy-etcd-certificates.yml` playbook.
 
 **Warning:** This will again lead to a restart of etcd and master services and consequently cause an outage for a few seconds of the OpenShift API.
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-certificates.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/redeploy-certificates.yml
 ```
 
 Check if the server certificate has been replaced:
 ```
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-ca.crt -text -noout | grep -i validity -A 2
+       Validity
+            Not Before: Jun  6 12:58:04 2019 GMT
+            Not After : Jun  4 12:58:04 2024 GMT
+
 [ec2-user@master0 ~]$ sudo openssl x509 -in /etc/origin/master/master.etcd-client.crt -text -noout | grep -i validity -A 2
+        Validity
+            Not Before: Jun  6 13:28:36 2019 GMT
+            Not After : Jun  4 13:28:36 2024 GMT
 ```
 
 
@@ -79,18 +89,25 @@ Use the following playbooks to replace the certificates of the other main compon
 **Warning:** Do not yet replace the router certificates with the corresponding playbook as it will break your routers running on OpenShift 3.6. If you want to, replace the router certificates after upgrading to OpenShift 3.7. (Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1490186)
 
 - masters (API server and controllers)
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-master-certificates.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-master/redeploy-certificates.yml
+  
 - etcd
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-ca.yml
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-etcd-certificates.yml
-- nodes
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-node-certificates.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/redeploy-ca.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/redeploy-certificates.yml
+  
 - registry
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-registry-certificates.yml
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-hosted/redeploy-registry-certificates.yml
+  
 - router
-  - /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/redeploy-router-certificates.yml
-
-
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-hosted/redeploy-router-certificates.yml
+  
+  **Warning:** The documented redeploy-certificates.yml for Nodes doesn't exists anymore! (since 3.10) 
+  This is already reported: Red Hat Bugzilla – Bug 1635251. 
+  Red Hat provided this KCS: https://access.redhat.com/solutions/3782361
+  
+- nodes
+  - /usr/share/ansible/openshift-ansible/playbooks/openshift-node/redeploy-certificates.yml 
+    
 ---
 
 **End of Lab 3.4**
