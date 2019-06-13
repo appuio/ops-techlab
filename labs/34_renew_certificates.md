@@ -89,7 +89,7 @@ Check if the server certificate has been replaced:
 
 2. Distribute ~/bootstrap.kubeconfig from step 1 to infra and compute nodes replacing /etc/origin/node/bootstrap.kubeconfig
 ```
-[ec2-user@master0 ~]$ sudo ansible nodes -m copy -a 'src=/tmp/bootstrap.kubeconfig dest=/etc/origin/node/bootstrap.kubeconfig'
+[ec2-user@master0 ~]$ ansible nodes -m copy -a 'src=/tmp/bootstrap.kubeconfig dest=/etc/origin/node/bootstrap.kubeconfig'
 ```
 
 3. Move node.kubeconfig and client-ca.crt. These will get recreated when the node service is restarted:
