@@ -60,7 +60,7 @@ $ for i in {0..2}; do curl -v http://infra-node${i}.user[X].lab.openshift.ch:193
 
 As already mentioned, finding out if our cluster will remain in an operational state in the near future also includes some better known checks we could call a more conventional **components monitoring**.
 
-Next to the usual monitoring of storage per partition/logical volume, there's one logical volume on each node of special interest to us: the **Docker storage**. The Docker storage contains images and container filesystems of running containers. Monitoring the available space of this logical volume is important in order to tune garbage collection. Garbage collection is done by the **kubelets** running on each node. The available garbage collection kubelet arguments can be found in the [official documentation](https://docs.openshift.com/container-platform/3.7/admin_guide/garbage_collection.html).
+Next to the usual monitoring of storage per partition/logical volume, there's one logical volume on each node of special interest to us: the **Docker storage**. The Docker storage contains images and container filesystems of running containers. Monitoring the available space of this logical volume is important in order to tune garbage collection. Garbage collection is done by the **kubelets** running on each node. The available garbage collection kubelet arguments can be found in the [official documentation](https://docs.openshift.com/container-platform/3.11/admin_guide/garbage_collection.html).
 
 Speaking of garbage collection, there's another component that needs frequent garbage collection: the registry. Contrary to the Docker storage on each node, OpenShift only provides a command to prune the registry but does not offer a means to execute it on a regular basis. Until it does, setup the [appuio-pruner](https://github.com/appuio/appuio-pruner) as described in its README.
 
@@ -83,7 +83,7 @@ oc create sa kube-ops-view
 oc adm policy add-scc-to-user anyuid -z kube-ops-view
 oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:ocp-ops-view:kube-ops-view
 oc apply -f https://raw.githubusercontent.com/raffaelespazzoli/kube-ops-view/ocp/deploy-openshift/kube-ops-view.yaml
-oc expose svc kube-ops-view
+oc create route edge --service kube-ops-view
 oc get route | grep kube-ops-view | awk '{print $2}'
 ```
 
