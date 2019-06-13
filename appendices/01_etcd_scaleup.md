@@ -5,23 +5,22 @@ This appendix is going to show you how to do a scaleup of etcd hosts.
 
 ## Adapt Inventory
 
-Uncomment the new etcd hosts in the Ansible inventory in the (`[new_etcd]`) section.
+Add the new etcd host in the Ansible inventory in the (`[new_etcd]`) section and add it to the (`[OSEv3:children]` group).
 ```
+[OSEv3:children]
 ...
-[etcd]
-master0.user[X].lab.openshift.ch
+new_etcd
 
 [new_etcd]
-master1.user[X].lab.openshift.ch
-master2.user[X].lab.openshift.ch
-...
+master2.user7.lab.openshift.ch
+
 ```
 
 ## Scaleup
 
 Execute the playbook responsible for the etcd scaleup:
 ```
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-etcd/scaleup.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/scaleup.yml 
 ```
 
 
@@ -29,7 +28,11 @@ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-et
 
 Verify your installation now consists of the original cluster plus one new etcd member:
 ```
-sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
+[root@master0 ~]# etcdctl2 --cert-file=/etc/etcd/peer.crt \
+                           --key-file=/etc/etcd/peer.key \
+                           --ca-file=/etc/etcd/ca.crt \
+                           --peers="https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379" \
+                           cluster-health
 ```
 
 Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
