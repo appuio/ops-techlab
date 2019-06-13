@@ -97,23 +97,39 @@ Check if the server certificate has been replaced:
 [ec2-user@master0 ~]$ ansible nodes -m shell -a 'mv /etc/origin/node/client-ca.crt{,.old}'
 [ec2-user@master0 ~]$ ansible nodes -m shell -a 'mv /etc/origin/node/node.kubeconfig{,.old}'
 ```
-4. Remove contents of /etc/origin/node/certificates/:
+4. Remove contents of /etc/origin/node/certificates/ on app-/infra-nodes:
 ```
-[ec2-user@master0 ~]$ ansible nodes -m shell -a 'rm -rf  /etc/origin/node/certificates'
+[ec2-user@master0 ~]$ ansible nodes -m shell -a 'rm -rf  /etc/origin/node/certificates' --limit 'nodes:!master*'
 ```
-5. Restart node service:
+5. Restart node service on app-/infra-nodes:
 ```
-[ec2-user@master0 ~]$ ansible nodes -m service -a "name=atomic-openshift-node state=restarted"
+[ec2-user@master0 ~]$ ansible nodes -m service -a "name=atomic-openshift-node state=restarted" --limit 'nodes:!master*'
 ```
 6. Approve CSRs, 2 should be approved for each node:
 ```
 [ec2-user@master0 ~]$ oc get csr -o name | xargs oc adm certificate approve
 ```
-7. Check if the node is READY:
+7. Check if the app-/infra-nodes are READY:
 ```
 [ec2-user@master0 ~]$ oc get node
 [ec2-user@master0 ~]$ for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}'`; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
 ```
+8. Remove contents of /etc/origin/node/certificates/ on master-nodes:
+```
+[ec2-user@master0 ~]$ ansible masters -m shell -a 'rm -rf  /etc/origin/node/certificates' 
+```
+9. Restart node service on master-nodes:
+```
+[ec2-user@master0 ~]$ ansible masters -m service -a "name=atomic-openshift-node state=restarted" 
+```
+10. Approve CSRs, 2 should be approved for each node:
+```
+[ec2-user@master0 ~]$ oc get csr -o name | xargs oc adm certificate approve
+```
+11. Check if the master-nodes are READY:
+```
+[ec2-user@master0 ~]$ oc get node
+[ec2-user@master0 ~]$ for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}'`; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
 
 ### Replace the other main certificates
 
