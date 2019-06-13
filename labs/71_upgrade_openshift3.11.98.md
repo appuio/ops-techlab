@@ -2,9 +2,38 @@
 
 ### Upgrade Preparation
 
-We first need to make sure our lab environment fulfills the requirements mentioned in the official documentation. We are going to do an "[Automated In-place Cluster Upgrade](https://docs.openshift.com/container-platform/3.11/upgrading/automated_upgrades.html)" which lists part of these requirements and explains how to verify the current installation. Also check the [Prerequisites](https://docs.openshift.com/container-platform/3.11/install_config/install/prerequisites.html#install-config-install-prerequisites) of the new release.
+We first need to make sure our lab environment fulfills the requirements mentioned in the official documentation. We are going to do an "[Automated In-place Cluster Upgrade](https://docs.openshift.com/container-platform/3.11/upgrading/automated_upgrades.html)" which lists part of these requirements and explains how to verify the current installation. Also check the [Prerequisites](https://docs.openshift.com/container-platform/3.11/install/prerequisites.html#install-config-install-prerequisites) of the new release.
 
-Conveniently, our lab environment already fulfills all the requirements, so we can move on to the next step. Let's attach the repositories for the new OpenShift release:
+Conveniently, our lab environment already fulfills all the requirements, so we can move on to the next step. 
+
+1. Ensure the openshift_deployment_type=openshift-enterprise
+```
+[ec2-user@master0 ~]$ grep -i openshift_deployment_type /etc/ansible/hosts
+```
+
+2. enable rolling, full system restarts of the hosts
+```
+[ec2-user@master0 ~]$ ansible masters -m shell -a "grep -i openshift_rolling_restart_mode /etc/ansible/hosts"
+```
+in our lab environment this parameter isn't set, so let's do it on all master-nodes:
+```
+[ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_rolling_restart_mode" line="openshift_rolling_restart_mode=system" state="present"'
+```
+3. change the value of openshift_pkg_version in /etc/ansible/hosts
+```
+[ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_pkg_version" line="openshift_pkg_version=-3.11.98" state="present"'
+```
+4. upgrade the nodes
+```
+[ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible
+[ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade.yml
+```
+5. reboot all hosts
+
+
+
+
+Let's attach the repositories for the new OpenShift release:
 ```
 [ec2-user@master0 ~]$ ansible all -a "subscription-manager refresh"
 [ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos --disable="rhel-7-server-ose-3.6-rpms" --enable="rhel-7-server-ose-3.7-rpms" --enable="rhel-7-fast-datapath-rpms"'
