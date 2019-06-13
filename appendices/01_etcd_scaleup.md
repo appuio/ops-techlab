@@ -1,4 +1,4 @@
-# Appendix 2: etcd Scaleup
+# Appendix 1: etcd Scaleup
 
 This appendix is going to show you how to do a scaleup of etcd hosts.
 
