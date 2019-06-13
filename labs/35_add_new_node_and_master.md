@@ -104,7 +104,7 @@ Check if the host is accessible and run the pre-install playbook:
 
 Now we can add the new master:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-master/scaleup.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-master/scaleup.yml
 ```
 
 Let's check if the node daemon on the new master is ready:
