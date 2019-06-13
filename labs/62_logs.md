@@ -73,7 +73,7 @@ Above command applies to all the other node services (`docker`, `dnsmasq` and `N
 Depending on the outcome of the above commands we have to get a closer look at specific services. This can either be done the conventional way, e.g. the 30 most recent messages for atomic-openshift-node on the first master:
 
 ```
-$ ansible masters[0] -a "journalctl -u atomic-openshift-node -n 30"
+[ec2-user@master0 ~]$ ansible masters[0] -a "journalctl -u atomic-openshift-node -n 30"
 ```
 
 Or by searching Elasticsearch: After logging in to https://logging.app[X].lab.openshift.ch, make sure you're on Kibana's "Discover" tab. Then choose the `.operations.*` index by clicking on the arrow in the dark-grey box on the left to get a list of all available indices. You can then create search queries such as `systemd.t.SYSTEMD_UNIT:atomic-openshift-node.service` in order to filter for all messages from every running OpenShift node service.

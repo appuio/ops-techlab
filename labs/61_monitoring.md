@@ -18,19 +18,19 @@ In order to answer this first question, we check the state of different vital co
 
 Check the masters' health state with a HTTP request:
 ```
-$ curl -v https://console.user[X].lab.openshift.ch/healthz
+[ec2-user@master0 ~]$ curl -v https://console.user[X].lab.openshift.ch/healthz
 ```
 
 As long as the response is a 200 status code at least one of the masters is still working and the API is accessible via Load Balancer (if there is one).
 
 **etcd** also exposes a similar health endpoint at https://`openshift_master_cluster_public_hostname`:2379/health, though it is only accessible using the client certificate and corresponding key stored on the masters at `/etc/origin/master/master.etcd-client.crt` and `/etc/origin/master/master.etcd-client.key`.
 ```
-$ sudo curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key https://master0.user[X].lab.openshift.ch:2379/health
+[ec2-user@master0 ~]$ sudo curl --cacert /etc/origin/master/master.etcd-ca.crt --cert /etc/origin/master/master.etcd-client.crt --key /etc/origin/master/master.etcd-client.key https://master0.user[X].lab.openshift.ch:2379/health
 ```
 
 The **HAProxy router pods** are responsible for getting application traffic into OpenShift. Similar to the masters, HAProxy also exposes a /healthz endpoint on port 1936 which can be checked with e.g.:
 ```
-$ curl -v http://router.app[X].lab.openshift.ch:1936/healthz
+[ec2-user@master0 ~]$ curl -v http://router.app[X].lab.openshift.ch:1936/healthz
 ```
 
 Using the wildcard domain to access a router's health page results in a positive answer if at least one router is up and running and that's all we want to know right now.
@@ -48,14 +48,14 @@ First, let's look at how to use above checks to answer this second question.
 
 The health endpoint exposed by **masters** was accessed via load balancer in the first category in order to find out if the API is generally available. This time however we want to find out if at least one of the master APIs is unavailable, even if there still are some that are accessible. So we check every single master endpoint directly instead of via load balancer:
 ```
-$ for i in {0..2}; do curl -v https://master${i}.user[X].lab.openshift.ch/healthz; done
+[ec2-user@master0 ~]$ for i in {0..2}; do curl -v https://master${i}.user[X].lab.openshift.ch/healthz; done
 ```
 
 The **etcd** check above is already run against single members of the cluster and can therefore be applied here in the exact same form. The difference only is that we want to make sure every single member is running, not just the number needed to have quorum.
 
 The approach used for the masters also applies to the **HAProxy routers**. A router pod is effectively listening on the node's interface it is running on. So instead of connecting via load balancer, we use the nodes' IP addresses the router pods are running on. In our case, these are nodes 0 and 1:
 ```
-$ for i in {0..2}; do curl -v http://infra-node${i}.user[X].lab.openshift.ch:1936/healthz; done
+[ec2-user@master0 ~]$ for i in {0..2}; do curl -v http://infra-node${i}.user[X].lab.openshift.ch:1936/healthz; done
 ```
 
 As already mentioned, finding out if our cluster will remain in an operational state in the near future also includes some better known checks we could call a more conventional **components monitoring**.
@@ -71,7 +71,7 @@ Besides the obvious components that need monitoring like CPU, memory and storage
 
 But let's first get an overview of available resources using tools you might not have heard about before. One such tool is [Cockpit](http://cockpit-project.org/). Cockpit aims to ease administration tasks of Linux servers by making some basic tasks available via web interface. It is installed by default on every master by the OpenShift Ansible playbooks and listens on port 9090. We don't want to expose the web interface to the internet though, so we are going to use SSH port forwarding to access it:
 ```
-$ ssh ec2-user@jump.lab.openshift.ch -L 9090:master0.user[X].lab.openshift.ch:9090
+[ec2-user@master0 ~]$ ssh ec2-user@jump.lab.openshift.ch -L 9090:master0.user[X].lab.openshift.ch:9090
 ```
 
 After the SSH tunnel has been established, open http://localhost:9090 in your browser and log in using user `ec2-user` and the password provided by the instructor. Explore the different tabs and sections of the web interface.
