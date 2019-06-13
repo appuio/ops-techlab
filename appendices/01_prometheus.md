@@ -1,4 +1,4 @@
-# Appendix 2: Monitoring with Prometheus
+# Appendix 1: Monitoring with Prometheus
 
 This appendix is going to show you how to install Prometheus on OpenShift 3.7.
 

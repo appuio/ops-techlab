@@ -55,88 +55,82 @@ https://logging.app[X].lab.openshift.ch
 
 ### Restore the etcd Cluster
 
-First, we need to stop all etcd:
+First, we need to stop all etcd and delete the corresponding data:
 ```
-[ec2-user@master0 ~]$ ansible etcd -m service -a "name=etcd state=stopped"
-```
-
-The cluster is now down and you can't get any resources through the console. We are now copying the files back from the backup and set the right permissions.
-```
-[ec2-user@master0 ~]$ ETCD_DIR=/var/lib/etcd/
-[ec2-user@master0 ~]$ sudo mv $ETCD_DIR /var/lib/etcd.orig
-[ec2-user@master0 ~]$ sudo cp -Rp etcd.bak $ETCD_DIR
-[ec2-user@master0 ~]$ sudo chcon -R --reference /var/lib/etcd.orig/ $ETCD_DIR
-[ec2-user@master0 ~]$ sudo chown -R etcd:etcd $ETCD_DIR
+[ec2-user@master0 ~]$ ansible etcd -m "file" -a "path=/etc/origin/node/pods-stopped state=directory"
+[ec2-user@master0 ~]$ ansible etcd -m "shell" -a "mv /etc/origin/node/pods/etcd.yaml /etc/origin/node/pods-stopped/"
+[ec2-user@master0 ~]$ ansible etcd -m "file" -a "path=/var/lib/etcd state=absent"
 ```
 
-Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and check if it's running. This is needed, because initially it will create a new cluster with the existing data from the backup.
+Prepare etcd directories:
 ```
-[ec2-user@master0 ~]$ sudo cp /usr/lib/systemd/system/etcd.service /etc/systemd/system
-[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /etc/systemd/system/etcd.service
-[ec2-user@master0 ~]$ sudo systemctl daemon-reload
-[ec2-user@master0 ~]$ sudo systemctl start etcd
-[ec2-user@master0 ~]$ sudo systemctl status etcd
+[ec2-user@master0 ~]$ ansible etcd -m "file" -a "path=/var/lib/etcd state=directory group=etcd owner=etcd recurse=yes"
+[ec2-user@master0 ~]$ ansible etcd -a "restorecon -Rv /var/lib/etcd/"
 ```
 
-The cluster is now initialized, so we need to remove the "--force-new-cluster" parameter again and restart etcd.
+Get Information on existing cluster:
 ```
-[ec2-user@master0 ~]$ sudo rm /etc/systemd/system/etcd.service
-[ec2-user@master0 ~]$ sudo systemctl daemon-reload
-[ec2-user@master0 ~]$ sudo systemctl restart etcd
-[ec2-user@master0 ~]$ sudo systemctl status etcd
+[root@master0 ~]# grep -i ETCD_INITIAL_ADVERTISE_PEER_URLS /etc/etcd/etcd.conf 
+ETCD_INITIAL_ADVERTISE_PEER_URLS=https://172.31.42.72:2380
 ```
 
-Check if etcd is healthy and check if "/openshift.io" exists in etcd
+Restore etcd data from snapshot using the information above:
 ```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
-member 92c764a37c90869 is healthy: got healthy result from https://127.0.0.1:2379
-cluster is healthy
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key ls /
-/openshift.io
-```
-
-We need to change the peerURL of the etcd to it's private ip. Make sure to correctly copy the **member_id** and **private_ip**.
-```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
-[member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
-
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member update [member_id] https://[private_ip]:2380
-Updated member with ID [member_id] in cluster
-
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
-[member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.201:2380 clientURLs=https://172.31.46.201:2379 isLeader=true
+[root@master0 ~]# etcdctl3 snapshot restore /var/lib/etcd/snapshot.db \
+                           --data-dir /var/lib/etcd/ \
+	                   --name "master0.user[X].lab.openshift.ch" \
+                      	   --initial-cluster "master0.user[X].lab.openshift.ch=https://[MASTER0_IP_FROM_ETCD_INITIAL_ADVERTISE_PEER_URLS]:2380" \
+             	           --initial-cluster-token etcd-cluster-1 \
+                           --initial-advertise-peer-urls https://[MASTER0_IP_FROM_ETCD_INITIAL_ADVERTISE_PEER_URLS]:2380 \
+                           --skip-hash-check=true"
 ```
 
-Add the second etcd `master1.user[X].lab.openshift.ch` to the etcd cluster
+Start first etcd:
 ```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member add master1.user[X].lab.openshift.ch https://[IP_OF_MASTER1]:2380
-Added member named master1.user[X].lab.openshift.ch with ID aadb46077a7f58a to cluster
-
-ETCD_NAME="master1.user[X].lab.openshift.ch"
-ETCD_INITIAL_CLUSTER="master0.user[X].lab.openshift.ch=https://172.31.37.65:2380,master1.user[X].lab.openshift.ch=https://172.31.32.131:2380"
-ETCD_INITIAL_CLUSTER_STATE="existing"
+[ec2-user@master0 ~]$ ansible master0 -m "shell" -a "mv /etc/origin/node/pods-stopped/etcd.yaml /etc/origin/node/pods/"
 ```
 
-Login to `master1.user[X].lab.openshift.ch` and edit the etcd configuration file using the environment variables provided above. Then remove the etcd data directory and restart etcd.
+We are now running on a single etcd setup. To get HA again, we need to scaleup to at least three etcds.
+
+First add the new etcds host in the Ansible inventory in the (`[new_etcd]`) section and add it to the (`[OSEv3:children]` group).
 ```
-[ec2-user@master1 ~]$ sudo vi /etc/etcd/etcd.conf
-[ec2-user@master1 ~]$ sudo rm -rf /var/lib/etcd/member
-[ec2-user@master1 ~]$ sudo systemctl restart etcd
+[OSEv3:children]
+...
+new_etcd
+
+[new_etcd]
+master1.user7.lab.openshift.ch
+master2.user7.lab.openshift.ch
+
 ```
 
-Login to `master0.user[X].lab.openshift.ch` again and check the etcd cluster health.
-```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member list
-633a80df3001: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.37.65:2380 clientURLs=https://172.31.37.65:2379 isLeader=true
-aadb46077a7f58a: name=master1.user[X].lab.openshift.ch peerURLs=https://172.31.32.131:2380 clientURLs=https://172.31.32.131:2379 isLeader=false
+### Scaleup to a HA etcd cluster
 
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
-member 633a80df3001 is healthy: got healthy result from https://172.31.37.65:2379
-member aadb46077a7f58a is healthy: got healthy result from https://172.31.32.131:2379
-cluster is healthy
+Execute the playbook responsible for the etcd scaleup:
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/scaleup.yml
 ```
 
-Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X].
+
+## Verification and Finalization
+
+Verify your installation now consists of the original cluster plus one new etcd member:
+```
+[root@master0 ~]# etcdctl2 --cert-file=/etc/etcd/peer.crt \
+                           --key-file=/etc/etcd/peer.key \
+                           --ca-file=/etc/etcd/ca.crt \
+                           --peers="https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379" \
+                           cluster-health
+```
+
+Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
+```
+...
+[etcd]
+master0.user[X].lab.openshift.ch
+master1.user[X].lab.openshift.ch
+master2.user[X].lab.openshift.ch
+```
 
 ---
 
