@@ -2,93 +2,39 @@
 
 ### Restore a Project
 
-We will now delete the logging project and try to restore it from the backup.
+We will now delete the initially created `dakota` project and try to restore it from the backup.
 ```
-[ec2-user@master0 ~]$ oc delete project logging
+[ec2-user@master0 ~]$ oc delete project dakota
 ```
 
 Check if the project is being deleted
 ```
-[ec2-user@master0 ~]$ oc get project logging
+[ec2-user@master0 ~]$ oc get project dakota
 ```
 
-Restore the logging project from the backup. Some objects still exist, because they are not namespaced and therefore not deleted. You will see during the restore, that these object will not be replaced.
+Restore the dakota project from the backup.
 ```
-[ec2-user@master0 ~]$ oc adm new-project logging --node-selector=""
-[ec2-user@master0 ~]$ oc project logging
-
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/serviceaccount.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/secret.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/configmap.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/rolebindings.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/project.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/daemonset.json
+[ec2-user@master0 ~]$ oc new-project dakota
+[ec2-user@master0 ~]$ oc project project-backup
+[ec2-user@master0 ~]$ oc debug `oc get pods -o jsonpath='{.items[*].metadata.name}'`
+sh-4.2# tar -xvf /backup/backup-201906131343.tar.gz -C /tmp/
+sh-4.2# oc apply -f /tmp/dakota/
 ```
 
-Scale the logging components.
+Start build and push image to registry
 ```
-[ec2-user@master0 ~]$ oc get dc
-NAME                  REVISION   DESIRED   CURRENT   TRIGGERED BY
-logging-curator       5          1         1         config
-logging-es-a4nhrowo   5          1         1         config
-logging-kibana        7          1         0         config
-
-
-[ec2-user@master0 ~]$ oc scale dc logging-kibana --replicas=0
-[ec2-user@master0 ~]$ oc scale dc logging-curator --replicas=0
-[ec2-user@master0 ~]$ oc scale dc logging-es-[HASH] --replicas=0
-[ec2-user@master0 ~]$ oc scale dc logging-kibana --replicas=1
-[ec2-user@master0 ~]$ oc scale dc logging-curator --replicas=1
-[ec2-user@master0 ~]$ oc scale dc logging-es-[HASH] --replicas=1
+[ec2-user@master0 ~]$ oc start-build ruby-ex -n dakota
 ``` 
 
 Check if the pods are coming up again
 ```
-[ec2-user@master0 ~]$ oc get pods -w
+[ec2-user@master0 ~]$ oc get pods -w -n dakota
 ```
-
-If all the pods are ready, Kibana should be receiving logs again.
-```
-https://logging.app[X].lab.openshift.ch
-```
-
 
 ### Restore the etcd Cluster
 
-First, we need to stop all etcd and delete the corresponding data:
-```
-[ec2-user@master0 ~]$ ansible etcd -m "file" -a "path=/etc/origin/node/pods-stopped state=directory"
-[ec2-user@master0 ~]$ ansible etcd -m "shell" -a "mv /etc/origin/node/pods/etcd.yaml /etc/origin/node/pods-stopped/"
-[ec2-user@master0 ~]$ ansible etcd -m "file" -a "path=/var/lib/etcd state=absent"
-```
-
-Prepare etcd directories:
-```
-[ec2-user@master0 ~]$ ansible etcd -m "file" -a "path=/var/lib/etcd state=directory group=etcd owner=etcd recurse=yes"
-[ec2-user@master0 ~]$ ansible etcd -a "restorecon -Rv /var/lib/etcd/"
-```
-
-Get Information on existing cluster:
-```
-[root@master0 ~]# grep -i ETCD_INITIAL_ADVERTISE_PEER_URLS /etc/etcd/etcd.conf 
-ETCD_INITIAL_ADVERTISE_PEER_URLS=https://172.31.42.72:2380
-```
-
-Restore etcd data from snapshot using the information above:
-```
-[root@master0 ~]# etcdctl3 snapshot restore /var/lib/etcd/snapshot.db \
-                           --data-dir /var/lib/etcd/ \
-	                   --name "master0.user[X].lab.openshift.ch" \
-                      	   --initial-cluster "master0.user[X].lab.openshift.ch=https://[MASTER0_IP_FROM_ETCD_INITIAL_ADVERTISE_PEER_URLS]:2380" \
-             	           --initial-cluster-token etcd-cluster-1 \
-                           --initial-advertise-peer-urls https://[MASTER0_IP_FROM_ETCD_INITIAL_ADVERTISE_PEER_URLS]:2380 \
-                           --skip-hash-check=true"
-```
-
-Start first etcd:
-```
-[ec2-user@master0 ~]$ ansible master0 -m "shell" -a "mv /etc/origin/node/pods-stopped/etcd.yaml /etc/origin/node/pods/"
-```
+TODO: according to:
+https://docs.openshift.com/container-platform/3.11/admin_guide/assembly_restoring-cluster.html#restoring-etcd_admin-restore-cluster
 
 We are now running on a single etcd setup. To get HA again, we need to scaleup to at least three etcds.
 

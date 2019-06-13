@@ -35,29 +35,42 @@ To backup the data in persistent volumes, you should mount them somewhere. If yo
 ### Project Backup
 
 It is advisable to regularly backup all project data.
-We have prior set up a cronjob in the project-backup project which writes all resources on OpenShift to a PV at 6:00 and 18:00.
+We have prior set up a cronjob in the project-backup project which hourly writes all resources on OpenShift to a PV.
 
 ### Create etcd Backup
 
 Create the etcd data backup.
 ```
+usernr=[ID]
 [root@master0 ~]# etcdctl3 --cert /etc/etcd/peer.crt \
                            --key /etc/etcd/peer.key \
                            --cacert /etc/etcd/ca.crt \
-                           --endpoints "https://master1.user[X].lab.openshift.ch:2379" \
-                           snapshot save /var/lib/etcd/snapshot.db"
+                           --endpoints "https://master0.user$usernr.lab.openshift.ch:2379" \
+                           endpoint health
+https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 1.308347ms
+https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 2.303151ms
+
+[root@master0 ~]# etcdctl2 backup --data-dir /var/lib/etcd/ --backup-dir /var/lib/etcd/etcd.bak/
+[root@master0 ~]# cp /var/lib/etcd/member/snap/db /var/lib/etcd/etcd.bak/
 ```
 
 Check if the etcd cluster is healthy.
 ```
-[root@master0 ~]# etcdctl2 --cert-file=/etc/etcd/peer.crt \
-                           --key-file=/etc/etcd/peer.key \
-                           --ca-file=/etc/etcd/ca.crt \
-                           --peers="https://master1.user[X].lab.openshift.ch:2379" \
-                           cluster-health
-member 50953a25943f54a8 is healthy: got healthy result from https://172.31.35.180:2379
-member ec41afe89f86deaf is healthy: got healthy result from https://172.31.35.199:2379
-cluster is healthy
+[root@master0 ~]# etcdctl3 --cert /etc/etcd/peer.crt \
+                           --key /etc/etcd/peer.key \
+                           --cacert /etc/etcd/ca.crt \
+                           --endpoints "https://master0.user$usernr.lab.openshift.ch:2379" \
+                           endpoint health
+https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 1.373096ms
+https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 1.656468ms
+
+[root@master0 ~]# etcdctl3 --cert /etc/etcd/peer.crt \
+                           --key /etc/etcd/peer.key \
+                           --cacert /etc/etcd/ca.crt \
+                           --endpoints "https://master0.user$usernr.lab.openshift.ch:2379" \
+                           endpoint status
+https://master0.user1.lab.openshift.ch:2379, cf42363b9a3c5327, 3.2.22, 22 MB, true, 120, 15669
+https://master0.user1.lab.openshift.ch:2379, cf42363b9a3c5327, 3.2.22, 22 MB, true, 120, 15669
 ```
 
 
