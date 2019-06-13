@@ -80,7 +80,40 @@ Check if the server certificate has been replaced:
             Not Before: Jun  6 13:28:36 2019 GMT
             Not After : Jun  4 13:28:36 2024 GMT
 ```
+### Redeploy nodes Certificates
 
+1. Create a new bootstrap.kubeconfig for nodes (MASTER nodes will just copy admin.kubeconfig):"
+```
+oc serviceaccounts create-kubeconfig node-bootstrapper -n openshift-infra --config /etc/origin/master/admin.kubeconfig > ~/bootstrap.kubeconfig
+```
+
+2. Distribute ~/bootstrap.kubeconfig from step 1 to infra and compute nodes replacing /etc/origin/node/bootstrap.kubeconfig
+```
+ansible nodes -m copy -a 'src=~/bootstrap.kubeconfig dest=/etc/origin/node/bootstrap.kubeconfig'
+```
+
+3. Move node.kubeconfig and client-ca.crt. These will get recreated when the node service is restarted:
+```
+ansible nodes -m shell -a 'mv /etc/origin/node/client-ca.crt{,.old}'
+ansible nodes -m shell -a 'mv /etc/origin/node/node.kubeconfig{,.old'
+```
+4. Remove contents of /etc/origin/node/certificates/:
+```
+ansible nodes -m shell -a 'rm -rf  /etc/origin/node/certificates'
+```
+5. Restart node service:
+```
+ansible nodes -m service -a "name=atomic-openshift-node state=restarted"
+```
+6. Approve CSRs, 2 should be approved for each node:
+```
+oc get csr -o name | xargs oc adm certificate approve
+```
+7. Check if the node is READY:
+```
+oc get node
+for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}'`; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
+```
 
 ### Replace the other main certificates
 
@@ -105,9 +138,7 @@ Use the following playbooks to replace the certificates of the other main compon
   This is already reported: Red Hat Bugzilla – Bug 1635251. 
   Red Hat provided this KCS: https://access.redhat.com/solutions/3782361
   
-- nodes
-  - /usr/share/ansible/openshift-ansible/playbooks/openshift-node/redeploy-certificates.yml 
-    
+- nodes (manual steps needed!)
 ---
 
 **End of Lab 3.4**
