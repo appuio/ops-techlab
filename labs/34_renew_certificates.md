@@ -84,7 +84,7 @@ Check if the server certificate has been replaced:
 
 1. Create a new bootstrap.kubeconfig for nodes (MASTER nodes will just copy admin.kubeconfig):"
 ```
-oc serviceaccounts create-kubeconfig node-bootstrapper -n openshift-infra --config /etc/origin/master/admin.kubeconfig > ~/bootstrap.kubeconfig
+[ec2-user@master0 ~]# oc serviceaccounts create-kubeconfig node-bootstrapper -n openshift-infra --config /etc/origin/master/admin.kubeconfig > /tmp/bootstrap.kubeconfig
 ```
 
 2. Distribute ~/bootstrap.kubeconfig from step 1 to infra and compute nodes replacing /etc/origin/node/bootstrap.kubeconfig
