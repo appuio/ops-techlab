@@ -94,16 +94,16 @@ Check if the server certificate has been replaced:
 
 3. Move node.kubeconfig and client-ca.crt. These will get recreated when the node service is restarted:
 ```
-[ec2-user@master0 ~]$ sudo ansible nodes -m shell -a 'mv /etc/origin/node/client-ca.crt{,.old}'
-[ec2-user@master0 ~]$ sudo ansible nodes -m shell -a 'mv /etc/origin/node/node.kubeconfig{,.old'
+[ec2-user@master0 ~]$ ansible nodes -m shell -a 'mv /etc/origin/node/client-ca.crt{,.old}'
+[ec2-user@master0 ~]$ ansible nodes -m shell -a 'mv /etc/origin/node/node.kubeconfig{,.old'
 ```
 4. Remove contents of /etc/origin/node/certificates/:
 ```
-[ec2-user@master0 ~]$ sudo ansible nodes -m shell -a 'rm -rf  /etc/origin/node/certificates'
+[ec2-user@master0 ~]$ ansible nodes -m shell -a 'rm -rf  /etc/origin/node/certificates'
 ```
 5. Restart node service:
 ```
-[ec2-user@master0 ~]$ sudo ansible nodes -m service -a "name=atomic-openshift-node state=restarted"
+[ec2-user@master0 ~]$ ansible nodes -m service -a "name=atomic-openshift-node state=restarted"
 ```
 6. Approve CSRs, 2 should be approved for each node:
 ```
