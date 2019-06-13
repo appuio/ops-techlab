@@ -130,6 +130,8 @@ Check if the server certificate has been replaced:
 ```
 [ec2-user@master0 ~]$ oc get node
 [ec2-user@master0 ~]$ for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}'`; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
+```
+
 
 ### Replace the other main certificates
 
