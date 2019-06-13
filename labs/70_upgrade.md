@@ -10,7 +10,7 @@ In this chapter, we will do a minor upgrade from OpenShift 3.11.88 to 3.11.98.
 
 ---
 
-<p width="100px" align="right"><a href="71_upgrade_openshift36.md">7.1 Upgrade to OpenShift 3.11.98 →</a></p>
+<p width="100px" align="right"><a href="71_upgrade_openshift3.11.98.md">7.1 Upgrade to OpenShift 3.11.98 →</a></p>
 
 [← back to the Labs Overview](../README.md)
 
