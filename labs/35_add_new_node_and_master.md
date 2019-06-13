@@ -118,6 +118,7 @@ infra-node1.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cac
 infra-node2.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
 master0.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
 master1.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
+master2.user7.lab.openshift.ch       Ready     master    6m        v1.11.0+d4cacc0
 
 ```
 
