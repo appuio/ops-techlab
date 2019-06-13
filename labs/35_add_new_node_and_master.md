@@ -110,15 +110,15 @@ Now we can add the new master:
 Let's check if the node daemon on the new master is ready:
 ```
 [ec2-user@master0 ~]$ oc get nodes
-NAME                             STATUS                     AGE       VERSION
-app-node0.user2.lab.openshift.ch     Ready                      3h        v1.6.1+5115d708d7
-app-node1.user2.lab.openshift.ch     Ready                      14m       v1.6.1+5115d708d7
-infra-node0.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-infra-node1.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-infra-node2.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-master0.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
-master1.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
-master2.user2.lab.openshift.ch       Ready,SchedulingDisabled   1m        v1.6.1+5115d708d7
+NAME                                 STATUS    ROLES     AGE       VERSION
+app-node0.user7.lab.openshift.ch     Ready     compute   1d        v1.11.0+d4cacc0
+app-node1.user7.lab.openshift.ch     Ready     compute   1d        v1.11.0+d4cacc0
+infra-node0.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+infra-node1.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+infra-node2.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+master0.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
+master1.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
+
 ```
 
 Check if the old masters see the new one:
