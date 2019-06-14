@@ -81,9 +81,17 @@ Upgrade "infra-node1.user[X].lab.openshift.ch":
 ansible nodes --poll=0 --background=1 -m shell -a 'sleep 2 && reboot'
 ```
 
+Ping master0.user[x].lab.openshift.ch and reconnect.
+
+Check health of all nodes:
+```
+[ec2-user@master0 ~]$ watch oc get nodes -o wide
+```
+
 #### 6. Upgrading the EFK Logging Stack ####
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
+[ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible/playbooks
+[ec2-user@master0 ~]$ ansible-playbook openshift-logging/config.yml
 [ec2-user@master0 ~]$ oc delete pod --selector="component=fluentd" -n logging
 ```
 
