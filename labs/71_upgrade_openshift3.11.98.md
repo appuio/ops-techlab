@@ -39,15 +39,42 @@ in our lab environment this parameter isn't set, so let's do it on all master-no
 ```
 
 4.3 upgrade the control plane
+
+    Upgrade the so-called control plane, consisting of:
+
+    - etcd
+    - master components
+    - node services running on masters
+    - Docker running on masters
+    - Docker running on any stand-alone etcd hosts
+
 ```
 [ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible
 [ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_control_plane.yml
 ```
 
-4.4 upgrade the nodes
+4.4 upgrade the nodes manually (one by one)
+Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes. 
+
+Upgrade "infra-node0.user[X].lab.openshift.ch":
 ```
-[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml
+[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node0.user[X].lab.openshift.ch"
 ```
+Wait until all GlusterFS Pods are ready again and check if GlusterFS volumes have heal entries.
+```
+[ec2-user@master0 ~]$ oc project glusterfs
+[ec2-user@master0 ~]$ oc get pods -o wide | grep glusterfs
+[ec2-user@master0 ~]$ oc rsh <GlusterFS_pod_name>
+sh-4.2# for vol in `gluster volume list`; do gluster volume heal $vol info; done | grep -i "number of entries"
+Number of entries: 0
+```
+If all volumes have "Number of entries: 0", we can proceed with the next node and repeat the check of GlusterFS.
+
+Upgrade "infra-node0.user[X].lab.openshift.ch":
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node1.user[X].lab.openshift.ch"
+```
+
 5. reboot all hosts
 ```
 ansible nodes --poll=0 --background=1 -m shell -a 'sleep 2 && reboot'
