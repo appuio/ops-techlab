@@ -1,4 +1,4 @@
-## Lab 7.1: Upgrade OpenShift 3.11.88 to 3.11.98
+## Lab 7.1: Upgrade OpenShift 3.11.88 to 3.11.104
 
 ### Upgrade Preparation
 
@@ -6,12 +6,12 @@ We first need to make sure our lab environment fulfills the requirements mention
 
 Conveniently, our lab environment already fulfills all the requirements, so we can move on to the next step. 
 
-1. Ensure the openshift_deployment_type=openshift-enterprise
+1. #### Ensure the openshift_deployment_type=openshift-enterprise ####
 ```
 [ec2-user@master0 ~]$ grep -i openshift_deployment_type /etc/ansible/hosts
 ```
 
-2. disable rolling, full system restarts of the hosts
+2. #### disable rolling, full system restarts of the hosts ####
 ```
 [ec2-user@master0 ~]$ ansible masters -m shell -a "grep -i openshift_rolling_restart_mode /etc/ansible/hosts"
 ```
@@ -19,11 +19,11 @@ in our lab environment this parameter isn't set, so let's do it on all master-no
 ```
 [ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_rolling_restart_mode" line="openshift_rolling_restart_mode=services" state="present"'
 ```
-3. change the value of openshift_pkg_version to 3.11.98 in /etc/ansible/hosts
+3. #### change the value of openshift_pkg_version to 3.11.104 in /etc/ansible/hosts ####
 ```
-[ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_pkg_version" line="openshift_pkg_version=-3.11.98" state="present"'
+[ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_pkg_version" line="openshift_pkg_version=-3.11.104" state="present"'
 ```
-4. upgrade the nodes
+4. #### upgrade the nodes ####
 
 4.1 prepare nodes for upgrade
 ```
@@ -59,7 +59,7 @@ Upgrade node by node manually because we need to make sure, that the nodes runni
 
 Upgrade "infra-node0.user[X].lab.openshift.ch":
 ```
-[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node0.user[X].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node0.user[X].lab.openshift.ch"
 ```
 Wait until all GlusterFS Pods are ready again and check if GlusterFS volumes have heal entries.
 ```
@@ -76,10 +76,39 @@ Upgrade "infra-node0.user[X].lab.openshift.ch":
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node1.user[X].lab.openshift.ch"
 ```
 
-5. reboot all hosts
+5. #### reboot all hosts ####
 ```
 ansible nodes --poll=0 --background=1 -m shell -a 'sleep 2 && reboot'
 ```
+
+6. Upgrading the EFK Logging Stack
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
+[ec2-user@master0 ~]$ oc delete pod --selector="component=fluentd" -n logging
+```
+
+7. Upgrading Cluster Metrics
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
+```
+
+8. The `atomic-openshift-clients-redistributable` package which provides the `oc` binary for different operating systems needs to be updated separately:
+```
+[ec2-user@master0 ~]$ ansible masters -a "yum install --assumeyes --disableexcludes=all atomic-openshift-clients-redistributable"
+```
+
+9. To finish the upgrade, it is best practice to run the config playbook:
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+```
+
+10. Update the `oc` binary on your own client. As before, you can get it from:
+```
+https://console.user[X].lab.openshift.ch/console/extensions/clients/
+```
+
+**Note:** You should tell all users of your platform to update their client. Client and server version differences can lead to compatibility issues.
+
 
 Let's attach the repositories for the new OpenShift release:
 ```
