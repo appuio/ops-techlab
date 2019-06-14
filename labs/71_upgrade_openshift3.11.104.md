@@ -89,7 +89,11 @@ Check health of all nodes:
 ```
 
 #### 6. Upgrading the EFK Logging Stack ####
+
+**notes** Setting openshift_logging_install_logging=true enables you to upgrade the logging stack.
+
 ```
+[ec2-user@master0 ~]$ grep openshift_logging_install_logging /etc/ansible/hosts
 [ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible/playbooks
 [ec2-user@master0 ~]$ ansible-playbook openshift-logging/config.yml
 [ec2-user@master0 ~]$ oc delete pod --selector="component=fluentd" -n logging
