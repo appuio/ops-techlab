@@ -28,7 +28,7 @@ in our lab environment this parameter isn't set, so let's do it on all master-no
 4.1 prepare nodes for upgrade
 ```
 [ec2-user@master0 ~]$ ansible all -a 'subscription-manager refresh'
-[ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos ---enable="rhel-7-server-ose-3.11-rpms" --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" -enable="rhel-7-server-ansible-2.6-rpms" --enable="rhel-7-fast-datapath-rpms" --disable="rhel-7-server-ose-3.10-rpms" --disable="rhel-7-server-ansible-2.4-rpms"' 
+[ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos --enable="rhel-7-server-ose-3.11-rpms" --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ansible-2.6-rpms" --enable="rhel-7-fast-datapath-rpms" --disable="rhel-7-server-ose-3.10-rpms" --disable="rhel-7-server-ansible-2.4-rpms"' 
 [ec2-user@master0 ~]$ ansible all -a 'yum clean all'
 [ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_certificate_expiry_fail_on_warn" line="openshift_certificate_expiry_fail_on_warn=False" state="present"'
 ```
