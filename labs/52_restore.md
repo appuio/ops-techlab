@@ -33,8 +33,13 @@ Check if the pods are coming up again
 
 ### Restore the etcd Cluster
 
-TODO: according to:
+Official documentation to restore etcd does not work:
 https://docs.openshift.com/container-platform/3.11/admin_guide/assembly_restoring-cluster.html#restoring-etcd_admin-restore-cluster
+
+To restore an etcd cluster running in static pods, please follow the following documentation:
+https://access.redhat.com/solutions/3885101
+
+### Scaleup the etcd Cluster
 
 We are now running on a single etcd setup. To get HA again, we need to scaleup to at least three etcds.
 
