@@ -71,9 +71,9 @@ Number of entries: 0
 ```
 If all volumes have "Number of entries: 0", we can proceed with the next node and repeat the check of GlusterFS.
 
-Upgrade "infra-node0.user[X].lab.openshift.ch":
+Upgrade "infra-node1.user[X].lab.openshift.ch":
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/upgrades/v3_7/upgrade_nodes.yml -e openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node1.user[X].lab.openshift.ch"
+[ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node1.user[X].lab.openshift.ch"
 ```
 
 5. #### reboot all hosts ####
