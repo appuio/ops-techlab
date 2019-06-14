@@ -111,13 +111,7 @@ The `atomic-openshift-clients-redistributable` package which provides the `oc` b
 [ec2-user@master0 ~]$ ansible masters -a "yum install --assumeyes --disableexcludes=all atomic-openshift-clients-redistributable"
 ```
 
-#### 9. finish the upgrade ####
-To finish the upgrade, it is best practice to run the config playbook:
-```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-```
-
-#### 10. Update oc binary on client ####
+#### 9. Update oc binary on client ####
 Update the `oc` binary on your own client. As before, you can get it from:
 ```
 https://console.user[X].lab.openshift.ch/console/extensions/clients/
