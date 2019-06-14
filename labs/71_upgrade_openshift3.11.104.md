@@ -111,6 +111,7 @@ https://console.user[X].lab.openshift.ch/console/extensions/clients/
 ```
 
 **Note:** You should tell all users of your platform to update their client. Client and server version differences can lead to compatibility issues.
+
 ---
 
 **End of Lab 7.1**
