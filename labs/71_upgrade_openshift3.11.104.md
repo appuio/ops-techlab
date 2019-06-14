@@ -101,7 +101,8 @@ Check health of all nodes:
 
 #### 7. Upgrading Cluster Metrics ####
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
+[ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible/playbooks
+[ec2-user@master0 ~]$ ansible-playbook openshift-metrics/config.yml
 ```
 
 #### 8. Update the oc binary ####
