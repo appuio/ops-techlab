@@ -16,7 +16,7 @@ Restore the dakota project from the backup.
 ```
 [ec2-user@master0 ~]$ oc new-project dakota
 [ec2-user@master0 ~]$ oc project project-backup
-[ec2-user@master0 ~]$ oc debug `oc get pods -o jsonpath='{.items[*].metadata.name}'`
+[ec2-user@master0 ~]$ oc debug `oc get pods -o jsonpath='{.items[*].metadata.name}' | awk '{print $1}'`
 sh-4.2# tar -xvf /backup/backup-201906131343.tar.gz -C /tmp/
 sh-4.2# oc apply -f /tmp/dakota/
 ```
