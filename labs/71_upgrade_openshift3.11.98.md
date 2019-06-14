@@ -54,6 +54,7 @@ in our lab environment this parameter isn't set, so let's do it on all master-no
 ```
 
 4.4 upgrade the nodes manually (one by one)
+
 Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes. 
 
 Upgrade "infra-node0.user[X].lab.openshift.ch":
