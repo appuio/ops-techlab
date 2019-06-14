@@ -19,19 +19,39 @@ in our lab environment this parameter isn't set, so let's do it on all master-no
 ```
 [ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_rolling_restart_mode" line="openshift_rolling_restart_mode=system" state="present"'
 ```
-3. change the value of openshift_pkg_version in /etc/ansible/hosts
+3. change the value of openshift_pkg_version to 3.11.98 in /etc/ansible/hosts
 ```
 [ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_pkg_version" line="openshift_pkg_version=-3.11.98" state="present"'
 ```
 4. upgrade the nodes
+
+4.1 prepare nodes for upgrade
 ```
-[ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible
-[ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade.yml
+[ec2-user@master0 ~]$ ansible all -a 'subscription-manager refresh'
+[ec2-user@master0 ~]$ ansible all -a 'subscription-manager repos ---enable="rhel-7-server-ose-3.11-rpms" --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" -enable="rhel-7-server-ansible-2.6-rpms" --enable="rhel-7-fast-datapath-rpms" --disable="rhel-7-server-ose-3.10-rpms" --disable="rhel-7-server-ansible-2.4-rpms"' 
+[ec2-user@master0 ~]$ ansible all -a 'yum clean all'
+[ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_certificate_expiry_fail_on_warn" line="openshift_certificate_expiry_fail_on_warn=False" state="present"'
+```
+4.2 prepare your upgrade-host 
+```
+[ec2-user@master0 ~]$ sudo -i
+[ec2-user@master0 ~]# yum update -y openshift-ansible
+[ec2-user@master0 ~]# cd /usr/share/ansible/openshift-ansible
+```
+
+4.3 upgrade the control plane
+```
+[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_control_plane.yaml
+```
+
+4.4 upgrade the nodes
+```
+[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yaml
 ```
 5. reboot all hosts
-
-
-
+```
+ansible nodes --poll=0 --background=1 -m shell -a 'sleep 2 && reboot'
+```
 
 Let's attach the repositories for the new OpenShift release:
 ```
