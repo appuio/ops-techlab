@@ -17,7 +17,7 @@ Conveniently, our lab environment already fulfills all the requirements, so we c
 ```
 in our lab environment this parameter isn't set, so let's do it on all master-nodes:
 ```
-[ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_rolling_restart_mode" line="openshift_rolling_restart_mode=system" state="present"'
+[ec2-user@master0 ~]$ ansible masters -m lineinfile -a 'path="/etc/ansible/hosts" regexp="^openshift_rolling_restart_mode" line="openshift_rolling_restart_mode=services" state="present"'
 ```
 3. change the value of openshift_pkg_version to 3.11.98 in /etc/ansible/hosts
 ```
