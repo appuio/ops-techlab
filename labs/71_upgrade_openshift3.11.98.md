@@ -36,17 +36,17 @@ in our lab environment this parameter isn't set, so let's do it on all master-no
 ```
 [ec2-user@master0 ~]$ sudo -i
 [ec2-user@master0 ~]# yum update -y openshift-ansible
-[ec2-user@master0 ~]# cd /usr/share/ansible/openshift-ansible
 ```
 
 4.3 upgrade the control plane
 ```
-[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_control_plane.yaml
+[ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible
+[ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_control_plane.yml
 ```
 
 4.4 upgrade the nodes
 ```
-[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yaml
+[ec2-user@master0 ~]# ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml
 ```
 5. reboot all hosts
 ```
