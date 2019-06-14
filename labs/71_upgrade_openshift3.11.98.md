@@ -11,7 +11,7 @@ Conveniently, our lab environment already fulfills all the requirements, so we c
 [ec2-user@master0 ~]$ grep -i openshift_deployment_type /etc/ansible/hosts
 ```
 
-2. enable rolling, full system restarts of the hosts
+2. disable rolling, full system restarts of the hosts
 ```
 [ec2-user@master0 ~]$ ansible masters -m shell -a "grep -i openshift_rolling_restart_mode /etc/ansible/hosts"
 ```
