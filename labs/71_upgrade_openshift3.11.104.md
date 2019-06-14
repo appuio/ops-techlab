@@ -90,7 +90,7 @@ Check health of all nodes:
 
 #### 6. Upgrading the EFK Logging Stack ####
 
-**notes** Setting openshift_logging_install_logging=true enables you to upgrade the logging stack.
+**Note:** Setting openshift_logging_install_logging=true enables you to upgrade the logging stack.
 
 ```
 [ec2-user@master0 ~]$ grep openshift_logging_install_logging /etc/ansible/hosts
