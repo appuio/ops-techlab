@@ -16,7 +16,7 @@ new_nodes
 ...
 
 [new_nodes]
-app-node1.user[X].lab.openshift.ch openshift_hostname=app-node1.user[X].lab.openshift.ch openshift_public_hostname=app-node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+app-node1.user7.lab.openshift.ch openshift_node_group_name='node-config-compute'
 ...
 
 ```
@@ -104,21 +104,22 @@ Check if the host is accessible and run the pre-install playbook:
 
 Now we can add the new master:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-master/scaleup.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-master/scaleup.yml
 ```
 
 Let's check if the node daemon on the new master is ready:
 ```
 [ec2-user@master0 ~]$ oc get nodes
-NAME                             STATUS                     AGE       VERSION
-app-node0.user2.lab.openshift.ch     Ready                      3h        v1.6.1+5115d708d7
-app-node1.user2.lab.openshift.ch     Ready                      14m       v1.6.1+5115d708d7
-infra-node0.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-infra-node1.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-infra-node2.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-master0.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
-master1.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
-master2.user2.lab.openshift.ch       Ready,SchedulingDisabled   1m        v1.6.1+5115d708d7
+NAME                                 STATUS    ROLES     AGE       VERSION
+app-node0.user7.lab.openshift.ch     Ready     compute   1d        v1.11.0+d4cacc0
+app-node1.user7.lab.openshift.ch     Ready     compute   1d        v1.11.0+d4cacc0
+infra-node0.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+infra-node1.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+infra-node2.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+master0.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
+master1.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
+master2.user7.lab.openshift.ch       Ready     master    6m        v1.11.0+d4cacc0
+
 ```
 
 Check if the old masters see the new one:
