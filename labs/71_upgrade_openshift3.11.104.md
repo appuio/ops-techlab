@@ -76,19 +76,7 @@ Upgrade "infra-node1.user[X].lab.openshift.ch":
 [ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node1.user[X].lab.openshift.ch"
 ```
 
-#### 5. reboot all hosts ####
-```
-ansible nodes --poll=0 --background=1 -m shell -a 'sleep 2 && reboot'
-```
-
-Ping master0.user[x].lab.openshift.ch and reconnect.
-
-Check health of all nodes:
-```
-[ec2-user@master0 ~]$ watch oc get nodes -o wide
-```
-
-#### 6. Upgrading the EFK Logging Stack ####
+#### 5. Upgrading the EFK Logging Stack ####
 
 **Note:** Setting openshift_logging_install_logging=true enables you to upgrade the logging stack.
 
@@ -99,19 +87,19 @@ Check health of all nodes:
 [ec2-user@master0 ~]$ oc delete pod --selector="component=fluentd" -n logging
 ```
 
-#### 7. Upgrading Cluster Metrics ####
+#### 6. Upgrading Cluster Metrics ####
 ```
 [ec2-user@master0 ~]$ cd /usr/share/ansible/openshift-ansible/playbooks
 [ec2-user@master0 ~]$ ansible-playbook openshift-metrics/config.yml
 ```
 
-#### 8. Update the oc binary ####
+#### 7. Update the oc binary ####
 The `atomic-openshift-clients-redistributable` package which provides the `oc` binary for different operating systems needs to be updated separately:
 ```
 [ec2-user@master0 ~]$ ansible masters -a "yum install --assumeyes --disableexcludes=all atomic-openshift-clients-redistributable"
 ```
 
-#### 9. Update oc binary on client ####
+#### 8. Update oc binary on client ####
 Update the `oc` binary on your own client. As before, you can get it from:
 ```
 https://console.user[X].lab.openshift.ch/console/extensions/clients/

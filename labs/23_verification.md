@@ -19,13 +19,13 @@ Check if all pvc are bound and glusterfs runs fine
 Check the etcd health status. 
 ```
 [ec2-user@master0 ~]$ sudo -i
-[ec2-user@master0 ~]# source /etc/etcd/etcd.conf
-[ec2-user@master0 ~]# etcdctl2 cluster-health
+[root@master0 ~]# source /etc/etcd/etcd.conf
+[root@master0 ~]# etcdctl2 cluster-health
 member 16682006866446bb is healthy: got healthy result from https://172.31.45.211:2379
 member 5c619e4b51953519 is healthy: got healthy result from https://172.31.44.160:2379
 cluster is healthy
 
-[ec2-user@master0 ~]# etcdctl2 member list
+[root@master0 ~]# etcdctl2 member list
 16682006866446bb: name=master1.user7.lab.openshift.ch peerURLs=https://172.31.45.211:2380 clientURLs=https://172.31.45.211:2379 isLeader=false
 5c619e4b51953519: name=master0.user7.lab.openshift.ch peerURLs=https://172.31.44.160:2380 clientURLs=https://172.31.44.160:2379 isLeader=true
 ```
