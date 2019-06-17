@@ -26,7 +26,7 @@ Start build and push image to registry
 [ec2-user@master0 ~]$ oc start-build ruby-ex -n dakota
 ``` 
 
-Check if the pods are coming up again
+Check whether the pods become ready again.
 ```
 [ec2-user@master0 ~]$ oc get pods -w -n dakota
 ```

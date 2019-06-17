@@ -50,7 +50,18 @@ usernr=[ID]
 https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 1.308347ms
 https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 2.303151ms
 
-[root@master0 ~]# etcdctl2 backup --data-dir /var/lib/etcd/ --backup-dir /var/lib/etcd/etcd.bak/
+
+[root@master0 ~]# etcdctl3 --cert /etc/etcd/peer.crt \
+                           --key /etc/etcd/peer.key \
+                           --cacert /etc/etcd/ca.crt \
+                           --endpoints "https://master0.user$usernr.lab.openshift.ch:2379" \
+                           snapshot save /var/lib/etcd/snapshot.db"
+```
+
+The snapshot has been created in the container. Therefore it could only be written to `/var/lib/etcd/`. For this reason the snapshot and the DB have to be copied away.
+```
+[root@master0 ~]# mkdir /var/lib/etcd/etcd.bak/
+[root@master0 ~]# cp /var/lib/etcd/snapshot.db /var/lib/etcd/etcd.bak/
 [root@master0 ~]# cp /var/lib/etcd/member/snap/db /var/lib/etcd/etcd.bak/
 ```
 
