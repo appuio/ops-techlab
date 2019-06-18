@@ -129,7 +129,7 @@ Check if the server certificate has been replaced:
 11. Check if the master-nodes are READY:
 ```
 [ec2-user@master0 ~]$ oc get node
-[ec2-user@master0 ~]$ for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}'` | grep master; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
+[ec2-user@master0 ~]$ for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}' | grep master`; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
 ```
 
 
