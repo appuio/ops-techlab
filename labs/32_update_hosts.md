@@ -41,13 +41,18 @@ First, login as cluster-admin and drain the first app-node (this deletes all pod
 [ec2-user@master0 ~]$ oc adm drain app-node0.user[X].lab.openshift.ch --ignore-daemonsets --delete-local-data
 ```
 
-After draining a node, only the DaemonSet (`logging-fluentd`) should remain on the node:
+After draining a node, only pods from DaemonSets should remain on the node:
 ```
 [ec2-user@master0 ~]$ oc adm manage-node app-node0.user[X].lab.openshift.ch --list-pods
+
 Listing matched pods on node: app-node0.user[X].lab.openshift.ch
 
-NAME                      READY     STATUS    RESTARTS   AGE
-logging-fluentd-s2k2j     1/1       Running   0          1h
+NAMESPACE              NAME                    READY     STATUS    RESTARTS   AGE
+openshift-logging      logging-fluentd-lfjnc   1/1       Running   0          33m
+openshift-monitoring   node-exporter-czhr2     2/2       Running   0          36m
+openshift-node         sync-rhh8z              1/1       Running   0          46m
+openshift-sdn          ovs-hz9wj               1/1       Running   0          46m
+openshift-sdn          sdn-49tpr               1/1       Running   0          46m
 ```
 
 Scheduling should now be disabled for this node:
@@ -77,8 +82,13 @@ Check that pods are correctly starting:
 
 Listing matched pods on node: app-node0.user[X].lab.openshift.ch
 
-NAME                      READY     STATUS    RESTARTS   AGE
-logging-fluentd-s2k2j     1/1       Running   1          1h
+NAMESPACE              NAME                    READY     STATUS    RESTARTS   AGE
+dakota                 ruby-ex-1-6lc87         1/1       Running   0          12m
+openshift-logging      logging-fluentd-lfjnc   1/1       Running   1          43m
+openshift-monitoring   node-exporter-czhr2     2/2       Running   2          47m
+openshift-node         sync-rhh8z              1/1       Running   1          56m
+openshift-sdn          ovs-hz9wj               1/1       Running   1          56m
+openshift-sdn          sdn-49tpr               1/1       Running   1          56m
 ```
 
 Since we want to update the whole cluster, **you will need to repeat these steps on all servers**. Masters do not need to be drained because they do not run any pods (unschedulable by default).
