@@ -60,7 +60,8 @@ Now we create the cronjob on the first master:
 Details https://github.com/mabegglen/openshift-project-backup
 
 If you want to reschedule your backup-job to check it's functionality to every 1minute:
-change the value of schedule: to "*/1 * * * *"
+
+Change the value of schedule: to "*/1 * * * *"
 ```
 [ec2-user@master0 ~]$ oc project project-backup
 [ec2-user@master0 ~]$ oc get cronjob
