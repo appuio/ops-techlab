@@ -38,12 +38,10 @@ To backup the data in persistent volumes, you should mount them somewhere. If yo
 
 It is advisable to regularly backup all project data.
 We will set up a cronjob in a project called "project-backup" which hourly writes all resources on OpenShift to a PV.
-Let's login to our Jumphost first and gather/deloy the backup-script:
+Let's gather the backup-script:
 ```
-[ec2-user@jump.lab.openshift.ch] cd /home/ec2-user/resource
-[ec2-user@jump.lab.openshift.ch] userid=[ID]
-[ec2-user@jump.lab.openshift.ch] ansible -i setup-inventory master0 -m shell -e "userid=$userid" -a " \
-sudo yum install git python-openshift -y && git clone https://github.com/mabegglen/openshift-project-backup"
+[ec2-user@master0 ~]$ sudo yum install git python-openshift -y
+[ec2-user@master0 ~]$ git clone https://github.com/mabegglen/openshift-project-backup"
 ```
 Now we create the cronjob on the first master:
 ```
