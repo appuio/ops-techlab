@@ -85,8 +85,7 @@ Check the logfiles while backup-job is running:
 ```
 [ec2-user@master0 openshift-project-backup]$ oc logs <cronjob-project-backup-NAME> -f
 ```
-When your Backupjob runs as expected, don't forget to set up the cronjob back to
-change the value of schedule: to "0 22 * * *"
+When your Backupjob runs as expected, don't forget to set up the cronjob back to "0 22 * * *" for example.
 ```
 [ec2-user@master0 ~]$ oc edit cronjob cronjob-project-backup
 ```
