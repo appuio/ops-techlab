@@ -45,17 +45,18 @@ Let's login to our Jumphost first and gather/deloy the backup-script:
 [ec2-user@jump.lab.openshift.ch] ansible -i setup-inventory master0 -m shell -e "userid=$userid" -a " \
 sudo yum install git python-openshift -y && git clone https://github.com/mabegglen/openshift-project-backup"
 ```
-Now we create the cronjob
+Now we create the cronjob on the first master:
 ```
-[ec2-user@master0 ~]$ cd openshift-project-backup && ansible-playbook playbook.yml \
+[ec2-user@master0 ~]$ cd openshift-project-backup 
+[ec2-user@master0 ~]$ ansible-playbook playbook.yml \
 -e openshift_project_backup_job_name="cronjob-project-backup" \
--e openshift_project_backup_schedule="0 * * * * "
--e openshift_project_backup_job_service_account="project-backup"
--e openshift_project_backup_namespace="project-backup"
--e openshift_project_backup_image="registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7"
--e openshift_project_backup_image_tag="v3.11"
--e openshift_project_backup_storage_size="1G"
--e openshift_project_backup_deadline="3600"
+-e "openshift_project_backup_schedule=\"0 6,18 * * *\"" \
+-e openshift_project_backup_job_service_account="project-backup" \
+-e openshift_project_backup_namespace="project-backup" \
+-e openshift_project_backup_image="registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7" \
+-e openshift_project_backup_image_tag="v3.11" \
+-e openshift_project_backup_storage_size="1G" \
+-e openshift_project_backup_deadline="3600" \
 -e openshift_project_backup_cronjob_api="batch/v1beta1"
 ```
 Details https://github.com/mabegglen/openshift-project-backup
