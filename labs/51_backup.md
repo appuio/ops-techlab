@@ -42,8 +42,8 @@ Let's login to our Jumphost first and gather/deloy the backup-script:
 ```
 [ec2-user@jump.lab.openshift.ch] cd /home/ec2-user/resource
 [ec2-user@jump.lab.openshift.ch] userid=[ID]
-[ec2-user@jump.lab.openshift.ch] ansible -i resource/setup-inventory master0 -m shell -e "userid=$userid" -a " \
-sudo yum install git python-openshift -y && git clone https://github.com/mabegglen/openshift-project-backup
+[ec2-user@jump.lab.openshift.ch] ansible -i setup-inventory master0 -m shell -e "userid=$userid" -a " \
+sudo yum install git python-openshift -y && git clone https://github.com/mabegglen/openshift-project-backup"
 ```
 Now we create the cronjob
 ```
