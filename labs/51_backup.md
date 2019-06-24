@@ -122,7 +122,7 @@ copy them to the tmp directory for further use:
 [root@master0 ~]# cp /var/lib/etcd/member/snap/db /tmp/db
 ```
 
-:warning: Before you proceed, make sure you've already added master2 https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md 
+:warning: Before you proceed, make sure you've already added master2 [LINK](https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md)
 
 copy the snapshot to the master1/master2.user[x].lab.openshift.ch
 ```
