@@ -92,25 +92,71 @@ When your Backupjob runs as expected, don't forget to set up the cronjob back to
 ```
 
 ### Create etcd Backup
+We plan to create a Backup of our etcd. When we've created our backup, we wan't to restore them on master1/master2 and scale out from 1 to 3 nodes.
 
-To ensure a consistent etcd backup, we need to stop the daemon. Since there are 3 etcd servers, there is no downtime. All the new data that gets written during this period gets synced after the etcd daemon is started again.
+First we create a snapshot of our etc-database:
+```
+[root@master0 ~]# export ETCD_POD_MANIFEST="/etc/origin/node/pods/etcd.yaml"
+[root@master0 ~]# export ETCD_EP=$(grep https ${ETCD_POD_MANIFEST} | cut -d '/' -f3)
+[root@master0 ~]# export ETCD_POD=$(oc get pods -n kube-system | grep -o -m 1 '\S*etcd\S*')
+[root@master0 ~]# oc project kube-system
+Now using project "kube-system" on server "https://internalconsole.user[x].lab.openshift.ch:443".
+[root@master0 ~]# oc exec ${ETCD_POD} -c etcd -- /bin/bash -c "ETCDCTL_API=3 etcdctl \
+ --cert /etc/etcd/peer.crt \
+ --key /etc/etcd/peer.key \
+ --cacert /etc/etcd/ca.crt \
+ --endpoints $ETCD_EP \
+ snapshot save /var/lib/etcd/snapshot.db" 
 
-
-
-[ec2-user@master0 ~]$ sudo etcdctl backup --data-dir /var/lib/etcd/ --backup-dir etcd.bak
-[ec2-user@master0 ~]$ sudo cp /var/lib/etcd/member/snap/db etcd.bak/member/snap/
-[ec2-user@master0 ~]$ sudo systemctl start etcd.service
+ Snapshot saved at /var/lib/etcd/snapshot.db
+```
+Check Filesize of the snapshot created:
+```
+[root@master0 ~]# ls -hl /var/lib/etcd/snapshot.db
+-rw-r--r--. 1 root root 21M Jun 24 16:44 /var/lib/etcd/snapshot.db
 ```
 
-Check if the etcd cluster is healthy.
+copy them to the tmp directory for further use:
 ```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379,https://master2.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
-member 3f511408a118b9fd is healthy: got healthy result from https://172.31.37.59:2379
-member 50953a25943f54a8 is healthy: got healthy result from https://172.31.35.180:2379
-member ec41afe89f86deaf is healthy: got healthy result from https://172.31.35.199:2379
-cluster is healthy
+[root@master0 ~]# cp /var/lib/etcd/snapshot.db /tmp/snapshot.db
+[root@master0 ~]# cp /var/lib/etcd/member/snap/db /tmp/db
 ```
 
+:warning: Before you proceed, make sure you've already added master2 https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md 
+
+copy the snapshot to the master1/master2.user[x].lab.openshift.ch
+```
+[ec2-user@master0 ~]$ userid=[x]
+[ec2-user@master0 ~]$ scp /tmp/snapshot.db master1.user$userid.lab.openshift.ch:/tmp/snapshot.db
+[ec2-user@master0 ~]$ scp /tmp/snapshot.db master2.user$userid.lab.openshift.ch:/tmp/snapshot.db
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=stopped"
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=stopped"
+[ec2-user@master0 ~]$ ansible etcd -a "rm -rf /var/lib/etcd"
+[ec2-user@master0 ~]$ ansible etcd -a "mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf.bak"
+```
+
+switch to user root and restore the etc-database
+run this task on ALL Masters (master0,master1,master2)
+```
+[ec2-user@master0 ~]$ sudo -i
+[root@master0 ~]# yum install etcd-3.2.22-1.el7.x86_64
+[root@master0 ~]# mv /etc/etcd/etcd.conf.bak /etc/etcd/etcd.conf
+[root@master0 ~]# source /etc/etcd/etcd.conf
+[root@master0 ~]# export ETCDCTL_API=3
+[root@master0 ~]# ETCDCTL_API=3 etcdctl snapshot restore /tmp/snapshot.db \
+  --name $ETCD_NAME \
+  --initial-cluster $ETCD_INITIAL_CLUSTER \
+  --initial-cluster-token $ETCD_INITIAL_CLUSTER_TOKEN \
+  --initial-advertise-peer-urls $ETCD_INITIAL_ADVERTISE_PEER_URLS \
+  --data-dir /var/lib/etcd
+[root@master0 ~]# restorecon -Rv /var/lib/etcd
+```
+
+Start Services on etcd-nodes
+```
+ansible etcd -m service -a "name=docker state=started"
+ansible etcd -m service -a "name=atomic-openshift-node state=started"
+```
 
 ---
 
