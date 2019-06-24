@@ -59,6 +59,37 @@ Now we create the cronjob on the first master:
 ```
 Details https://github.com/mabegglen/openshift-project-backup
 
+If you want to reschedule your backup-job to check it's functionality to every 1minute:
+change the value of schedule: to "*/1 * * * *"
+```
+[ec2-user@master0 ~]$ oc project project-backup
+[ec2-user@master0 ~]$ oc get cronjob
+[ec2-user@master0 ~]$ oc edit cronjob cronjob-project-backup
+```
+
+Show if cronjob is active:
+```
+[ec2-user@master0 openshift-project-backup]$ oc get cronjob
+NAME                     SCHEDULE      SUSPEND   ACTIVE    LAST SCHEDULE   AGE
+cronjob-project-backup   */1 * * * *   False     1         1m              48m
+```
+
+Show if backup-pod was launched:
+```
+[ec2-user@master0 openshift-project-backup]$ oc get pods
+NAME                                      READY     STATUS      RESTARTS   AGE
+cronjob-project-backup-1561384620-kjm6v   1/1       Running     0          47s
+```
+
+Check the logfiles while backup-job is running:
+```
+[ec2-user@master0 openshift-project-backup]$ oc logs <cronjob-project-backup-NAME> -f
+```
+When your Backupjob runs as expected, don't forget to set up the cronjob back to
+change the value of schedule: to "0 22 * * *"
+```
+[ec2-user@master0 ~]$ oc edit cronjob cronjob-project-backup
+```
 
 ### Create etcd Backup
 
