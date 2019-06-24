@@ -154,8 +154,11 @@ run this task on ALL Masters (master0,master1,master2)
 
 Start Services on etcd-nodes
 ```
-ansible etcd -m service -a "name=docker state=started"
-ansible etcd -m service -a "name=atomic-openshift-node state=started"
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=started"
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=started"
+[ec2-user@master0 ~]$ sudo -i 
+[root@master0 ~]# ETCD_ALL_ENDPOINTS=` etcdctl3 --write-out=fields   member list | awk '/ClientURL/{printf "%s%s",sep,$3; sep=","}'`
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
 ```
 
 ---
