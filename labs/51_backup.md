@@ -123,46 +123,6 @@ copy them to the tmp directory for further use:
 [root@master0 ~]# cp /var/lib/etcd/snapshot.db /tmp/snapshot.db
 [root@master0 ~]# cp /var/lib/etcd/member/snap/db /tmp/db
 ```
-
-:warning: Before you proceed, make sure you've already added master2 [LINK](https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md)
-
-copy the snapshot to the master1/master2.user[x].lab.openshift.ch
-```
-[ec2-user@master0 ~]$ userid=[x]
-[ec2-user@master0 ~]$ scp /tmp/snapshot.db master1.user$userid.lab.openshift.ch:/tmp/snapshot.db
-[ec2-user@master0 ~]$ scp /tmp/snapshot.db master2.user$userid.lab.openshift.ch:/tmp/snapshot.db
-[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=stopped"
-[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=stopped"
-[ec2-user@master0 ~]$ ansible etcd -a "rm -rf /var/lib/etcd"
-[ec2-user@master0 ~]$ ansible etcd -a "mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf.bak"
-```
-
-switch to user root and restore the etc-database
-run this task on ALL Masters (master0,master1,master2)
-```
-[ec2-user@master0 ~]$ sudo -i
-[root@master0 ~]# yum install etcd-3.2.22-1.el7.x86_64
-[root@master0 ~]# mv /etc/etcd/etcd.conf.bak /etc/etcd/etcd.conf
-[root@master0 ~]# source /etc/etcd/etcd.conf
-[root@master0 ~]# export ETCDCTL_API=3
-[root@master0 ~]# ETCDCTL_API=3 etcdctl snapshot restore /tmp/snapshot.db \
-  --name $ETCD_NAME \
-  --initial-cluster $ETCD_INITIAL_CLUSTER \
-  --initial-cluster-token $ETCD_INITIAL_CLUSTER_TOKEN \
-  --initial-advertise-peer-urls $ETCD_INITIAL_ADVERTISE_PEER_URLS \
-  --data-dir /var/lib/etcd
-[root@master0 ~]# restorecon -Rv /var/lib/etcd
-```
-
-Start Services on etcd-nodes
-```
-[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=started"
-[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=started"
-[ec2-user@master0 ~]$ sudo -i 
-[root@master0 ~]# ETCD_ALL_ENDPOINTS=` etcdctl3 --write-out=fields   member list | awk '/ClientURL/{printf "%s%s",sep,$3; sep=","}'`
-[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
-```
-
 ---
 
 **End of Lab 5.1**
