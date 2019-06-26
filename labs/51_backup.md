@@ -92,7 +92,7 @@ When your Backupjob runs as expected, don't forget to set up the cronjob back to
 ```
 [ec2-user@master0 ~]$ oc edit cronjob cronjob-project-backup
 ```
-If you wanna Restore a Project, proceed to <p width="100px" align="right"><a href="52_restore.md">Lab 5.2.1</a></p>
+If you wanna Restore a project, proceed to [Lab 5.2.1](52_restore.md#5.2.1)
 
 
 ### Lab 5.1.5: Create etcd Backup
