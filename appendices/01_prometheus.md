@@ -27,12 +27,8 @@ The following diagram shows the general architectural overview of Prometheus:
 
 ## Monitoring use cases
 Starting with OpenShift 3.11, Prometheus is installed by default to **monitor the OpenShift cluster** (depicted in the diagram below on the left side: *Kubernetes Prometheus deployment*). This installation is managed by the "Cluster Monitoring Operator" and not intended to be customized (we will do it anyway).  
-**See: [Cluster Monitoring Operator](cluster-monitoring-operator)**
-
 
 To **monitor applications** or **define custom Prometheus configurations**, the Tech Preview feature [Operator Lifecycle Manager (OLM)](https://docs.openshift.com/container-platform/3.11/install_config/installing-operator-framework.html]) can be used to install the Prometheus Operator which in turn allows to define Prometheus instances (depicted in the diagram below on the right side: *Service Prometheus deployment*). These instances are fully customizable with the use of *Custom Ressource Definitions (CRD)*.  
-**See: [Application Monitoring](application-monitoring)**
-
 
 ![Prometheus Overview](../resources/images/prometheus_use-cases.png)
 
@@ -62,23 +58,28 @@ openshift_cluster_monitoring_operator_alertmanager_config=[tbd]
 
 Run the installer
 
-```bash
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-monitoring/config.yml
+```
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-monitoring/config.yml
 ```
 
-### Configure Prometheus
+### Access Prometheus
 
+You can login with the cluster administrator `sheriff` on:
+https://prometheus-k8s-openshift-monitoring.app[X].lab.openshift.ch/
+
+
+### Configure Prometheus
 Let Prometheus scrape service labels in different namespaces
 
-```bash
-oc adm policy add-cluster-role-to-user cluster-reader -z prometheus-k8s -n openshift-monitoring
+```
+[ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user cluster-reader -z prometheus-k8s -n openshift-monitoring
 ```
 
 To modify the Prometheus configuration - e.g. retention time, change the ConfigMap `cluster-monitoring-config` as described here:
 <https://github.com/openshift/cluster-monitoring-operator/blob/release-3.11/Documentation/user-guides/configuring-cluster-monitoring.md>
 
-```bash
-oc edit cm cluster-monitoring-config -n openshift-monitoring
+```
+[ec2-user@master0 ~]$ oc edit cm cluster-monitoring-config -n openshift-monitoring
 ```
 
 Unfortunately, changing the default scrape config is not supported with the Cluster Monitoring Operator.
@@ -130,43 +131,43 @@ spec:
 Create the custom cluster role `router-metrics` and add it to the Prometheus service account `prometheus-k8s`, for Prometheus to be able to read the router metrics.
 First you need to check, what labels your routers are using.
 
-```bash
-oc get endpoints -n default --show-labels
-NAME               ENDPOINTS                                                  AGE       LABELS
-....
-router             172.22.22.122:1936,172.22.22.122:80,172.22.22.122:443      6d        router=router
+```
+[ec2-user@master0 ~]$ oc get endpoints -n default --show-labels
+NAME               ENDPOINTS                                                            AGE       LABELS
+router             172.31.43.147:1936,172.31.47.59:1936,172.31.47.64:1936 + 6 more...   1h        router=router
 ```
 
 Set the router label as parameter
 
-```bash
-oc adm policy add-cluster-role-to-user router-metrics system:serviceaccount:openshift-monitoring:prometheus-k8s
-oc process -f templates/template-router.yaml -p ROUTER_LABEL="router" | oc apply -f -
+```
+[ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user router-metrics system:serviceaccount:openshift-monitoring:prometheus-k8s
+
+[ec2-user@master0 ~]$ oc process -f resource/templates/template-router.yaml -p ROUTER_LABEL="router" | oc apply -f -
 ```
 ### Logging Monitoring
 
 The Service `logging-es-prometheus` needs to be labeled and the following RoleBinding applied, for Prometheus to be able to get the metrics.
 
-```bash
-oc label svc logging-es-prometheus -n openshift-logging scrape=prometheus
-oc create -f templates/template-rolebinding.yaml -n openshift-logging
-oc process -f templates/template-logging.yaml  | oc apply -f -
+```
+[ec2-user@master0 ~]$ oc label svc logging-es-prometheus -n openshift-logging scrape=prometheus
+[ec2-user@master0 ~]$ oc create -f resource/templates/template-rolebinding.yaml -n openshift-logging
+[ec2-user@master0 ~]$ oc process -f resource/templates/template-logging.yaml  | oc apply -f -
 ```
 
 ## Additional rules: CRD type PrometheusRule
 
 In order for the custom rules to be added to the managed Prometheus instance, the following labels need to be defined in the "PromtheusRule" CR:
 
-```bash
+```
 prometheus: k8s
 role: alert-rules
 ```
 
 Add the custom rules from the template folder to Prometheus:
 
-```bash
-oc process -f templates/template-k8s-custom-rules.yaml -p SEVERITY_LABEL="critical" | oc apply -f -
 ```
+[ec2-user@master0 ~]$ oc process -f resource/templates/template-k8s-custom-rules.yaml -p SEVERITY_LABEL="critical" | oc apply -f -
+` ``
 
 ## AlertManager
 
@@ -175,9 +176,9 @@ Configuring Alertmanager with the Red Hat Ansible playbooks.
 
 By hand
 
-```bash
-oc delete secret alertmanager-main
-oc create secret generic alertmanager-main --from-file=templates/alertmanager.yaml
+```
+[ec2-user@master0 ~]$ oc delete secret alertmanager-main
+[ec2-user@master0 ~]$ oc create secret generic alertmanager-main --from-file=resource/templates/alertmanager.yaml
 ```
 
 Follow these guides:
@@ -187,22 +188,22 @@ Follow these guides:
 
 ### Add view role for developers
 
-```bash
-oc adm policy add-cluster-role-to-user cluster-monitoring-view [user]
+```
+[ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user cluster-monitoring-view [user]
 ```
 
 ### Add metrics reader service account to access Prometheus metrics
 
-```bash
-oc create sa prometheus-metrics-reader -n openshift-monitoring
-oc adm policy add-cluster-role-to-user cluster-monitoring-view -z prometheus-metrics-reader -n openshift-monitoring
-oc sa get-token prometheus-metrics-reader -n openshift-monitoring
+```
+[ec2-user@master0 ~]$ oc create sa prometheus-metrics-reader -n openshift-monitoring
+[ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user cluster-monitoring-view -z prometheus-metrics-reader -n openshift-monitoring
+[ec2-user@master0 ~]$ oc sa get-token prometheus-metrics-reader -n openshift-monitoring
 ```
 
 ### Allow Prometheus to scrape your metrics endpoints (if using ovs-networkpolicy plugin)
 
 Create an additional network-policy.
 
-```bash
-oc create -f templates/networkpolicy.yaml -n [namespace]
+```
+[ec2-user@master0 ~]$ oc create -f resource/templates/networkpolicy.yaml -n [namespace]
 ```
