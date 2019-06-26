@@ -11,7 +11,7 @@ In this techlab you will learn how to create a new backup and which files are im
 - Ansible hosts file
 
 
-### Master Backup Files
+### Lab 5.1.1: Master Backup Files
 
 The following files should be backuped on all masters:
 
@@ -22,7 +22,7 @@ The following files should be backuped on all masters:
 	`/etc/sysconfig/docker-network` 
 	`/etc/sysconfig/docker-storage`
 
-### Node Backup Files
+### Lab 5.1.2: Node Backup Files
 
 Backup the following folders on all nodes:
 
@@ -31,12 +31,12 @@ Backup the following folders on all nodes:
 - Docker configurations: /etc/sysconfig/docker /etc/sysconfig/docker-network /etc/sysconfig/docker-storage
 
 
-### Application Backup
+### Lab 5.1.3: Application Backup
 
 To backup the data in persistent volumes, you should mount them somewhere. If you mount a Glusterfs volume, it is guaranteed to be consistent. The bricks directly on the Glusterfs servers can contain small inconsistencies that Glusterfs hasn't synced to the other instances yet.
 
 
-### Project Backup
+### Lab 5.1.4: Project Backup
 
 It is advisable to regularly backup all project data.
 We will set up a cronjob in a project called "project-backup" which hourly writes all resources on OpenShift to a PV.
@@ -92,8 +92,10 @@ When your Backupjob runs as expected, don't forget to set up the cronjob back to
 ```
 [ec2-user@master0 ~]$ oc edit cronjob cronjob-project-backup
 ```
+If you wanna Restore a Project, proceed to <p width="100px" align="right"><a href="52_restore.md">Lab 5.2.1</a></p>
 
-### Create etcd Backup
+
+### Lab 5.1.5: Create etcd Backup
 We plan to create a Backup of our etcd. When we've created our backup, we wan't to restore them on master1/master2 and scale out from 1 to 3 nodes.
 
 First we create a snapshot of our etc-database:
@@ -123,6 +125,8 @@ copy them to the tmp directory for further use:
 [root@master0 ~]# cp /var/lib/etcd/snapshot.db /tmp/snapshot.db
 [root@master0 ~]# cp /var/lib/etcd/member/snap/db /tmp/db
 ```
+If you wanna Restore an etcd, proceed to <p width="100px" align="right"><a href="52_restore.md">Lab 5.2.2</a></p>
+
 ---
 
 **End of Lab 5.1**
