@@ -1,8 +1,7 @@
 ## Lab 5.2: Restore
 
-<a name="5.2.1">
+<a name="5.2.1"> </a>
 ### Lab 5.2.1: Restore a Project
-</a>
 
 We will now delete the logging project and try to restore it from the backup.
 ```
@@ -55,9 +54,8 @@ https://logging.app[X].lab.openshift.ch
 ```
 
 
-<a name="5.2.2">
+<a name="5.2.2"></a>
 ### Lab 5.2.2: Restore the etcd Cluster ###
-<a/>
 
 :warning: Before you proceed, make sure you've already added master2 [LINK](https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md)
 
