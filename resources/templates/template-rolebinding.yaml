@@ -1,0 +1,17 @@
+apiVersion: v1
+groupNames: null
+metadata:
+  namespace: openshift-logging
+kind: RoleBinding
+metadata:
+  name: prometheus-monitoring-viewer
+  namespace: openshift-logging
+roleRef:
+  name: prometheus-metrics-viewer
+  namespace: openshift-logging
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+  namespace: openshift-monitoring
+userNames:
+- system:serviceaccount:openshift-monitoring:prometheus-k8s

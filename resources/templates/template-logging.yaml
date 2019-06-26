@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: logging-template
+  annotations:
+    description: "Adds the logging servicemonitor"
+objects:
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    labels:
+      k8s-app: elasticsearch-metrics
+    name: elasticsearch-metrics
+    namespace: openshift-monitoring
+  spec:
+    endpoints:
+    - honorLabels: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      path: /_prometheus/metrics
+      interval: 30s
+      scheme: https
+      targetPort: restapi
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+        insecureSkipVerify: true
+    namespaceSelector:
+      matchNames:
+      - openshift-logging
+    selector:
+      matchLabels:
+        scrape: prometheus

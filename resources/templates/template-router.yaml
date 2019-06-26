@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: router-template
+  annotations:
+    description: "Adds the router servicemonitor"
+objects:
+- apiVersion: authorization.openshift.io/v1
+  kind: ClusterRole
+  metadata:
+    name: router-metrics
+  rules:
+  - apiGroups:
+    - route.openshift.io
+    attributeRestrictions: null
+    resources:
+    - routers/metrics
+    verbs:
+    - get
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    labels:
+      k8s-app: router-metrics
+    name: router-metrics
+    namespace: openshift-monitoring
+  spec:
+    endpoints:
+    - honorLabels: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      interval: 30s
+      scheme: https
+      port: "1936-tcp"
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+        insecureSkipVerify: true
+    namespaceSelector:
+      matchNames:
+      - default
+    selector:
+      matchLabels:
+        router: ${ROUTER_LABEL}
+parameters:
+- description: Labels used to scrape router endpoints
+  name: ROUTER_LABEL

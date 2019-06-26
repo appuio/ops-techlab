@@ -1,141 +1,208 @@
-# Appendix 1: Monitoring with Prometheus
+# Prometheus
+Source: https://github.com/prometheus/prometheus
 
-This appendix is going to show you how to install Prometheus on OpenShift 3.7.
+Visit [prometheus.io](https://prometheus.io) for the full documentation,
+examples and guides.
 
+Prometheus, a [Cloud Native Computing Foundation](https://cncf.io/) project, is a systems and service monitoring system. It collects metrics
+from configured targets at given intervals, evaluates rule expressions,
+displays the results, and can trigger alerts if some condition is observed
+to be true.
+
+Prometheus' main distinguishing features as compared to other monitoring systems are:
+
+- a **multi-dimensional** data model (timeseries defined by metric name and set of key/value dimensions)
+- a **flexible query language** to leverage this dimensionality
+- no dependency on distributed storage; **single server nodes are autonomous**
+- timeseries collection happens via a **pull model** over HTTP
+- **pushing timeseries** is supported via an intermediary gateway
+- targets are discovered via **service discovery** or **static configuration**
+- multiple modes of **graphing and dashboarding support**
+- support for hierarchical and horizontal **federation**
+
+## Prometheus overview
+The following diagram shows the general architectural overview of Prometheus:
+
+![Prometheus Architecture](../resources/images/prometheus_architecture.png)
+
+## Monitoring use cases
+Starting with OpenShift 3.11, Prometheus is installed by default to **monitor the OpenShift cluster** (depicted in the diagram below on the left side: *Kubernetes Prometheus deployment*). This installation is managed by the "Cluster Monitoring Operator" and not intended to be customized (we will do it anyway).  
+**See: [Cluster Monitoring Operator](cluster-monitoring-operator)**
+
+
+To **monitor applications** or **define custom Prometheus configurations**, the Tech Preview feature [Operator Lifecycle Manager (OLM)](https://docs.openshift.com/container-platform/3.11/install_config/installing-operator-framework.html]) can be used to install the Prometheus Operator which in turn allows to define Prometheus instances (depicted in the diagram below on the right side: *Service Prometheus deployment*). These instances are fully customizable with the use of *Custom Ressource Definitions (CRD)*.  
+**See: [Application Monitoring](application-monitoring)**
+
+
+![Prometheus Overview](../resources/images/prometheus_use-cases.png)
+
+(source: https://sysdig.com/blog/kubernetes-monitoring-prometheus-operator-part3/)
+
+# Cluster Monitoring Operator
+
+![Cluster Monitoring Operator components](../resources/images/prometheus_cmo.png)
+<https://github.com/openshift/cluster-monitoring-operator/tree/release-3.11>
 
 ## Installation
 
-OpenShift 3.7 was the first release to make it possible to install Prometheus via playbooks. We set the Ansible inventory variables, run the playbook to perform the actual installation and add the following components to the installation:
-- Monitor router endpoints
-- Deploy node-exporter DaemonSet
-- Deploy kube-state-metrics
+<https://docs.openshift.com/container-platform/3.11/install_config/prometheus_cluster_monitoring.html>
 
-Uncomment the following part in your Ansible inventory at `/etc/ansible/hosts`:
-```
-openshift_hosted_prometheus_deploy=true
-openshift_prometheus_node_selector={"region":"infra"}
-openshift_prometheus_additional_rules_file=/usr/share/ansible/prometheus/prometheus_configmap_rules.yaml
-```
+From OpenShift 3.11 onwards, the CMO is installed per default. To customize the installation you can set the following variables in inventory (small cluster)
 
-Execute the playbook to install Prometheus:
-```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-prometheus.yml
+```ini
+openshift_cluster_monitoring_operator_install=true # default value
+openshift_cluster_monitoring_operator_prometheus_storage_enabled=true
+openshift_cluster_monitoring_operator_prometheus_storage_capacity=50Gi
+openshift_cluster_monitoring_operator_prometheus_storage_class_name=[tbd]
+openshift_cluster_monitoring_operator_alertmanager_storage_enabled=true
+openshift_cluster_monitoring_operator_alertmanager_storage_capacity=2Gi
+openshift_cluster_monitoring_operator_alertmanager_storage_class_name=[tbd]
+openshift_cluster_monitoring_operator_alertmanager_config=[tbd]
 ```
 
-### Monitor OpenShift routers with Prometheus
+Run the installer
 
-Get the router password for basic authentication to scrape information from the router healthz endpoint:
-```
-[ec2-user@master0 ~]$ oc get dc router -n default -o jsonpath='{.spec.template.spec.containers[*].env[?(@.name=="STATS_PASSWORD")].value}{"\n"}'
-```
-
-Add router scrape configuration and add the output from the command above to `[ROUTER_PW]`:
-```
-[ec2-user@master0 ~]$ oc edit configmap prometheus -n openshift-metrics
-    scrape_configs:
-...
-    - job_name: 'openshift-routers'
-      metrics_path: '/metrics'
-      scheme: http
-      basic_auth:
-        username: admin
-        password: [ROUTER_PW]
-      static_configs:
-      - targets: ['router.default.svc.cluster.local:1936']
-...
-    alerting:
-      alertmanagers:
+```bash
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-monitoring/config.yml
 ```
 
-### Deploy node-exporter
+### Configure Prometheus
 
-Delete the project node-selector, grant prometheus-node-exporter serviceaccount hostaccess and deploy the node-exporter DaemonSet.
-```
-[ec2-user@master0 ~]$ oc annotate namespace openshift-metrics openshift.io/node-selector="" --overwrite
-[ec2-user@master0 ~]$ oc adm policy add-scc-to-user -z prometheus-node-exporter -n openshift-metrics hostaccess
-[ec2-user@master0 ~]$ oc create -f resource/node-exporter.yaml -n openshift-metrics
-```
+Let Prometheus scrape service labels in different namespaces
 
-Add scrape configuration for node-exporter:
-```
-[ec2-user@master0 ~]$ oc edit configmap prometheus -n openshift-metrics
-    scrape_configs:
-...
-    - job_name: 'node-exporters'
-      tls_config:
-        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        insecure_skip_verify: true
-      kubernetes_sd_configs:
-      - role: node
-      relabel_configs:
-      - action: labelmap
-        regex: __meta_kubernetes_node_label_(.+)
-      - source_labels: [__meta_kubernetes_role]
-        action: replace
-        target_label: kubernetes_role
-      - source_labels: [__address__]
-        regex: '(.*):10250'
-        replacement: '${1}:9100'
-        target_label: __address__
-...
-    alerting:
-      alertmanagers:
+```bash
+oc adm policy add-cluster-role-to-user cluster-reader -z prometheus-k8s -n openshift-monitoring
 ```
 
-Check port for Prometheus node-exporter:
-```
-[ec2-user@master0 ~]$ ansible nodes -m iptables -a "chain=OS_FIREWALL_ALLOW protocol=tcp destination_port=9100 jump=ACCEPT comment=node-exporter"
-```
+To modify the Prometheus configuration - e.g. retention time, change the ConfigMap `cluster-monitoring-config` as described here:
+<https://github.com/openshift/cluster-monitoring-operator/blob/release-3.11/Documentation/user-guides/configuring-cluster-monitoring.md>
 
-### Deploy kube-state-metrics
-
-Documentation: https://github.com/kubernetes/kube-state-metrics
-```
-[ec2-user@master0 ~]$ oc create -f resource/kube-state-metrics.yaml -n openshift-metrics
+```bash
+oc edit cm cluster-monitoring-config -n openshift-monitoring
 ```
 
-Add kube-state-metric scrape configuration.
+Unfortunately, changing the default scrape config is not supported with the Cluster Monitoring Operator.
+
+#### etcd monitoring
+
+To add etcd monitoring, follow this guide:
+<https://docs.openshift.com/container-platform/3.11/install_config/prometheus_cluster_monitoring.html#configuring-etcd-monitoring>
+
+## Additional services: CRD type ServiceMonitor (unsupported by Red Hat)
+
+Creating additional ServiceMonitor objects is not supported by Red Hat. See [Supported Configuration](https://docs.openshift.com/container-platform/3.11/install_config/prometheus_cluster_monitoring.html#supported-configuration) for details.
+
+We will do it anyway :sunglasses:.
+
+In order for the custom services to be added to the managed Prometheus instance, the label `k8s-app` needs to be present in the "ServiceMonitor" *Custom Ressource (CR)*
+
+See example for *Service Monitor* `router-metrics`:
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  generation: 1
+  labels:
+    k8s-app: router-metrics
+  name: router-metrics
+  namespace: ""
+spec:
+  endpoints:
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    honorLabels: true
+    interval: 30s
+    port: 1936-tcp
+    scheme: https
+    tlsConfig:
+      caFile: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+      insecureSkipVerify: true
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      router: router
 ```
-[ec2-user@master0 ~]$ oc edit configmap prometheus -n openshift-metrics
-   scrape_configs:
-...
-    - job_name: 'kube-state-metrics'
-      metrics_path: '/metrics'
-      scheme: http
-      static_configs:
-      - targets: ['kube-state.openshift-metrics.svc.cluster.local:80']
-...
-    alerting:
-      alertmanagers:
+
+### Router Monitoring
+
+Create the custom cluster role `router-metrics` and add it to the Prometheus service account `prometheus-k8s`, for Prometheus to be able to read the router metrics.
+First you need to check, what labels your routers are using.
+
+```bash
+oc get endpoints -n default --show-labels
+NAME               ENDPOINTS                                                  AGE       LABELS
+....
+router             172.22.22.122:1936,172.22.22.122:80,172.22.22.122:443      6d        router=router
 ```
 
-### Restart Prometheus
+Set the router label as parameter
 
-Delete the Prometheus pod load the changed configuration.
+```bash
+oc adm policy add-cluster-role-to-user router-metrics system:serviceaccount:openshift-monitoring:prometheus-k8s
+oc process -f templates/template-router.yaml -p ROUTER_LABEL="router" | oc apply -f -
 ```
-[ec2-user@master0 ~]$ oc get pods -n openshift-metrics
-NAME                             READY     STATUS             RESTARTS   AGE
-kube-state-2718312193-kgs9w	 1/1	   Running   0          24s	  10.131.2.14     node4.user8.lab.openshift.ch
-prometheus-0                     5/5	   Running   0          4m        10.129.2.88     node2.user8.lab.openshift.ch
-prometheus-node-exporter-22hwn   1/1	   Running   0          37s	  172.31.39.136   master2.user8.lab.openshift.ch
-prometheus-node-exporter-2hq7j   1/1	   Running   0          37s	  172.31.35.184   node2.user8.lab.openshift.ch
-prometheus-node-exporter-2rfj8   1/1	   Running   0          37s	  172.31.41.6     node1.user8.lab.openshift.ch
-prometheus-node-exporter-995tx   1/1	   Running   0          37s	  172.31.36.128   master0.user8.lab.openshift.ch
-prometheus-node-exporter-c4jlz   1/1	   Running   0          37s	  172.31.46.123   node3.user8.lab.openshift.ch
-prometheus-node-exporter-c7v76   1/1	   Running   0          37s	  172.31.40.35    master1.user8.lab.openshift.ch
-prometheus-node-exporter-jk7q7   1/1	   Running   0          37s	  172.31.43.182   node0.user8.lab.openshift.ch
-prometheus-node-exporter-sgpmm   1/1	   Running   0          37s	  172.31.41.93    node4.user8.lab.openshift.ch
+### Logging Monitoring
 
-[ec2-user@master0 ~]$ oc delete pod prometheus-0 -n openshift-metrics
-pod "prometheus-0" deleted
+The Service `logging-es-prometheus` needs to be labeled and the following RoleBinding applied, for Prometheus to be able to get the metrics.
+
+```bash
+oc label svc logging-es-prometheus -n openshift-logging scrape=prometheus
+oc create -f templates/template-rolebinding.yaml -n openshift-logging
+oc process -f templates/template-logging.yaml  | oc apply -f -
 ```
 
-### Access Prometheus
+## Additional rules: CRD type PrometheusRule
 
-This creates a new project called `openshift-metrics`. As soon as the pod is running you will be able to access it with the user `cheyenne`.
-https://prometheus-openshift-metrics.app[X].lab.openshift.ch/
+In order for the custom rules to be added to the managed Prometheus instance, the following labels need to be defined in the "PromtheusRule" CR:
 
----
+```bash
+prometheus: k8s
+role: alert-rules
+```
 
-[← back to the labs overview](../README.md)
+Add the custom rules from the template folder to Prometheus:
 
+```bash
+oc process -f templates/template-k8s-custom-rules.yaml -p SEVERITY_LABEL="critical" | oc apply -f -
+```
+
+## AlertManager
+
+Configuring Alertmanager with the Red Hat Ansible playbooks.
+<https://docs.openshift.com/container-platform/3.11/install_config/prometheus_cluster_monitoring.html#configuring-alertmanager>
+
+By hand
+
+```bash
+oc delete secret alertmanager-main
+oc create secret generic alertmanager-main --from-file=templates/alertmanager.yaml
+```
+
+Follow these guides:
+<https://github.com/openshift/cluster-monitoring-operator/blob/release-3.11/Documentation/user-guides/configuring-prometheus-alertmanager.md>
+
+## Additional configuration
+
+### Add view role for developers
+
+```bash
+oc adm policy add-cluster-role-to-user cluster-monitoring-view [user]
+```
+
+### Add metrics reader service account to access Prometheus metrics
+
+```bash
+oc create sa prometheus-metrics-reader -n openshift-monitoring
+oc adm policy add-cluster-role-to-user cluster-monitoring-view -z prometheus-metrics-reader -n openshift-monitoring
+oc sa get-token prometheus-metrics-reader -n openshift-monitoring
+```
+
+### Allow Prometheus to scrape your metrics endpoints (if using ovs-networkpolicy plugin)
+
+Create an additional network-policy.
+
+```bash
+oc create -f templates/networkpolicy.yaml -n [namespace]
+```
