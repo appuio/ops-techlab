@@ -57,7 +57,7 @@ https://logging.app[X].lab.openshift.ch
 <a name="5.2.2"></a>
 ### Lab 5.2.2: Restore the etcd Cluster ###
 
-:warning: Before you proceed, make sure you've already added master2 [LINK](https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md)
+:warning: Before you proceed, make sure you've already added master2 [Lab 3.5.2](35_add_new_node_and_master.md#3.5.2)
 
 copy the snapshot to the master1.user[x].lab.openshift.ch
 ```
