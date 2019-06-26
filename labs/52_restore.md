@@ -1,6 +1,6 @@
 ## Lab 5.2: Restore
 
-### Restore a Project
+### Lab 5.2.1: Restore a Project
 
 We will now delete the logging project and try to restore it from the backup.
 ```
@@ -53,7 +53,7 @@ https://logging.app[X].lab.openshift.ch
 ```
 
 
-### Restore the etcd Cluster ###
+### Lab 5.2.2: Restore the etcd Cluster ###
 
 :warning: Before you proceed, make sure you've already added master2 [LINK](https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md)
 
@@ -69,6 +69,7 @@ copy the snapshot to the master1.user[x].lab.openshift.ch
 ```
 
 switch to user root and restore the etc-database
+
 :warning: run this task on ALL Masters (master0,master1)
 ```
 [ec2-user@master0 ~]$ sudo -i
