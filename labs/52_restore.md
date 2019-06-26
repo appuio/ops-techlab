@@ -53,87 +53,70 @@ https://logging.app[X].lab.openshift.ch
 ```
 
 
-### Restore the etcd Cluster
+### Restore the etcd Cluster ###
 
-First, we need to stop all etcd:
-```
-[ec2-user@master0 ~]$ ansible etcd -m service -a "name=etcd state=stopped"
-```
+:warning: Before you proceed, make sure you've already added master2 [LINK](https://github.com/gerald-eggenberger/ops-techlab/blob/release-3.11-backup/labs/35_add_new_node_and_master.md)
 
-The cluster is now down and you can't get any resources through the console. We are now copying the files back from the backup and set the right permissions.
+copy the snapshot to the master1.user[x].lab.openshift.ch
 ```
-[ec2-user@master0 ~]$ ETCD_DIR=/var/lib/etcd/
-[ec2-user@master0 ~]$ sudo mv $ETCD_DIR /var/lib/etcd.orig
-[ec2-user@master0 ~]$ sudo cp -Rp etcd.bak $ETCD_DIR
-[ec2-user@master0 ~]$ sudo chcon -R --reference /var/lib/etcd.orig/ $ETCD_DIR
-[ec2-user@master0 ~]$ sudo chown -R etcd:etcd $ETCD_DIR
-```
-
-Add the "--force-new-cluster" parameter to the etcd unit file, start etcd and check if it's running. This is needed, because initially it will create a new cluster with the existing data from the backup.
-```
-[ec2-user@master0 ~]$ sudo cp /usr/lib/systemd/system/etcd.service /etc/systemd/system
-[ec2-user@master0 ~]$ sudo sed -i '/ExecStart/s/"$/  --force-new-cluster"/' /etc/systemd/system/etcd.service
-[ec2-user@master0 ~]$ sudo systemctl daemon-reload
-[ec2-user@master0 ~]$ sudo systemctl start etcd
-[ec2-user@master0 ~]$ sudo systemctl status etcd
+[ec2-user@master0 ~]$ userid=[x]
+[ec2-user@master0 ~]$ scp /tmp/snapshot.db master1.user$userid.lab.openshift.ch:/tmp/snapshot.db
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=stopped"
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=stopped"
+[ec2-user@master0 ~]$ ansible etcd -a "rm -rf /var/lib/etcd"
+[ec2-user@master0 ~]$ ansible etcd -a "rmdir /var/lib/etcd"
+[ec2-user@master0 ~]$ ansible etcd -a "mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf.bak"
 ```
 
-The cluster is now initialized, so we need to remove the "--force-new-cluster" parameter again and restart etcd.
+switch to user root and restore the etc-database
+:warning: run this task on ALL Masters (master0,master1)
 ```
-[ec2-user@master0 ~]$ sudo rm /etc/systemd/system/etcd.service
-[ec2-user@master0 ~]$ sudo systemctl daemon-reload
-[ec2-user@master0 ~]$ sudo systemctl restart etcd
-[ec2-user@master0 ~]$ sudo systemctl status etcd
-```
-
-Check if etcd is healthy and check if "/openshift.io" exists in etcd
-```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key cluster-health
-member 92c764a37c90869 is healthy: got healthy result from https://127.0.0.1:2379
-cluster is healthy
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key ls /
-/openshift.io
-```
-
-We need to change the peerURL of the etcd to it's private ip. Make sure to correctly copy the **member_id** and **private_ip**.
-```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
-[member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://localhost:2380 clientURLs=https://[private_ip]:2379 isLeader=true
-
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member update [member_id] https://[private_ip]:2380
-Updated member with ID [member_id] in cluster
-
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/etcd/ca.crt --cert-file=/etc/etcd/peer.crt --key-file=/etc/etcd/peer.key member list
-[member_id]: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.46.201:2380 clientURLs=https://172.31.46.201:2379 isLeader=true
+[ec2-user@master0 ~]$ sudo -i
+[root@master0 ~]# yum install etcd-3.2.22-1.el7.x86_64
+[root@master0 ~]# mv /etc/etcd/etcd.conf.bak /etc/etcd/etcd.conf
+[root@master0 ~]# source /etc/etcd/etcd.conf
+[root@master0 ~]# export ETCDCTL_API=3
+[root@master0 ~]# ETCDCTL_API=3 etcdctl snapshot restore /tmp/snapshot.db \
+  --name $ETCD_NAME \
+  --initial-cluster $ETCD_INITIAL_CLUSTER \
+  --initial-cluster-token $ETCD_INITIAL_CLUSTER_TOKEN \
+  --initial-advertise-peer-urls $ETCD_INITIAL_ADVERTISE_PEER_URLS \
+  --data-dir /var/lib/etcd
+[root@master0 ~]# restorecon -Rv /var/lib/etcd
 ```
 
-Add the second etcd `master1.user[X].lab.openshift.ch` to the etcd cluster
+#### Check ectd-clusther health ####
 ```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member add master1.user[X].lab.openshift.ch https://[IP_OF_MASTER1]:2380
-Added member named master1.user[X].lab.openshift.ch with ID aadb46077a7f58a to cluster
+[root@master0 ~]# ETCD_ALL_ENDPOINTS=` etcdctl3 --write-out=fields   member list | awk '/ClientURL/{printf "%s%s",sep,$3; sep=","}'`
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint health
+```
 
-ETCD_NAME="master1.user[X].lab.openshift.ch"
-ETCD_INITIAL_CLUSTER="master0.user[X].lab.openshift.ch=https://172.31.37.65:2380,master1.user[X].lab.openshift.ch=https://172.31.32.131:2380"
+### Scale up the etcd Cluster ###
+Add the third etcd master2.user[X].lab.openshift.ch to the etcd cluster
+```
+[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member add master2.user[X].lab.openshift.ch https://[IP_OF_MASTER2]:2380
+Added member named master2.user[X].lab.openshift.ch with ID aadb46077a7f58a to cluster
+
+ETCD_NAME="master2.user[X].lab.openshift.ch"
+ETCD_INITIAL_CLUSTER="master0.user[X].lab.openshift.ch=https://172.31.37.65:2380,master2.user[X].lab.openshift.ch=https://172.31.32.131:2380"
 ETCD_INITIAL_CLUSTER_STATE="existing"
 ```
 
-Login to `master1.user[X].lab.openshift.ch` and edit the etcd configuration file using the environment variables provided above. Then remove the etcd data directory and restart etcd.
+Login to `master2.user[X].lab.openshift.ch` and edit the etcd configuration file using the environment variables provided above. 
+Then remove the etcd data directory and restart etcd.
+
 ```
-[ec2-user@master1 ~]$ sudo vi /etc/etcd/etcd.conf
-[ec2-user@master1 ~]$ sudo rm -rf /var/lib/etcd/member
-[ec2-user@master1 ~]$ sudo systemctl restart etcd
+[ec2-user@master2 ~]$ sudo vi /etc/etcd/etcd.conf
+[ec2-user@master2 ~]$ sudo rm -rf /var/lib/etcd/member
+[ec2-user@master2 ~]$ sudo systemctl restart etcd
 ```
 
-Login to `master0.user[X].lab.openshift.ch` again and check the etcd cluster health.
+#### Check ectd-clusther health ####
 ```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member list
-633a80df3001: name=master0.user[X].lab.openshift.ch peerURLs=https://172.31.37.65:2380 clientURLs=https://172.31.37.65:2379 isLeader=true
-aadb46077a7f58a: name=master1.user[X].lab.openshift.ch peerURLs=https://172.31.32.131:2380 clientURLs=https://172.31.32.131:2379 isLeader=false
-
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
-member 633a80df3001 is healthy: got healthy result from https://172.31.37.65:2379
-member aadb46077a7f58a is healthy: got healthy result from https://172.31.32.131:2379
-cluster is healthy
+[root@master0 ~]# ETCD_ALL_ENDPOINTS=` etcdctl3 --write-out=fields   member list | awk '/ClientURL/{printf "%s%s",sep,$3; sep=","}'`
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint health
 ```
 
 Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X].
