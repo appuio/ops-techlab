@@ -167,7 +167,7 @@ Add the custom rules from the template folder to Prometheus:
 
 ```
 [ec2-user@master0 ~]$ oc process -f resource/templates/template-k8s-custom-rules.yaml -p SEVERITY_LABEL="critical" | oc apply -f -
-` ``
+```
 
 ## AlertManager
 
