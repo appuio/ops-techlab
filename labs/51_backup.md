@@ -125,7 +125,7 @@ copy them to the tmp directory for further use:
 [root@master0 ~]# cp /var/lib/etcd/snapshot.db /tmp/snapshot.db
 [root@master0 ~]# cp /var/lib/etcd/member/snap/db /tmp/db
 ```
-If you wanna Restore an etcd, proceed to [Lab 5.2.2](52_restore.md# Lab 5.2.2: Restore the etcd Cluster)
+If you wanna Restore an etcd, proceed to [Lab 5.2.2](52_restore.md#5.2.2)
 
 ---
 
