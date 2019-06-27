@@ -67,10 +67,10 @@ Run the installer
 You can login with the cluster administrator `sheriff` on:
 https://prometheus-k8s-openshift-monitoring.app[X].lab.openshift.ch/
 
-Additional targets: `Status` -> `Targets`
-Scrape configuration: `Status` ->  `Configuration`
-Defined rules: `Status` -> `Rules`
-Service Discovery: `Status` -> `Service Discovery`
+- Additional targets: `Status` -> `Targets`
+- Scrape configuration: `Status` ->  `Configuration`
+- Defined rules: `Status` -> `Rules`
+- Service Discovery: `Status` -> `Service Discovery`
 
 
 ### Configure Prometheus
