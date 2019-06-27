@@ -67,6 +67,11 @@ Run the installer
 You can login with the cluster administrator `sheriff` on:
 https://prometheus-k8s-openshift-monitoring.app[X].lab.openshift.ch/
 
+Additional targets: `Status` -> `Targets`
+Scrape configuration: `Status` ->  `Configuration`
+Defined rules: `Status` -> `Rules`
+Service Discovery: `Status` -> `Service Discovery`
+
 
 ### Configure Prometheus
 Let Prometheus scrape service labels in different namespaces
@@ -137,13 +142,17 @@ NAME               ENDPOINTS                                                    
 router             172.31.43.147:1936,172.31.47.59:1936,172.31.47.64:1936 + 6 more...   1h        router=router
 ```
 
-Set the router label as parameter
-
+Add the `prometheus-k8s` service account to the `router-metrics` cluster role
 ```
 [ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user router-metrics system:serviceaccount:openshift-monitoring:prometheus-k8s
+```
 
+Set the router label as parameter and create the service monitor
+```
+[ec2-user@master0 ~]$ oc project openshift-monitoring
 [ec2-user@master0 ~]$ oc process -f resource/templates/template-router.yaml -p ROUTER_LABEL="router" | oc apply -f -
 ```
+
 ### Logging Monitoring
 
 The Service `logging-es-prometheus` needs to be labeled and the following RoleBinding applied, for Prometheus to be able to get the metrics.
