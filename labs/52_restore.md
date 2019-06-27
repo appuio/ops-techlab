@@ -112,6 +112,9 @@ new_etcd
 [new_etcd] 
 master2.user[X].lab.openshift.ch 
 ```
+
+:warning: the scaleup-playbook provided by redhat doesn't restart the masters seamlessly. If you have to scaleup in production, please do this in a maintenance window.
+
 Run the scaleup-Playbook to scaleup the etcd-cluster:
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/scaleup.yml
@@ -123,6 +126,27 @@ Run the scaleup-Playbook to scaleup the etcd-cluster:
 [root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
 [root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint health
 ```
+
+:information_source: don't get confused by the 4 entries. Master0 will show up twice with the same id
+
+You should now get an output like this.
+```
++---------------------------------------------+------------------+---------+---------+-----------+-----------+------------+
+|                  ENDPOINT                   |        ID        | VERSION | DB SIZE | IS LEADER | RAFT TERM | RAFT INDEX |
++---------------------------------------------+------------------+---------+---------+-----------+-----------+------------+
+| https://master0.user1.lab.openshift.ch:2379 | a8e78dd0690640cb |  3.2.22 |   26 MB |     false |         2 |       9667 |
+|                   https://172.31.42.95:2379 | 1ab823337d6e84bf |  3.2.22 |   26 MB |     false |         2 |       9667 |
+|                   https://172.31.38.22:2379 | 56f5e08139a21df3 |  3.2.22 |   26 MB |      true |         2 |       9667 |
+|                  https://172.31.46.194:2379 | a8e78dd0690640cb |  3.2.22 |   26 MB |     false |         2 |       9667 |
++---------------------------------------------+------------------+---------+---------+-----------+-----------+------------+
+
+https://172.31.46.194:2379 is healthy: successfully committed proposal: took = 2.556091ms
+https://172.31.42.95:2379 is healthy: successfully committed proposal: took = 2.018976ms
+https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 2.639024ms
+https://172.31.38.22:2379 is healthy: successfully committed proposal: took = 1.666699ms
+
+```
+
 #### move new etcd-member in /etc/ansible/hosts ####
 
 Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
