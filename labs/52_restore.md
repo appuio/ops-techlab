@@ -103,22 +103,18 @@ As we have restored the etcd on all masters we should be able to start the servi
 
 ### Scale up the etcd Cluster ###
 Add the third etcd master2.user[X].lab.openshift.ch to the etcd cluster
+We add the 3rd Node (master2) by adding it to the [new_etcd] group and activate this group by uncommenting it:
 ```
-[ec2-user@master0 ~]$ sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member add master2.user[X].lab.openshift.ch https://[IP_OF_MASTER2]:2380
-Added member named master2.user[X].lab.openshift.ch with ID aadb46077a7f58a to cluster
+[OSEv3:children]
+...
+new_etcd 
 
-ETCD_NAME="master2.user[X].lab.openshift.ch"
-ETCD_INITIAL_CLUSTER="master0.user[X].lab.openshift.ch=https://172.31.37.65:2380,master2.user[X].lab.openshift.ch=https://172.31.32.131:2380"
-ETCD_INITIAL_CLUSTER_STATE="existing"
+[new_etcd] 
+master2.user[X].lab.openshift.ch 
 ```
-
-Login to `master2.user[X].lab.openshift.ch` and edit the etcd configuration file using the environment variables provided above. 
-Then remove the etcd data directory and restart etcd.
-
+Run the scaleup-Playbook to scaleup the etcd-cluster:
 ```
-[ec2-user@master2 ~]$ sudo vi /etc/etcd/etcd.conf
-[ec2-user@master2 ~]$ sudo rm -rf /var/lib/etcd/member
-[ec2-user@master2 ~]$ sudo systemctl restart etcd
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/scaleup.yml
 ```
 
 #### Check ectd-clusther health ####
@@ -127,6 +123,9 @@ Then remove the etcd data directory and restart etcd.
 [root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
 [root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint health
 ```
+#### move new etcd-member in /etc/ansible/hosts ####
+
+Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
 
 Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X].
 
