@@ -3,56 +3,34 @@
 <a name="5.2.1"> </a>
 ### Lab 5.2.1: Restore a Project
 
-We will now delete the logging project and try to restore it from the backup.
+We will now delete the initially created `dakota` project and try to restore it from the backup.
 ```
-[ec2-user@master0 ~]$ oc delete project logging
+[ec2-user@master0 ~]$ oc delete project dakota
 ```
 
 Check if the project is being deleted
 ```
-[ec2-user@master0 ~]$ oc get project logging
+[ec2-user@master0 ~]$ oc get project dakota
 ```
 
-Restore the logging project from the backup. Some objects still exist, because they are not namespaced and therefore not deleted. You will see during the restore, that these object will not be replaced.
+Restore the dakota project from the backup.
 ```
-[ec2-user@master0 ~]$ oc adm new-project logging --node-selector=""
-[ec2-user@master0 ~]$ oc project logging
-
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/serviceaccount.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/secret.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/configmap.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/rolebindings.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/project.json
-[ec2-user@master0 ~]$ oc create -f /home/ec2-user/openshift_backup_[date]/projects/logging/daemonset.json
+[ec2-user@master0 ~]$ oc new-project dakota
+[ec2-user@master0 ~]$ oc project project-backup
+[ec2-user@master0 ~]$ oc debug `oc get pods -o jsonpath='{.items[*].metadata.name}' | awk '{print $1}'`
+sh-4.2# tar -xvf /backup/backup-201906131343.tar.gz -C /tmp/
+sh-4.2# oc apply -f /tmp/dakota/
 ```
 
-Scale the logging components.
+Start build and push image to registry
 ```
-[ec2-user@master0 ~]$ oc get dc
-NAME                  REVISION   DESIRED   CURRENT   TRIGGERED BY
-logging-curator       5          1         1         config
-logging-es-a4nhrowo   5          1         1         config
-logging-kibana        7          1         0         config
-
-
-[ec2-user@master0 ~]$ oc scale dc logging-kibana --replicas=0
-[ec2-user@master0 ~]$ oc scale dc logging-curator --replicas=0
-[ec2-user@master0 ~]$ oc scale dc logging-es-[HASH] --replicas=0
-[ec2-user@master0 ~]$ oc scale dc logging-kibana --replicas=1
-[ec2-user@master0 ~]$ oc scale dc logging-curator --replicas=1
-[ec2-user@master0 ~]$ oc scale dc logging-es-[HASH] --replicas=1
+[ec2-user@master0 ~]$ oc start-build ruby-ex -n dakota
 ``` 
 
-Check if the pods are coming up again
+Check whether the pods become ready again.
 ```
-[ec2-user@master0 ~]$ oc get pods -w
+[ec2-user@master0 ~]$ oc get pods -w -n dakota
 ```
-
-If all the pods are ready, Kibana should be receiving logs again.
-```
-https://logging.app[X].lab.openshift.ch
-```
-
 
 <a name="5.2.2"></a>
 ### Lab 5.2.2: Restore the etcd Cluster ###
@@ -116,6 +94,7 @@ master2.user[X].lab.openshift.ch
 :warning: the scaleup-playbook provided by redhat doesn't restart the masters seamlessly. If you have to scaleup in production, please do this in a maintenance window.
 
 Run the scaleup-Playbook to scaleup the etcd-cluster:
+
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/scaleup.yml
 ```
@@ -130,6 +109,7 @@ Run the scaleup-Playbook to scaleup the etcd-cluster:
 :information_source: don't get confused by the 4 entries. Master0 will show up twice with the same id
 
 You should now get an output like this.
+
 ```
 +---------------------------------------------+------------------+---------+---------+-----------+-----------+------------+
 |                  ENDPOINT                   |        ID        | VERSION | DB SIZE | IS LEADER | RAFT TERM | RAFT INDEX |
@@ -144,7 +124,6 @@ https://172.31.46.194:2379 is healthy: successfully committed proposal: took = 2
 https://172.31.42.95:2379 is healthy: successfully committed proposal: took = 2.018976ms
 https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 2.639024ms
 https://172.31.38.22:2379 is healthy: successfully committed proposal: took = 1.666699ms
-
 ```
 
 #### move new etcd-member in /etc/ansible/hosts ####

@@ -84,7 +84,7 @@ Check if the server certificate has been replaced:
 
 1. Create a new bootstrap.kubeconfig for nodes (MASTER nodes will just copy admin.kubeconfig):"
 ```
-[ec2-user@master0 ~]# oc serviceaccounts create-kubeconfig node-bootstrapper -n openshift-infra --config /etc/origin/master/admin.kubeconfig > /tmp/bootstrap.kubeconfig
+[ec2-user@master0 ~]$ sudo oc serviceaccounts create-kubeconfig node-bootstrapper -n openshift-infra --config /etc/origin/master/admin.kubeconfig > /tmp/bootstrap.kubeconfig
 ```
 
 2. Distribute ~/bootstrap.kubeconfig from step 1 to infra and compute nodes replacing /etc/origin/node/bootstrap.kubeconfig
@@ -129,7 +129,7 @@ Check if the server certificate has been replaced:
 11. Check if the master-nodes are READY:
 ```
 [ec2-user@master0 ~]$ oc get node
-[ec2-user@master0 ~]$ for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}'`; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
+[ec2-user@master0 ~]$ for i in `oc get nodes -o jsonpath=$'{range .items[*]}{.metadata.name}\n{end}' | grep master`; do oc get --raw /api/v1/nodes/$i/proxy/healthz; echo -e "\t$i"; done
 ```
 
 

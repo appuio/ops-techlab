@@ -108,7 +108,9 @@ If you use Java base images other than the ones provided by Red Hat you have to 
 
 To apply the outgoing HTTP proxy configuration to the cluster you have to run the master and node config playbooks:
 ```
-[ec2-user@master0 ~]$ ansible-playbook --tags master,node /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-node/bootstrap.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-master/config.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-master/additional_config.yml
 ```
 
 

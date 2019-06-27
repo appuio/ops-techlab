@@ -17,19 +17,16 @@ The following files should be backuped on all masters:
 
 - Ansible inventory file (contains information about the cluster): `/etc/ansible/hosts`
 - Configuration files (for the master), certificates and htpasswd: `/etc/origin/master/`
-- Docker configurations: 
-	`/etc/sysconfig/docker` 
-	`/etc/sysconfig/docker-network` 
-	`/etc/sysconfig/docker-storage`
 
 ### Lab 5.1.2: Node Backup Files
+=======
+- Docker configurations: `/etc/sysconfig/docker` `/etc/sysconfig/docker-network` `/etc/sysconfig/docker-storage`
 
 Backup the following folders on all nodes:
 
 - Node Configuration files: `/etc/origin/node/`
 - Certificates for the docker-registry: `/etc/docker/certs.d/`
-- Docker configurations: /etc/sysconfig/docker /etc/sysconfig/docker-network /etc/sysconfig/docker-storage
-
+- Docker configurations: `/etc/sysconfig/docker` `/etc/sysconfig/docker-network` `/etc/sysconfig/docker-storage`
 
 ### Lab 5.1.3: Application Backup
 
@@ -82,6 +79,7 @@ Show if backup-pod was launched:
 [ec2-user@master0 openshift-project-backup]$ oc get pods
 NAME                                      READY     STATUS      RESTARTS   AGE
 cronjob-project-backup-1561384620-kjm6v   1/1       Running     0          47s
+
 ```
 
 Check the logfiles while backup-job is running:
