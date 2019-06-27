@@ -1,6 +1,7 @@
 ## Lab 5.2: Restore
 
-### Restore a Project
+<a name="5.2.1"> </a>
+### Lab 5.2.1: Restore a Project
 
 We will now delete the initially created `dakota` project and try to restore it from the backup.
 ```
@@ -31,52 +32,113 @@ Check whether the pods become ready again.
 [ec2-user@master0 ~]$ oc get pods -w -n dakota
 ```
 
-### Restore the etcd Cluster
+<a name="5.2.2"></a>
+### Lab 5.2.2: Restore the etcd Cluster ###
 
-Official documentation to restore etcd does not work:
-https://docs.openshift.com/container-platform/3.11/admin_guide/assembly_restoring-cluster.html#restoring-etcd_admin-restore-cluster
+:warning: Before you proceed, make sure you've already added master2 [Lab 3.5.2](35_add_new_node_and_master.md#3.5.2)
 
-To restore an etcd cluster running in static pods, please follow the following documentation:
-https://access.redhat.com/solutions/3885101
+copy the snapshot to the master1.user[x].lab.openshift.ch
+```
+[ec2-user@master0 ~]$ userid=[x]
+[ec2-user@master0 ~]$ scp /tmp/snapshot.db master1.user$userid.lab.openshift.ch:/tmp/snapshot.db
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=stopped"
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=stopped"
+[ec2-user@master0 ~]$ ansible etcd -a "rm -rf /var/lib/etcd"
+[ec2-user@master0 ~]$ ansible etcd -a "mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf.bak"
+```
 
-### Scaleup the etcd Cluster
+switch to user root and restore the etc-database
 
-We are now running on a single etcd setup. To get HA again, we need to scaleup to at least three etcds.
+:warning: run this task on ALL Masters (master0,master1)
+```
+[ec2-user@master0 ~]$ sudo -i
+[root@master0 ~]# yum install etcd-3.2.22-1.el7.x86_64
+[root@master0 ~]# rmdir /var/lib/etcd
+[root@master0 ~]# mv /etc/etcd/etcd.conf.bak /etc/etcd/etcd.conf
+[root@master0 ~]# source /etc/etcd/etcd.conf
+[root@master0 ~]# export ETCDCTL_API=3
+[root@master0 ~]# ETCDCTL_API=3 etcdctl snapshot restore /tmp/snapshot.db \
+  --name $ETCD_NAME \
+  --initial-cluster $ETCD_INITIAL_CLUSTER \
+  --initial-cluster-token $ETCD_INITIAL_CLUSTER_TOKEN \
+  --initial-advertise-peer-urls $ETCD_INITIAL_ADVERTISE_PEER_URLS \
+  --data-dir /var/lib/etcd
+[root@master0 ~]# restorecon -Rv /var/lib/etcd
+```
 
-First add the new etcds host in the Ansible inventory in the (`[new_etcd]`) section and add it to the (`[OSEv3:children]` group).
+As we have restored the etcd on all masters we should be able to start the services:
+```
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=started"
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=started"
+```
+
+#### Check ectd-clusther health ####
+```
+[root@master0 ~]# ETCD_ALL_ENDPOINTS=` etcdctl3 --write-out=fields   member list | awk '/ClientURL/{printf "%s%s",sep,$3; sep=","}'`
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint health
+```
+
+### Scale up the etcd Cluster ###
+Add the third etcd master2.user[X].lab.openshift.ch to the etcd cluster
+We add the 3rd Node (master2) by adding it to the [new_etcd] group and activate this group by uncommenting it:
 ```
 [OSEv3:children]
 ...
-new_etcd
+new_etcd 
 
-[new_etcd]
-master1.user7.lab.openshift.ch
-master2.user7.lab.openshift.ch
-
+[new_etcd] 
+master2.user[X].lab.openshift.ch 
 ```
 
-### Scaleup to a HA etcd cluster
+:warning: the scaleup-playbook provided by redhat doesn't restart the masters seamlessly. If you have to scaleup in production, please do this in a maintenance window.
 
-Execute the playbook responsible for the etcd scaleup:
+Run the scaleup-Playbook to scaleup the etcd-cluster:
+
 ```
 [ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-etcd/scaleup.yml
 ```
 
-
-## Verification and Finalization
-
-Verify your installation now consists of the original cluster plus one new etcd member:
+#### Check ectd-clusther health ####
 ```
-[root@master0 ~]# etcdctl2 --cert-file=/etc/etcd/peer.crt \
-                           --key-file=/etc/etcd/peer.key \
-                           --ca-file=/etc/etcd/ca.crt \
-                           --peers="https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379" \
-                           cluster-health
+[root@master0 ~]# ETCD_ALL_ENDPOINTS=` etcdctl3 --write-out=fields   member list | awk '/ClientURL/{printf "%s%s",sep,$3; sep=","}'`
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint status  --write-out=table
+[root@master0 ~]# etcdctl3 --endpoints=$ETCD_ALL_ENDPOINTS  endpoint health
 ```
+
+:information_source: don't get confused by the 4 entries. Master0 will show up twice with the same id
+
+You should now get an output like this.
+
+```
++---------------------------------------------+------------------+---------+---------+-----------+-----------+------------+
+|                  ENDPOINT                   |        ID        | VERSION | DB SIZE | IS LEADER | RAFT TERM | RAFT INDEX |
++---------------------------------------------+------------------+---------+---------+-----------+-----------+------------+
+| https://master0.user1.lab.openshift.ch:2379 | a8e78dd0690640cb |  3.2.22 |   26 MB |     false |         2 |       9667 |
+|                   https://172.31.42.95:2379 | 1ab823337d6e84bf |  3.2.22 |   26 MB |     false |         2 |       9667 |
+|                   https://172.31.38.22:2379 | 56f5e08139a21df3 |  3.2.22 |   26 MB |      true |         2 |       9667 |
+|                  https://172.31.46.194:2379 | a8e78dd0690640cb |  3.2.22 |   26 MB |     false |         2 |       9667 |
++---------------------------------------------+------------------+---------+---------+-----------+-----------+------------+
+
+https://172.31.46.194:2379 is healthy: successfully committed proposal: took = 2.556091ms
+https://172.31.42.95:2379 is healthy: successfully committed proposal: took = 2.018976ms
+https://master0.user1.lab.openshift.ch:2379 is healthy: successfully committed proposal: took = 2.639024ms
+https://172.31.38.22:2379 is healthy: successfully committed proposal: took = 1.666699ms
+```
+
+#### move new etcd-member in /etc/ansible/hosts ####
 
 Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
+
+
 ```
 ...
+#new_etcd
+
+#[new_etcd]
+
+...
+
 [etcd]
 master0.user[X].lab.openshift.ch
 master1.user[X].lab.openshift.ch

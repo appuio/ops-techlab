@@ -2,8 +2,8 @@
 
 In this lab we will add a new node and a new master to our OpenShift cluster.
 
-
-### Add a New Node
+<a name="3.5.1"> </a>
+### Lab 3.5.1: Add a New Node
 
 Uncomment the new node (`app-node1.user...`) in the Ansible inventory and also uncomment the `new_nodes` group in the "[OSEv3:children]" section.
 ```
@@ -76,7 +76,8 @@ app-node1.user[X].lab.openshift.ch openshift_hostname=app-node1.user[X].lab.open
 ...
 ```
 
-### Add a New Master
+<a name="3.5.2"> </a>
+### Lab 3.5.2: Add a New Master
 
 Uncomment the new master inside the Ansible inventory. It needs to be in both the `[new_nodes]` and the `[new_masters]` groups.
 ```
@@ -215,7 +216,8 @@ This means we now have an empty `[new_nodes]` and `[new_masters]` groups.
 ```
 
 
-### Fix Logging
+<a name="3.5.3"> </a>
+### Lab 3.5.3: Fix Logging
 
 The default logging stack on OpenShift mainly consists of Elasticsearch, fluentd and Kibana, where fluentd is a DaemonSet. This means that a fluentd pod is automatically deployed on every node, even if scheduling is disabled for that node. The limiting factor for the deployment of DaemonSet pods is the node selector which is set by default to the label `logging-infra-fluentd=true`. The logging playbook attaches this label to all nodes by default, so if you wanted to prevent the deployment of fluentd on certain hosts you had to add the label `logging-infra-fluentd=false` in the inventory. As you may have seen, we do not specify the label specifically in the inventory, which means:
 - Every node gets the `logging-infra-fluentd=true` attached by the logging playbook
