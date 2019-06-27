@@ -96,7 +96,7 @@ If you wanna Restore a project, proceed to [Lab 5.2.1](52_restore.md#5.2.1)
 ### Lab 5.1.5: Create etcd Backup
 We plan to create a Backup of our etcd. When we've created our backup, we wan't to restore them on master1/master2 and scale out from 1 to 3 nodes.
 
-First we create a snapshot of our etc-database:
+First we create a snapshot of our etcd cluster:
 ```
 [root@master0 ~]# export ETCD_POD_MANIFEST="/etc/origin/node/pods/etcd.yaml"
 [root@master0 ~]# export ETCD_EP=$(grep https ${ETCD_POD_MANIFEST} | cut -d '/' -f3)
