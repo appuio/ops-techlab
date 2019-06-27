@@ -151,7 +151,22 @@ https://172.31.38.22:2379 is healthy: successfully committed proposal: took = 1.
 
 Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in your Ansible inventory at `/etc/ansible/hosts` so the group looks like:
 
-Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X].
+
+```
+...
+#new_etcd
+
+#[new_etcd]
+
+...
+
+[etcd]
+master0.user1.lab.openshift.ch
+master1.user1.lab.openshift.ch
+master2.user1.lab.openshift.ch
+```
+
+Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X]. [Lab 5.2.2](52_restore.md#5.2.2)
 
 ---
 
