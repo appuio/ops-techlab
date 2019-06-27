@@ -88,6 +88,12 @@ switch to user root and restore the etc-database
 [root@master0 ~]# restorecon -Rv /var/lib/etcd
 ```
 
+As we have restored the etcd on all masters we should be able to start the services:
+```
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=started"
+[ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=started"
+```
+
 #### Check ectd-clusther health ####
 ```
 [root@master0 ~]# ETCD_ALL_ENDPOINTS=` etcdctl3 --write-out=fields   member list | awk '/ClientURL/{printf "%s%s",sep,$3; sep=","}'`
