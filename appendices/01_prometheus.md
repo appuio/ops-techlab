@@ -154,7 +154,7 @@ Set the router label as parameter and create the service monitor
 ```
 
 ### Logging Monitoring
-
+Just works on clustered ElasticSearch, the OPStechlab runs because of lack of ressources on a single node ES. 
 The Service `logging-es-prometheus` needs to be labeled and the following RoleBinding applied, for Prometheus to be able to get the metrics.
 
 ```
