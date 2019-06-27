@@ -166,8 +166,6 @@ master1.user1.lab.openshift.ch
 master2.user1.lab.openshift.ch
 ```
 
-Try to restore the last etcd on master2.user[X] the same way you did for master1.user[X]. [Lab 5.2.2](52_restore.md#5.2.2)
-
 ---
 
 **End of Lab 5.2**
