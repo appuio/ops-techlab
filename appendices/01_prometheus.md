@@ -165,11 +165,9 @@ The Service `logging-es-prometheus` needs to be labeled and the following RoleBi
 
 ## Additional rules: CRD type PrometheusRule
 
-In order for the custom rules to be added to the managed Prometheus instance, the following labels need to be defined in the "PromtheusRule" CR:
-
+Take a look at the additional ruleset, that we suggest to use monitoring OpenShift.
 ```
-prometheus: k8s
-role: alert-rules
+[ec2-user@master0 ~]$ less resource/templates/template-k8s-custom-rules.yaml
 ```
 
 Add the custom rules from the template folder to Prometheus:
@@ -193,20 +191,29 @@ By hand
 Follow these guides:
 <https://github.com/openshift/cluster-monitoring-operator/blob/release-3.11/Documentation/user-guides/configuring-prometheus-alertmanager.md>
 
+Check if the new configuration is in place: https://alertmanager-main-openshift-monitoring.app[X].lab.openshift.ch/#/status
+
 ## Additional configuration
 
 ### Add view role for developers
 
+Let non OpenShift admins access Prometheus:
 ```
 [ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user cluster-monitoring-view [user]
 ```
 
 ### Add metrics reader service account to access Prometheus metrics
 
+You can create a service account to access Prometheus through the API 
 ```
 [ec2-user@master0 ~]$ oc create sa prometheus-metrics-reader -n openshift-monitoring
 [ec2-user@master0 ~]$ oc adm policy add-cluster-role-to-user cluster-monitoring-view -z prometheus-metrics-reader -n openshift-monitoring
-[ec2-user@master0 ~]$ oc sa get-token prometheus-metrics-reader -n openshift-monitoring
+```
+
+Access the API with a simple `curl`
+```
+[ec2-user@master0 ~]$ export TOKEN=`oc sa get-token prometheus-metrics-reader -n openshift-monitoring`
+[ec2-user@master0 ~]$ curl https://prometheus-k8s-openshift-monitoring.app[X].lab.openshift.ch/api/v1/query?query=ALERTS -H "Authorization: Bearer $TOKEN"
 ```
 
 ### Allow Prometheus to scrape your metrics endpoints (if using ovs-networkpolicy plugin)
