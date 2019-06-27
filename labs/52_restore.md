@@ -66,7 +66,6 @@ copy the snapshot to the master1.user[x].lab.openshift.ch
 [ec2-user@master0 ~]$ ansible etcd -m service -a "name=atomic-openshift-node state=stopped"
 [ec2-user@master0 ~]$ ansible etcd -m service -a "name=docker state=stopped"
 [ec2-user@master0 ~]$ ansible etcd -a "rm -rf /var/lib/etcd"
-[ec2-user@master0 ~]$ ansible etcd -a "rmdir /var/lib/etcd"
 [ec2-user@master0 ~]$ ansible etcd -a "mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf.bak"
 ```
 
@@ -76,6 +75,7 @@ switch to user root and restore the etc-database
 ```
 [ec2-user@master0 ~]$ sudo -i
 [root@master0 ~]# yum install etcd-3.2.22-1.el7.x86_64
+[root@master0 ~]# rmdir /var/lib/etcd
 [root@master0 ~]# mv /etc/etcd/etcd.conf.bak /etc/etcd/etcd.conf
 [root@master0 ~]# source /etc/etcd/etcd.conf
 [root@master0 ~]# export ETCDCTL_API=3
