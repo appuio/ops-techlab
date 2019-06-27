@@ -140,9 +140,9 @@ Move the now functional etcd members from the group `[new_etcd]` to `[etcd]` in 
 ...
 
 [etcd]
-master0.user1.lab.openshift.ch
-master1.user1.lab.openshift.ch
-master2.user1.lab.openshift.ch
+master0.user[X].lab.openshift.ch
+master1.user[X].lab.openshift.ch
+master2.user[X].lab.openshift.ch
 ```
 
 ---
