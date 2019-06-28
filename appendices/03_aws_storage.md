@@ -119,7 +119,7 @@ provisioners-efs                           1Mi        RWX            Retain     
 pvc-2fa78a43-98ee-11e9-94ce-064eab17d15e   10Mi       RWX            Delete           Bound     test/provisioners-efs              nfs                      17m
 registry-volume                            5Gi        RWX            Retain           Bound     default/registry-claim                                      13m
 [ec2-user@master0 ~]$ oc scale dc/ruby-ex --replicas=0
-[ec2-user@master0 ~]$ oc delete pvc provisioners-efs
+[ec2-user@master0 ~]$ oc delete pvc quotatest
 [ec2-user@master0 ~]$ oc get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                              STORAGECLASS   REASON    AGE
 provisioners-efs                           1Mi        RWX            Retain           Bound     openshift-infra/provisioners-efs                            23m
