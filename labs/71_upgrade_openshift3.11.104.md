@@ -57,7 +57,7 @@ Upgrade the so-called control plane, consisting of:
 
 Upgrade node by node manually because we need to make sure, that the nodes running GlusterFS in container have enough time to replicate to the other nodes. 
 
-Upgrade "infra-node0.user[X].lab.openshift.ch":
+Upgrade `infra-node0.user[X].lab.openshift.ch`:
 ```
 [ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml \
                       --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node0.user[X].lab.openshift.ch"
@@ -70,9 +70,9 @@ Wait until all GlusterFS Pods are ready again and check if GlusterFS volumes hav
 sh-4.2# for vol in `gluster volume list`; do gluster volume heal $vol info; done | grep -i "number of entries"
 Number of entries: 0
 ```
-If all volumes have "Number of entries: 0", we can proceed with the next node and repeat the check of GlusterFS.
+If all volumes have `Number of entries: 0`, we can proceed with the next node and repeat the check of GlusterFS.
 
-Upgrade "infra-node1.user[X].lab.openshift.ch" and infra-node2.user[X].lab.openshift.ch the same way you as you did the first one:
+Upgrade `infra-node1` and `infra-node2` the same way you as you did the first one:
 ```
 [ec2-user@master0 ~]$ ansible-playbook playbooks/byo/openshift-cluster/upgrades/v3_11/upgrade_nodes.yml \
                       --extra-vars openshift_upgrade_nodes_label="kubernetes.io/hostname=infra-node1.user[X].lab.openshift.ch"
@@ -111,7 +111,7 @@ The `atomic-openshift-clients-redistributable` package which provides the `oc` b
 #### 8. Update oc binary on client ####
 Update the `oc` binary on your own client. As before, you can get it from:
 ```
-https://console.user[X].lab.openshift.ch/console/extensions/clients/
+https://client.app[X].lab.openshift.ch
 ```
 
 **Note:** You should tell all users of your platform to update their client. Client and server version differences can lead to compatibility issues.
