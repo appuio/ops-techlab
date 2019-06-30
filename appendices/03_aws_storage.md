@@ -107,19 +107,29 @@ $ df -h /quotatest
 Filesystem                                                                                                               Size  Used Avail Use% Mounted on
 fs-4f7f2916.efs.eu-central-1.amazonaws.com:/persistentvolumes/provisioners-efs-pvc-2fa78a43-98ee-11e9-94ce-064eab17d15e  8.0E     0  8.0E   0% /quotatest
 $ dd if=/dev/urandom of=/quotatest/quota bs=4096 count=10000
+$ $ du -hs /quotatest/
+40M     /quotatest/
 ```
 
 #### Delete EFS Volumes
 When you delete the PVC, the PV and the corresponding data gets deleted.
-
+The default RECLAIM POLICY is set to 'Delete':
 ```
 [ec2-user@master0 ~]$ oc get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                              STORAGECLASS   REASON    AGE
 provisioners-efs                           1Mi        RWX            Retain           Bound     openshift-infra/provisioners-efs                            23m
 pvc-2fa78a43-98ee-11e9-94ce-064eab17d15e   10Mi       RWX            Delete           Bound     test/provisioners-efs              nfs                      17m
 registry-volume                            5Gi        RWX            Retain           Bound     default/registry-claim                                      13m
+```
+
+Rundown the application and delete the pvc:
+```
 [ec2-user@master0 ~]$ oc scale dc/ruby-ex --replicas=0
 [ec2-user@master0 ~]$ oc delete pvc quotatest
+```
+
+Check if the pv was deleted:
+```
 [ec2-user@master0 ~]$ oc get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                              STORAGECLASS   REASON    AGE
 provisioners-efs                           1Mi        RWX            Retain           Bound     openshift-infra/provisioners-efs                            23m
