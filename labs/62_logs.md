@@ -84,6 +84,6 @@ Or if we wanted to filter for error messages we could simply use "error" in the 
 
 **End of Lab 6.2**
 
-<p width="100px" align="right"><a href="70_upgrade.md">Upgrade OpenShift from 3.6 to 3.7 →</a></p>
+<p width="100px" align="right"><a href="70_upgrade.md">Upgrade OpenShift from 3.11.88 to 3.11.104 →</a></p>
 
 [← back to the Chapter Overview](60_monitoring_troubleshooting.md)
