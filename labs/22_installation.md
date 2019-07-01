@@ -49,7 +49,7 @@ Deploy the openshift-client-distributor.
 [ec2-user@master0 ~]$ sudo yum install python-openshift
 [ec2-user@master0 ~]$ git clone https://github.com/appuio/openshift-client-distributor
 [ec2-user@master0 ~]$ cd openshift-client-distributor
-[ec2-user@master0 ~]$ ansible-playbook playbook.yml -e 'openshift_client_distributor_hostname=client.app[X].lab.openshift.ch'"
+[ec2-user@master0 ~]$ ansible-playbook playbook.yml -e 'openshift_client_distributor_hostname=client.app[X].lab.openshift.ch'
 ```
 
 5. You can now download the client binary and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
