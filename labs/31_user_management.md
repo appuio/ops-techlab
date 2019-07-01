@@ -79,6 +79,8 @@ Groups can be created manually or synchronized from an LDAP directory. So let's 
 [ec2-user@master0 ~]$ oc login -u sheriff
 
 [ec2-user@master0 ~]$ oc adm groups new deputy-sheriffs cowboy
+group.user.openshift.io/deputy-sheriffs created
+[ec2-user@master0 ~]$ oc get groups
 NAME         USERS
 deputy-sheriffs   cowboy
 ```
