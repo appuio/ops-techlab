@@ -102,6 +102,7 @@ Check if the server certificate has been replaced:
 [ec2-user@master0 ~]$ ansible nodes -m shell -a 'rm -rf  /etc/origin/node/certificates' --limit 'nodes:!master*'
 ```
 5. Restart node service on app-/infra-nodes:
+:warning: restart atomic-openshift-node will fail, until CSR's are approved! Approve (Task 6) the CSR's and restart the Services again.
 ```
 [ec2-user@master0 ~]$ ansible nodes -m service -a "name=atomic-openshift-node state=restarted" --limit 'nodes:!master*'
 ```
