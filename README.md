@@ -30,7 +30,7 @@ There's a [Troubleshooting Cheat Sheet](resources/troubleshooting_cheat_sheet.md
 
 1. [Monitoring with Prometheus](appendices/01_prometheus.md)
 2. [Useful Internet Resources](appendices/02_internet_resources.md)
-
+3. [Using AWS EFS Storage](appendices/03_aws_storage.md)
 
 ## License
 

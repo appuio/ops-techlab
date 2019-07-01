@@ -17,9 +17,9 @@ The following files should be backuped on all masters:
 
 - Ansible inventory file (contains information about the cluster): `/etc/ansible/hosts`
 - Configuration files (for the master), certificates and htpasswd: `/etc/origin/master/`
+- Docker configurations: `/etc/sysconfig/docker` `/etc/sysconfig/docker-network` `/etc/sysconfig/docker-storage`
 
 ### Lab 5.1.2: Node Backup Files
-- Docker configurations: `/etc/sysconfig/docker` `/etc/sysconfig/docker-network` `/etc/sysconfig/docker-storage`
 
 Backup the following folders on all nodes:
 
