@@ -37,7 +37,22 @@ Password is documented in the Ansible inventory:
 [ec2-user@master0 ~]$ grep keepass /etc/ansible/hosts
 ```
 
-4. You can download the client binary and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
+4. Deploy the APPUiO openshift-client-distributor. This provides the correct oc client in a Pod and can then be obtained via the OpenShift GUI. For this to work, the Masters must have the package `atomic-openshift-clients-redistributable` installed. In addition the variable `openshift_web_console_extension_script_urls` must be defined in the inventory.
+```
+[ec2-user@master0 ~]$ grep openshift_web_console_extension_script_urls /etc/ansible/hosts
+openshift_web_console_extension_script_urls=["https://client.app1.lab.openshift.ch/cli-download-customization.js"]
+[ec2-user@master0 ~]$ ansible masters -m shell -a "rpm -qi atomic-openshift-clients-redistributable"
+```
+
+Deploy the openshift-client-distributor.
+```
+[ec2-user@master0 ~]$ sudo yum install python-openshift
+[ec2-user@master0 ~]$ git clone https://github.com/appuio/openshift-client-distributor
+[ec2-user@master0 ~]$ cd openshift-client-distributor
+[ec2-user@master0 ~]$ ansible-playbook playbook.yml -e 'openshift_client_distributor_hostname=client.app[X].lab.openshift.ch'"
+```
+
+5. You can now download the client binary and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
 ```
 https://console.user[X].lab.openshift.ch/console/command-line
 ```
