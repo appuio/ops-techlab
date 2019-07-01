@@ -11,7 +11,7 @@ Uncomment the new node (`app-node1.user...`) in the Ansible inventory and also u
 ...
 glusterfs
 bastion
-new_masters
+#new_masters
 new_nodes
 ...
 
