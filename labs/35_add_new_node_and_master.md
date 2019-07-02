@@ -231,7 +231,7 @@ oc get nodes --show-labels
 Then we correct it either by executing the logging playbook or by manually labelling the nodes with `oc`. Executing the playbook takes quite some time but we leave this choice to you:
 - So either execute the playbook:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-logging/config.yml
 ```
 
 - Or label the nodes manually with `oc`:
