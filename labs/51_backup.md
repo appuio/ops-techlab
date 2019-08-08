@@ -39,7 +39,7 @@ We will set up a cronjob in a project called "project-backup" which hourly write
 Let's gather the backup-script:
 ```
 [ec2-user@master0 ~]$ sudo yum install git python-openshift -y
-[ec2-user@master0 ~]$ git clone https://github.com/mabegglen/openshift-project-backup"
+[ec2-user@master0 ~]$ git clone https://github.com/mabegglen/openshift-project-backup
 ```
 Now we create the cronjob on the first master:
 ```
