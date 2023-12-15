@@ -16,18 +16,18 @@ Check if all pvc are bound and glusterfs runs fine
 [ec2-user@master0 ~]$ oc get pvc --all-namespaces
 ```
 
-Check the etcd health status. Do not forget to change the *[X]* of *user[X]* with your number.
+Check the etcd health status. 
 ```
-[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379,https://master2.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key cluster-health
-member 3f511408a118b9fd is healthy: got healthy result from https://172.31.37.59:2379
-member 50953a25943f54a8 is healthy: got healthy result from https://172.31.35.180:2379
-member ec41afe89f86deaf is healthy: got healthy result from https://172.31.35.199:2379
+[ec2-user@master0 ~]$ sudo -i
+[root@master0 ~]# source /etc/etcd/etcd.conf
+[root@master0 ~]# etcdctl2 cluster-health
+member 16682006866446bb is healthy: got healthy result from https://172.31.45.211:2379
+member 5c619e4b51953519 is healthy: got healthy result from https://172.31.44.160:2379
 cluster is healthy
 
-[ec2-user@master0 ~]# sudo etcdctl -C https://master0.user[X].lab.openshift.ch:2379,https://master1.user[X].lab.openshift.ch:2379,https://master2.user[X].lab.openshift.ch:2379 --ca-file=/etc/origin/master/master.etcd-ca.crt --cert-file=/etc/origin/master/master.etcd-client.crt --key-file=/etc/origin/master/master.etcd-client.key member list
-3f511408a118b9fd: name=ip-172-31-37-59.eu-central-1.compute.internal peerURLs=https://172.31.37.59:2380 clientURLs=https://172.31.37.59:2379 isLeader=true
-50953a25943f54a8: name=master0.user2.lab.openshift.ch peerURLs=https://172.31.35.180:2380 clientURLs=https://172.31.35.180:2379 isLeader=false
-ec41afe89f86deaf: name=master1.user2.lab.openshift.ch peerURLs=https://172.31.35.199:2380 clientURLs=https://172.31.35.199:2379 isLeader=false
+[root@master0 ~]# etcdctl2 member list
+16682006866446bb: name=master1.user7.lab.openshift.ch peerURLs=https://172.31.45.211:2380 clientURLs=https://172.31.45.211:2379 isLeader=false
+5c619e4b51953519: name=master0.user7.lab.openshift.ch peerURLs=https://172.31.44.160:2380 clientURLs=https://172.31.44.160:2379 isLeader=true
 ```
 
 Create a project, run a build, push/pull from the internal registry and deploy a test application.

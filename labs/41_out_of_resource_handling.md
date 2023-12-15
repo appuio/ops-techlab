@@ -21,7 +21,7 @@ An OpenShift node recovers from out of memory conditions by killing containers o
 
 The order in which containers and pods are killed is determined by their Quality of Service (QoS) class.
 The QoS class in turn is defined by resource requests and limits developers configure on their containers.
-For more information see [Quality of Service Tiers](https://docs.openshift.com/container-platform/3.6/dev_guide/compute_resources.html#quality-of-service-tiers).
+For more information see [Quality of Service Tiers](https://docs.openshift.com/container-platform/3.11/dev_guide/compute_resources.html#quality-of-service-tiers).
 
 
 ### Out of Memory Killer in Action
@@ -30,7 +30,7 @@ To observe how the OOM killer in action create a container which allocates all m
 
 ```
 [ec2-user@master0 ~]$ oc new-project out-of-memory
-[ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_oom.yaml
+[ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.11/resources/membomb/pod_oom.yaml
 ```
 
 Wait and watch till the container is up and being killed. `oc get pods -o wide -w` will then show:
@@ -100,7 +100,7 @@ Soft evictions allow the threshold to be exceeded for a configurable grace perio
 To observe a pod eviction create a container which allocates memory till it is being evicted:
 
 ```
-[ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.6/resources/membomb/pod_eviction.yaml
+[ec2-user@master0 ~]$ oc create -f https://raw.githubusercontent.com/appuio/ops-techlab/release-3.11/resources/membomb/pod_eviction.yaml
 ```
 
 Wait till the container gets evicted. Run `oc describe pod -l app=membomb` to see the reason for the eviction:
@@ -137,16 +137,18 @@ This is usually to low to trigger pod eviction before the OOM killer hits. We re
 threshold of **500Mi**. If you keep to see lots of OOM killed containers consider increasing the hard eviction threshold or
 adding a soft eviction threshold. But remember that hard eviction thresholds are subtracted from the nodes allocatable resources.
 
-You can configure reserves and eviction thresholds in the `openshift_node_kubelet_args` key of your Ansible inventory, e.g.:
+You can configure reserves and eviction thresholds in the node configuration, e.g.:
 
 ```
-openshift_node_kubelet_args='{"kube-reserved":["cpu=200m,memory=1G"],"system-reserved":["cpu=200m,memory=1G"],"eviction-hard":["memory.available<500Mi"]}'
+kubeletArguments:
+  kube-reserved:
+    - "cpu=200m,memory=512Mi"
+  system-reserved:
+    - "cpu=200m,memory=512Mi"
 ```
 
-Then run the config playbook to apply the settings to the cluster.
-
-See [Allocating Node Resources](https://docs.openshift.com/container-platform/3.6/admin_guide/allocating_node_resources.html)
-and [Out of Resource Handling](https://docs.openshift.com/container-platform/3.6/admin_guide/out_of_resource_handling.html) for more information.
+See [Allocating Node Resources](https://docs.openshift.com/container-platform/3.11/admin_guide/allocating_node_resources.html)
+and [Out of Resource Handling](https://docs.openshift.com/container-platform/3.11/admin_guide/out_of_resource_handling.html) for more information.
 
 ---
 

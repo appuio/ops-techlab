@@ -28,10 +28,9 @@ There's a [Troubleshooting Cheat Sheet](resources/troubleshooting_cheat_sheet.md
 
 ## Appendices
 
-1. [etcd Scaleup](appendices/01_etcd_scaleup.md)
-2. [Monitoring with Prometheus](appendices/02_prometheus.md)
-3. [Useful Internet Resources](appendices/03_internet_resources.md)
-
+1. [Monitoring with Prometheus](appendices/01_prometheus.md)
+2. [Useful Internet Resources](appendices/02_internet_resources.md)
+3. [Using AWS EFS Storage](appendices/03_aws_storage.md)
 
 ## License
 

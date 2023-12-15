@@ -2,8 +2,8 @@
 
 In this lab we will add a new node and a new master to our OpenShift cluster.
 
-
-### Add a New Node
+<a name="3.5.1"> </a>
+### Lab 3.5.1: Add a New Node
 
 Uncomment the new node (`app-node1.user...`) in the Ansible inventory and also uncomment the `new_nodes` group in the "[OSEv3:children]" section.
 ```
@@ -11,12 +11,12 @@ Uncomment the new node (`app-node1.user...`) in the Ansible inventory and also u
 ...
 glusterfs
 bastion
-new_masters
+#new_masters
 new_nodes
 ...
 
 [new_nodes]
-app-node1.user[X].lab.openshift.ch openshift_hostname=app-node1.user[X].lab.openshift.ch openshift_public_hostname=app-node1.user[X].lab.openshift.ch openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+app-node1.user7.lab.openshift.ch openshift_node_group_name='node-config-compute'
 ...
 
 ```
@@ -32,7 +32,7 @@ Test the ssh connection and run the pre-install playbook:
 
 Now add the new node with the scaleup playbook:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-node/scaleup.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-node/scaleup.yml
 ```
 
 Check if the node is ready:
@@ -76,7 +76,8 @@ app-node1.user[X].lab.openshift.ch openshift_hostname=app-node1.user[X].lab.open
 ...
 ```
 
-### Add a New Master
+<a name="3.5.2"> </a>
+### Lab 3.5.2: Add a New Master
 
 Uncomment the new master inside the Ansible inventory. It needs to be in both the `[new_nodes]` and the `[new_masters]` groups.
 ```
@@ -104,21 +105,22 @@ Check if the host is accessible and run the pre-install playbook:
 
 Now we can add the new master:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-master/scaleup.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-master/scaleup.yml
 ```
 
 Let's check if the node daemon on the new master is ready:
 ```
 [ec2-user@master0 ~]$ oc get nodes
-NAME                             STATUS                     AGE       VERSION
-app-node0.user2.lab.openshift.ch     Ready                      3h        v1.6.1+5115d708d7
-app-node1.user2.lab.openshift.ch     Ready                      14m       v1.6.1+5115d708d7
-infra-node0.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-infra-node1.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-infra-node2.user2.lab.openshift.ch   Ready                      4h        v1.6.1+5115d708d7
-master0.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
-master1.user2.lab.openshift.ch       Ready,SchedulingDisabled   4h        v1.6.1+5115d708d7
-master2.user2.lab.openshift.ch       Ready,SchedulingDisabled   1m        v1.6.1+5115d708d7
+NAME                                 STATUS    ROLES     AGE       VERSION
+app-node0.user7.lab.openshift.ch     Ready     compute   1d        v1.11.0+d4cacc0
+app-node1.user7.lab.openshift.ch     Ready     compute   1d        v1.11.0+d4cacc0
+infra-node0.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+infra-node1.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+infra-node2.user7.lab.openshift.ch   Ready     infra     1d        v1.11.0+d4cacc0
+master0.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
+master1.user7.lab.openshift.ch       Ready     master    1d        v1.11.0+d4cacc0
+master2.user7.lab.openshift.ch       Ready     master    6m        v1.11.0+d4cacc0
+
 ```
 
 Check if the old masters see the new one:
@@ -214,7 +216,8 @@ This means we now have an empty `[new_nodes]` and `[new_masters]` groups.
 ```
 
 
-### Fix Logging
+<a name="3.5.3"> </a>
+### Lab 3.5.3: Fix Logging
 
 The default logging stack on OpenShift mainly consists of Elasticsearch, fluentd and Kibana, where fluentd is a DaemonSet. This means that a fluentd pod is automatically deployed on every node, even if scheduling is disabled for that node. The limiting factor for the deployment of DaemonSet pods is the node selector which is set by default to the label `logging-infra-fluentd=true`. The logging playbook attaches this label to all nodes by default, so if you wanted to prevent the deployment of fluentd on certain hosts you had to add the label `logging-infra-fluentd=false` in the inventory. As you may have seen, we do not specify the label specifically in the inventory, which means:
 - Every node gets the `logging-infra-fluentd=true` attached by the logging playbook
@@ -228,7 +231,7 @@ oc get nodes --show-labels
 Then we correct it either by executing the logging playbook or by manually labelling the nodes with `oc`. Executing the playbook takes quite some time but we leave this choice to you:
 - So either execute the playbook:
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/openshift-logging/config.yml
 ```
 
 - Or label the nodes manually with `oc`:

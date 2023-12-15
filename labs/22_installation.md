@@ -19,32 +19,42 @@ Now we run the prepare_hosts_for_ose.yml playbook. This will do the following:
 Run the installation
 1. Install OpenShift. This takes a while, get a coffee.
 ```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 ```
 
-2. Deploy the OpenShift metrics
-```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml
-```
-
-3. Deploy the OpenShift logging
-```
-[ec2-user@master0 ~]$ ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-logging.yml
-```
-
-4. Add the cluster-admin role to the "sheriff" user.
+2. Add the cluster-admin role to the "sheriff" user.
 ```
 [ec2-user@master0 ~]$ oc adm policy --as system:admin add-cluster-role-to-user cluster-admin sheriff
 ```
 
-5. Now open your browser and access the master API with the user "sheriff". Password is documented in the Ansible inventory.
+3. Now open your browser and access the master API with the user "sheriff":
 ```
 https://console.user[X].lab.openshift.ch/console/
 ```
-
-6. You can download the client binary and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
+Password is documented in the Ansible inventory:
 ```
-https://console.user[X].lab.openshift.ch/console/extensions/clients/
+[ec2-user@master0 ~]$ grep keepass /etc/ansible/hosts
+```
+
+4. Deploy the APPUiO openshift-client-distributor. This provides the correct oc client in a Pod and can then be obtained via the OpenShift GUI. For this to work, the Masters must have the package `atomic-openshift-clients-redistributable` installed. In addition the variable `openshift_web_console_extension_script_urls` must be defined in the inventory.
+```
+[ec2-user@master0 ~]$ grep openshift_web_console_extension_script_urls /etc/ansible/hosts
+openshift_web_console_extension_script_urls=["https://client.app1.lab.openshift.ch/cli-download-customization.js"]
+[ec2-user@master0 ~]$ ansible masters -m shell -a "rpm -qi atomic-openshift-clients-redistributable"
+```
+
+Deploy the openshift-client-distributor.
+```
+[ec2-user@master0 ~]$ sudo yum install python-openshift
+[ec2-user@master0 ~]$ git clone https://github.com/appuio/openshift-client-distributor
+[ec2-user@master0 ~]$ cd openshift-client-distributor
+[ec2-user@master0 ~]$ ansible-playbook playbook.yml -e 'openshift_client_distributor_hostname=client.app[X].lab.openshift.ch'
+```
+
+5. You can now download the client binary and use it from your local workstation. The binary is available for Linux, macOS and Windows. (optional)
+```
+https://console.user[X].lab.openshift.ch/console/command-line
 ```
 
 ---

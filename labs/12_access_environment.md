@@ -8,7 +8,7 @@ https://console.user[X].lab.openshift.ch
 ```
 to
 ```
-https://console.user1.lab.openshift.ch
+https://console.user[X].lab.openshift.ch
 ```
 
 
